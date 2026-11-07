@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0369d6">
   <meta name="description" content="Linh xem lại lịch chụp GradStudio, booking GS-1024 và khoản cọc 30%.">
   <title>DUKStudio — Lịch chụp của tôi</title>
+  <!-- CSS dùng chung duy nhất cho cả 3 màn hình đồ án: không phụ thuộc CDN, mở trực tiếp offline -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,11 +19,13 @@
         <p class="brand-caption">&lt; studio ảnh tốt nghiệp &gt;</p>
       </div>
 
+      <!-- Điều hướng chính theo noi-dung.md (chỉ link tới trang có thật) -->
       <nav class="main-nav" aria-label="Điều hướng chính">
         <a class="nav-link" href="index.html">Dịch vụ</a>
         <a class="nav-link is-active" href="booking.html" aria-current="page">Lịch chụp của tôi</a>
       </nav>
 
+      <!-- Khối tài khoản khách hàng Linh (Customer) theo kịch bản GradStudio -->
       <div class="user-badge" aria-label="Tài khoản khách hàng đang đăng nhập">
         <div class="user-avatar" aria-hidden="true">
           <span class="avatar-letter">L</span>
@@ -117,23 +120,23 @@
               <li class="appointment-item is-unavailable">
                 <p><s>09:00 — Giờ bạn mong muốn</s><br><strong>Không khả dụng:</strong> Mai bận 08:00–12:00.</p>
               </li>
-              <li class="appointment-item">
+              <li class="appointment-item appointment-item--makeup">
                 <p><strong>13:00–14:00 — Trang điểm</strong><br>Makeup với Mai tại studio.<br><span>Có mặt sớm 10 phút để chuẩn bị.</span></p>
               </li>
-              <li class="appointment-item">
+              <li class="appointment-item appointment-item--shoot">
                 <p><strong>14:00–16:00 — Chụp ảnh</strong><br>Chụp với Tuấn tại Phòng B.</p>
               </li>
             </ol>
           </section>
-
-          <section class="location-card note-card" aria-labelledby="location-title">
-            <h2 id="location-title">Địa điểm</h2>
-            <p class="studio-name">DUKStudio</p>
-            <address>Tầng 3, Tòa nhà Phượng Vĩ, Số 88/12/5 Đường Lê Văn Việt, Khu phố 2, Phường Hiệp Phú, Thành phố Thủ Đức, Thành phố Hồ Chí Minh</address>
-            <p class="not-wired-label">Xem đường đi — Chưa có</p>
-            <p class="selected-photos-label">Ảnh đã chọn — Chưa có</p>
-          </section>
         </div>
+
+        <section class="location-card note-card" aria-labelledby="location-title">
+          <h2 id="location-title">Địa điểm</h2>
+          <p class="studio-name">DUKStudio</p>
+          <address>Tầng 3, Tòa nhà Phượng Vĩ, Số 88/12/5 Đường Lê Văn Việt, Khu phố 2, Phường Hiệp Phú, Thành phố Thủ Đức, Thành phố Hồ Chí Minh</address>
+          <p class="not-wired-label">Xem đường đi — Chưa có</p>
+          <p class="selected-photos-label">Ảnh đã chọn — Chưa có</p>
+        </section>
       </div>
 
       <div class="booking-return role-handoff">
@@ -145,17 +148,17 @@
     <footer class="site-footer">
       <div class="footer-head">
         <img src="assets/logo.svg" alt="DUKStudio">
-        <span>Một lịch hẹn cho cả buổi chụp — từ hỏi giá, chốt giờ đến nhận ảnh.</span>
+        <span>Một lịch hẹn cho cả buổi chụp — từ hỏi giá, chốt giờ đến nhận ảnh. ♡</span>
       </div>
       <div class="footer-meta">
         <p><strong>DUKStudio</strong> — Giờ mở cửa: Thứ Hai – Chủ nhật, 08:30–19:00 — Email: lienhe@dukstudio.example</p>
       </div>
-      <div class="booking-footer-links">
+      <nav aria-label="Điều hướng chân trang">
         <a href="index.html">Dịch vụ</a>
         <a href="booking.html" aria-current="page">Lịch chụp của tôi</a>
         <span class="footer-disabled">Chính sách đặt cọc — Chưa có</span>
         <span class="footer-disabled">Liên hệ — Chưa có</span>
-      </div>
+      </nav>
       <p class="footer-caption">&lt; studio ảnh tốt nghiệp &gt;</p>
     </footer>
   </div>
