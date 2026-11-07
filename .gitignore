@@ -1,0 +1,9 @@
+# Git Ignore for DUKStudio
+# Ignore draft/concept folder during initial structure commit
+concept-draft/
+
+# Ignore OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
