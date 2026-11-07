@@ -783,7 +783,9 @@ p {
    ========================================================================== */
 
 /* 1. Header & Page Layout */
-/* Header badge default */
+.booking-site .user-badge {
+  box-shadow: none;
+}
 
 .booking-main {
   width: 100%;
@@ -798,7 +800,9 @@ p {
   margin: 0 0 var(--space-4);
 }
 
-/* Page heading default */
+.booking-site .booking-page-heading::before {
+  display: none;
+}
 
 .booking-page-heading h1 {
   margin: 0;
@@ -1408,5 +1412,3 @@ p {
     grid-column: 1 / -1;
   }
 }
-
-/* Refined card visual tokens */
