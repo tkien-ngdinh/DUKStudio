@@ -1,0 +1,201 @@
+/* DUKSTUDIO — Mobile-first: 360px -> 768px -> 1280px
+   Base Design System, Typography, Reset, and Layout Utilities
+   .html nối file này bằng <link rel="stylesheet" href="style.css">.
+   Font Malika nội bộ đã được đính kèm tại assets/1FTV-VIP-Malika.ttf (100% offline). */
+
+@font-face {
+  font-family: "DUK Malika";
+  src: local("1FTV VIP Malika"), local("1FTVVIPMalika-Regular"),
+       url("assets/1FTV-VIP-Malika.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Spacing Scale chuẩn rubric (4, 8, 16, 24, 32, 48px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  /* Colors với chuẩn tương phản WCAG AA (Contrast Ratio >= 4.5:1) */
+  --blue: #0369d6;            /* Contrast ~4.54:1 với chữ trắng */
+  --deep-blue: #044fb5;       /* Contrast >6.2:1 với chữ trắng */
+  --lime: #b9f656;            /* Xanh neon thương hiệu DUK */
+  --lime-ink: #325800;        /* Contrast >5.7:1 trên nền trắng/paper */
+  --pink: #db2366;            /* Contrast >4.7:1 với chữ trắng */
+  --pink-light: #ffcae2;
+  --paper: #fcfcfd;
+  --ink: #172538;             /* Contrast >14.7:1 trên nền sáng */
+  --ink-muted: #3d4f66;       /* Contrast >6.2:1 trên nền sáng */
+  --light-blue: #eaf5ff;
+  --online-green: #15803d;    /* Màu xanh lá trạng thái hoạt động */
+  --border-color: #cbd5e1;
+
+  /* Touch Target & Bo góc */
+  --tap-min: 44px;            /* Chuẩn vùng chạm tiếp cận tối thiểu 44px */
+  --round: 20px;
+
+  /* Typography */
+  /* 1. Font Display / Tiêu đề: Font Malika (có sẵn file tại assets/1FTV-VIP-Malika.ttf) */
+  --font-display: "DUK Malika", "1FTV VIP Malika", system-ui, sans-serif;
+
+  /* 2. Font Tech/Services: Góc cạnh, dứt khoát như Chakra Petch */
+  --font-chakra: "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+
+  /* 3. Font Chat: Trung tính, thoáng mắt, cực nét như Montserrat */
+  --font-chat: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Font mặc định cho body */
+  --font: var(--font-display);
+}
+
+/* ==========================================================================
+   CSS RESET TOÀN DIỆN
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%;            /* 16px base font chuẩn trình duyệt */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--blue);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;            /* 16px */
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  text-rendering: optimizeLegibility;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--deep-blue);
+  outline-offset: 3px;
+}
+
+h1, h2, h3, p {
+  margin-top: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+}
+
+p {
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   LAYOUT CONTAINER (MOBILE-FIRST)
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: 90rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.site {
+  max-width: 90rem;
+  margin: 0 auto;
+  min-width: 0;
+  background: var(--paper);
+  border: 4px solid var(--blue);
+  border-radius: var(--round) var(--round) 0 0;
+}
+
+/* ==========================================================================
+   TABLE WRAPPER (RESPONSIVE CHO CẢ 3 MÀN HÌNH ĐỒ ÁN)
+   ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--space-3) 0 var(--space-4);
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: var(--space-2);
+}
+
+.table-wrapper table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table-wrapper th {
+  background: var(--light-blue);
+  color: var(--deep-blue);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.table-wrapper tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ==========================================================================
+   FRAMEWORK MEDIA QUERIES (MOBILE-FIRST BREAKPOINTS)
+   ========================================================================== */
+@media (min-width: 768px) {
+  /* Tablet breakpoint expansions */
+}
+
+@media (min-width: 1280px) {
+  /* Desktop breakpoint expansions */
+}
