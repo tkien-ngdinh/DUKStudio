@@ -294,6 +294,11 @@ p {
   box-shadow: 0 4px 12px rgba(23, 37, 56, 0.05);
 }
 
+.table-wrapper:focus-visible {
+  outline: 2px solid var(--deep-blue);
+  outline-offset: 2px;
+}
+
 .table-wrapper table {
   width: 100%;
   min-width: 520px;
@@ -965,8 +970,15 @@ select:focus-visible {
   min-height: var(--tap-min);
   padding: var(--space-2);
   border-radius: 8px;
+  cursor: pointer;
 }
-.slot-option input { flex: none; min-width: var(--space-4); min-height: var(--space-4); }
+.slot-option input {
+  flex: none;
+  min-width: var(--space-4);
+  min-height: var(--space-4);
+  cursor: pointer;
+  accent-color: var(--deep-blue);
+}
 .slot-option label { flex: 1; min-width: 0; min-height: var(--tap-min); display: flex; align-items: center; }
 .slot-option.is-chosen { background: var(--lime); color: #143805; font-weight: 700; }
 .slot-option.is-unavailable { background: #eef2f7; color: var(--ink-muted); text-decoration: line-through; }
