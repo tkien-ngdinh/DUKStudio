@@ -7,3 +7,6 @@ concept-draft/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local tool caches
+.impeccable/
