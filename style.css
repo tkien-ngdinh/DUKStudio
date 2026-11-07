@@ -831,7 +831,7 @@ select:focus-visible {
 .studio-panel {
   min-width: 0;
   padding: var(--space-3);
-  border: 2px solid var(--border-color);
+  border: 4px solid var(--deep-blue);
   border-radius: var(--round);
   background: #ffffff;
   font-family: var(--font-chat);
@@ -906,20 +906,25 @@ select:focus-visible {
 .studio-chat .message--system .message-person { color: #143805; }
 .studio-chat .chat-hint { color: var(--ink-muted); }
 
-/* Form Booking mới — điểm nhấn của trang */
+/* Form Booking mới — điểm nhấn của trang, cùng tông xanh thương hiệu */
 .booking-form {
   display: grid;
   gap: var(--space-3);
+  align-content: start;
   min-width: 0;
   padding: var(--space-4) var(--space-3);
-  border: 4px solid var(--pink);
+  border: 4px solid var(--deep-blue);
   border-radius: var(--round);
-  background: #fff8fb;
-  box-shadow: 0 16px 32px -4px rgba(219, 35, 102, 0.28);
+  background: #f3f9ff;
+  color: var(--ink);
+  font-family: var(--font-chat);
+  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.28);
 }
 .booking-form h3 {
   margin: 0;
-  color: var(--pink);
+  padding-bottom: var(--space-2);
+  border-bottom: 4px solid var(--lime);
+  color: var(--deep-blue);
   font-size: 1.7rem;
   line-height: 1.15;
 }
@@ -933,14 +938,14 @@ select:focus-visible {
   min-width: 0;
   min-height: var(--tap-min);
   padding: var(--space-2) var(--space-3);
-  border: 2px solid #5b6b82;
+  border: 2px solid var(--deep-blue);
   border-radius: 12px;
   background: #ffffff;
   color: var(--ink);
   font-size: 1rem;
   overflow-wrap: anywhere;
 }
-.field input[readonly] { background: #eef2f7; }
+.field input[readonly] { background: #e3effc; }
 .field textarea { resize: vertical; }
 .field-note { margin: 0; color: var(--ink-muted); }
 .field-trio { display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
@@ -949,7 +954,7 @@ select:focus-visible {
   display: grid;
   gap: var(--space-2);
   padding: var(--space-3);
-  border: 2px solid #5b6b82;
+  border: 2px solid var(--deep-blue);
   border-radius: 12px;
 }
 .slot-group legend { padding: 0 var(--space-2); }
@@ -998,9 +1003,10 @@ select:focus-visible {
 .resource-table tbody { display: grid; gap: var(--space-3); }
 .resource-table tr {
   padding: var(--space-3);
-  border: 2px solid var(--border-color);
+  border: 2px solid #b7cdea;
+  border-top: 6px solid var(--blue);
   border-radius: 12px;
-  background: var(--paper);
+  background: #f3f9ff;
   overflow-wrap: anywhere;
 }
 .resource-table tbody th {
@@ -1009,7 +1015,7 @@ select:focus-visible {
   font-size: 1.1rem;
   text-align: left;
 }
-.resource-table td { padding: var(--space-1) 0; }
+.resource-table td { padding: var(--space-1) 0; color: var(--ink); }
 .resource-table td::before {
   content: attr(data-label);
   display: block;
@@ -1017,29 +1023,51 @@ select:focus-visible {
   font-size: .88rem;
   font-weight: 700;
 }
+.resource-table td[data-label="Ghi chú"] { font-weight: 700; }
 .resource-table .row-clash {
-  border-color: #7a1010;
-  border-left-width: 8px;
-  background: #ffe3e3;
-  color: #5c0a0a;
-  font-weight: 700;
+  border-color: var(--pink);
+  border-top-color: var(--pink);
+  background: #ffe9f2;
 }
-.resource-table .row-clash th { color: #5c0a0a; }
-.resource-table .row-clash td::before { color: #5c0a0a; }
+.resource-table .row-clash th { color: #8f0f45; }
+.resource-table .row-clash td::before { color: #8f0f45; }
+.resource-table .row-clash td[data-label="Ghi chú"] {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: 2px solid var(--pink);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #8f0f45;
+}
 
 @media (min-width: 768px) {
   .studio-main { padding: var(--space-4) var(--space-6) var(--space-6); }
   .studio-title { font-size: 2.25rem; }
   .studio-panel { padding: var(--space-4); }
-  /* Cột trái: danh sách + lịch; cột phải: chat + form (cao tương đương) */
-  .studio-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
-  .area-list { grid-column: 1; grid-row: 1; }
-  .area-calendar { grid-column: 1; grid-row: 2; }
-  .area-chat { grid-column: 2; grid-row: 1 / span 2; }
   .booking-form { padding: var(--space-4); }
+  /* Tablet: ba vùng xếp dọc, mỗi vùng dùng hết chiều ngang nên không lệch chiều cao */
+  .convo-list,
+  .resource-table tbody { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .field-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (min-width: 1280px) {
   .studio-title { font-size: 3.1rem; }
-  .studio-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
+  /* Laptop: hàng 1 = danh sách | chat, hàng 2 = lịch tài nguyên | form Booking mới.
+     Các ô cùng hàng cao bằng nhau (grid stretch); thẻ giữ chiều cao tự nhiên, phần thừa là khoảng trắng cuối ô. */
+  .studio-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+  .area-list { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; }
+  .area-chat { grid-column: 2; grid-row: 1; }
+  .area-calendar { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; }
+  .area-booking { grid-column: 2; grid-row: 2; }
+  .area-chat .studio-chat { margin-bottom: 0; }
+  .convo-list { flex: 1; grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .calendar-list { flex: 1; display: flex; }
+  .resource-table { flex: 1; display: flex; }
+  .resource-table tbody { flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
+  .field-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* Phân cấp viền: chat và form (quan trọng) đậm, danh sách và lịch (tham khảo) nhạt hơn */
+.area-list,
+.area-calendar { border: 3px solid #9dc3f0; }
