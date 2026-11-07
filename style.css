@@ -773,3 +773,638 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ==========================================================================
+   BOOKING — SCREEN 3 STYLES (GRADSTUDIO / DUKSTUDIO)
+   Kế thừa hoàn toàn ngôn ngữ thiết kế từ index.html:
+   - Màu sắc: Electric blue, Lime neon, Deep blue, Pink CTA, Paper, Ink.
+   - Typography: Font Malika (Display), Chakra/Bahnschrift (Labels), Chat (Body).
+   - Component: .package--blue, .chat-window, .note-card, .role-handoff.
+   ========================================================================== */
+
+/* 1. Header & Page Layout */
+/* Header badge default */
+
+.booking-main {
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  min-width: 0;
+}
+
+.booking-page-heading {
+  max-width: 60rem;
+  margin: 0 0 var(--space-4);
+}
+
+/* Page heading default */
+
+.booking-page-heading h1 {
+  margin: 0;
+  color: var(--blue);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  overflow-wrap: anywhere;
+}
+
+.booking-page-heading p {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-muted);
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.booking-schedule-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* 2. Featured Booking Card (Kế thừa từ .package.package--blue của index.html) */
+.booking-summary.package--blue {
+  border: 2px solid rgba(7, 86, 199, 0.4);
+  border-radius: var(--round);
+  background: var(--blue);
+  color: #ffffff;
+  padding: var(--space-4);
+  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.booking-card-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.booking-summary h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1.2;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-summary .package-mark {
+  color: var(--lime);
+  font-size: 2.5rem;
+  line-height: 0.9;
+  font-family: system-ui, sans-serif;
+}
+
+.booking-status.package-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 100px;
+  background: var(--paper);
+  color: var(--deep-blue);
+  font-family: var(--font-chakra);
+  font-size: 0.92rem;
+  font-weight: 700;
+  transform: rotate(-2deg);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-package {
+  margin: var(--space-3) 0 var(--space-3);
+  color: var(--lime);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+
+/* Box chi tiết khách hàng */
+.booking-details {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 16px;
+  box-shadow: inset 0 2px 4px rgba(7, 86, 199, 0.08);
+  font-family: var(--font-chat);
+}
+
+.booking-details > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.booking-details > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.booking-details dt {
+  color: var(--ink-muted);
+  font-family: var(--font-chakra);
+  font-weight: 600;
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+.booking-details dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-chat);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* Card chi phí & phân bổ cọc 30% (Đã xử lý bỏ đường kẻ trùng lặp) */
+.booking-summary .cost-heading {
+  margin: var(--space-4) 0 var(--space-2);
+  color: #ffffff;
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.booking-costs {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 16px;
+  box-shadow: inset 0 2px 4px rgba(7, 86, 199, 0.08);
+  font-family: var(--font-chat);
+  font-variant-numeric: tabular-nums;
+}
+
+.booking-costs > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.booking-costs > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.booking-costs dt {
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.booking-costs dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.booking-costs .deposit-row {
+  background: var(--lime);
+  color: var(--lime-ink);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 12px;
+  border-bottom: 0;
+  margin: 0;
+}
+
+.booking-costs .deposit-row dt {
+  color: var(--lime-ink);
+  font-family: var(--font-chakra);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.booking-costs .deposit-row dd {
+  color: var(--lime-ink);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+/* Cảnh báo giữ lịch & Nút thanh toán */
+.booking-hold-warning {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3);
+  border: 2px solid #b45309;
+  border-radius: 12px;
+  background: #fffbeb;
+  color: #78350f;
+  font-family: var(--font-chat);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.booking-hold-warning strong {
+  color: #78350f;
+}
+
+.deposit-action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.deposit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid #8091aa;
+  border-radius: 12px;
+  background: #d5dce5;
+  color: #3c4752;
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  cursor: not-allowed;
+}
+
+.not-wired-note {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-chat);
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.booking-reminder {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-chat);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.95);
+  overflow-wrap: anywhere;
+}
+
+/* 3. Week Card & Timeline Card (Kế thừa cấu trúc .chat-window) */
+.week-card.chat-window,
+.timeline-card.chat-window {
+  border: 3px solid var(--blue);
+  border-radius: var(--round);
+  background: #ffffff;
+  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
+  font-family: var(--font-chat);
+  overflow: hidden;
+}
+
+.booking-site .chat-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.booking-site .chat-header h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.booking-date-prefix {
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.booking-date-emphasis {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 4. Week Schedule (Danh sách 7 ngày đồng bộ, rõ ràng, không bị méo chữ hay lệch hàng) */
+.week-grid.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2);
+  background: #eaf5ff;
+  list-style: none;
+}
+
+.booking-site .week-grid .week-day {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-height: var(--tap-min);
+  padding: var(--space-2);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: #ffffff;
+  transition: border-color 0.15s ease;
+  overflow-wrap: anywhere;
+}
+
+.booking-site .week-grid .week-day:hover {
+  border-color: var(--blue);
+}
+
+.booking-site .week-grid .week-day span:first-child {
+  flex: 0 0 auto;
+  min-width: 4.8rem;
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.booking-site .week-grid .week-day strong {
+  flex: 0 0 auto;
+  min-width: 3.2rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--deep-blue);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.booking-site .week-grid .week-day span:last-child {
+  flex: 1 1 auto;
+  margin-left: auto;
+  text-align: right;
+  font-family: var(--font-chat);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.week-day.is-booked {
+  background: var(--lime);
+  border: 2px solid var(--lime-ink);
+  box-shadow: 0 4px 14px rgba(159, 229, 28, 0.4);
+}
+
+.booking-site .week-grid .week-day.is-booked span:first-child,
+.booking-site .week-grid .week-day.is-booked strong,
+.booking-site .week-grid .week-day.is-booked span:last-child {
+  color: var(--lime-ink);
+  font-weight: 700;
+}
+
+.booking-site .week-grid .week-day.is-booked span:last-child {
+  font-weight: 800;
+}
+
+/* 5. Timeline Card (Kế thừa bong bóng tin nhắn .message) */
+.appointment-timeline.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-3);
+  background: #eaf5ff;
+  list-style: none;
+}
+
+.appointment-item {
+  padding: var(--space-3);
+  border-radius: 16px;
+  font-family: var(--font-chat);
+  line-height: 1.45;
+  font-size: 0.95rem;
+}
+
+.appointment-item p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.appointment-item strong,
+.appointment-item s {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mốc giờ trùng (Clash) - hiển thị bằng chữ và gạch ngang rõ ràng */
+.appointment-item.is-unavailable {
+  background: #fff1f2;
+  border: 2px solid #e11d48;
+  color: #881337;
+}
+
+.appointment-item.is-unavailable s {
+  font-weight: 700;
+  color: #881337;
+}
+
+.appointment-item.is-unavailable strong {
+  color: #881337;
+}
+
+/* Mốc 1: Makeup với Mai (Phong cách .message--duk màu lime) */
+.appointment-item--makeup {
+  background: var(--lime);
+  color: var(--lime-ink);
+  border-bottom-left-radius: 4px;
+}
+
+.appointment-item--makeup strong,
+.appointment-item--makeup span {
+  color: var(--lime-ink);
+}
+
+/* Mốc 2: Chụp với Tuấn (Phong cách .message--guest màu trắng có viền xanh) */
+.appointment-item--shoot {
+  background: #ffffff;
+  border: 2px solid var(--deep-blue);
+  color: var(--ink);
+  border-bottom-right-radius: 4px;
+}
+
+.appointment-item--shoot strong {
+  color: var(--deep-blue);
+}
+
+/* 6. Location Card (Kế thừa cấu trúc .note-card) */
+.location-card.note-card {
+  border: 2px solid #b4ef62;
+  border-radius: var(--round);
+  background: #e6ffce;
+  padding: var(--space-4);
+  font-family: var(--font-chat);
+}
+
+.location-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  color: var(--deep-blue);
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  margin: 0 0 var(--space-2);
+}
+
+.studio-name {
+  margin: 0 0 var(--space-2);
+  color: var(--deep-blue);
+  font-family: var(--font-chakra);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.location-card address {
+  font-style: normal;
+  font-family: var(--font-chat);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid #b4ef62;
+  border-radius: 12px;
+  padding: var(--space-3);
+  margin: 0 0 var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.not-wired-label,
+.selected-photos-label {
+  display: inline-block;
+  font-family: var(--font-chakra);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  background: rgba(255, 255, 255, 0.75);
+  padding: var(--space-1) var(--space-3);
+  border-radius: 8px;
+  margin: 0 var(--space-2) var(--space-2) 0;
+  overflow-wrap: anywhere;
+}
+
+/* 7. Return link & role handoff */
+.booking-site .booking-return.role-handoff {
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  border-top: 2px dashed #9dd65b;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.booking-site .booking-return p {
+  color: var(--ink-muted);
+  font-family: var(--font-chat);
+  font-size: 0.95rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-site .booking-return-link.pink-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 12px;
+  background: var(--pink);
+  color: #ffffff;
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.booking-site .booking-return-link.pink-cta:hover {
+  background: #c31856;
+  transform: translateY(-1px);
+}
+
+/* 8. Responsive Media Queries cho booking */
+@media (min-width: 768px) {
+  .booking-main {
+    padding: var(--space-6);
+  }
+
+  .booking-page-heading h1 {
+    font-size: 2.5rem;
+  }
+
+  .booking-site .chat-header h2 {
+    font-size: 1.625rem;
+  }
+
+  .booking-date-emphasis {
+    font-size: 2rem;
+  }
+
+  .week-grid.chat-messages {
+    padding: var(--space-3);
+  }
+
+  .booking-site .week-grid .week-day {
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+@media (min-width: 1280px) {
+  .booking-main {
+    padding: var(--space-6) max(var(--space-6), calc((100% - 74rem) / 2));
+  }
+
+  .booking-layout {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--space-5);
+  }
+
+  .booking-site .location-card {
+    grid-column: 1 / -1;
+  }
+}
