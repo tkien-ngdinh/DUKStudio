@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#037cff">
+  <meta name="description" content="DUKStudio — Dịch vụ chụp ảnh và tư vấn kỷ yếu, tốt nghiệp và chân dung.">
+  <title>DUKStudio — Dịch vụ chụp ảnh và tư vấn</title>
+  <!-- CSS dùng chung duy nhất cho cả 3 màn hình đồ án: không phụ thuộc CDN, mở trực tiếp offline -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site" id="dau-trang">
+    <header class="site-header">
+      <div class="brand-block">
+        <a class="brand-link" href="index.html" aria-label="DUKStudio — Trang chủ">
+          <img class="brand-logo" src="assets/logo.svg" alt="DUKStudio">
+        </a>
+        <p class="brand-caption">&lt; studio ảnh tốt nghiệp &gt;</p>
+      </div>
+
+      <!-- Điều hướng chính theo noi-dung.md (chỉ link tới trang có thật) -->
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <a class="nav-link is-active" href="index.html" aria-current="page">Dịch vụ</a>
+        <a class="nav-link" href="booking.html">Lịch chụp của tôi</a>
+      </nav>
+
+      <!-- Khối tài khoản khách hàng Linh (Customer) theo kịch bản GradStudio -->
+      <div class="user-badge" aria-label="Tài khoản khách hàng đang đăng nhập">
+        <div class="user-avatar" aria-hidden="true">
+          <span class="avatar-letter">L</span>
+          <span class="online-dot" title="Khách hàng đang trực tuyến"></span>
+        </div>
+        <div class="user-meta">
+          <strong class="user-name">Linh</strong>
+          <span class="user-role">Customer</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-illustration">
+          <div class="hero-feather">
+            <img src="assets/hero.svg" alt="Sticker DUKStudio màu xanh, hồng và xanh lime. Good Service.">
+          </div>
+        </div>
+        <div class="hero-copy">
+          <h1 id="hero-title">Lưu lại ngày ra trường</h1>
+          <p>Tư vấn trong chat.</p>
+          <a class="pink-cta" href="#dich-vu">Xem gói chụp</a>
+        </div>
+      </section>
+
+
+      <section class="section services" id="dich-vu" aria-labelledby="services-title">
+        <div class="section-intro">
+          <p class="eyebrow">&lt; Dịch vụ &gt;</p>
+          <h2 id="services-title">Dịch vụ</h2>
+          <p class="section-microcopy">Một lịch hẹn cho cả buổi chụp — từ hỏi giá, chốt giờ đến nhận ảnh. ✳</p>
+        </div>
+
+        <div class="packages">
+          <article class="package package--lime">
+            <div class="package-top"><span>01 / gói chụp</span><span class="package-mark" aria-hidden="true">✳</span></div>
+            <div class="package-inner">
+              <p class="package-kicker">cùng nhau!</p>
+              <h3>Kỷ yếu lớp</h3>
+              <p class="package-description">Chụp cả lớp và nhóm nhỏ ngoài trời hoặc trong studio, một bạn đại diện lớp quản lý booking.</p>
+            </div>
+            <div class="package-bottom">
+              <p class="package-price">Từ <strong>350.000đ</strong><small>/người</small></p>
+              <span class="package-chat-hint">Tư vấn qua chat bên dưới ↓</span>
+            </div>
+          </article>
+
+          <article class="package package--blue">
+            <div class="package-top"><span>02 / gói chụp nổi bật</span><span class="package-mark" aria-hidden="true">✦</span></div>
+            <div class="package-inner">
+              <p class="package-kicker">best day!</p>
+              <!-- Mô tả gói dài để kiểm tra không tràn text theo noi-dung.md -->
+              <h3>Gói Tốt nghiệp Premium — 2 giờ — 30 ảnh chỉnh</h3>
+              <p class="package-description">Gói Tốt nghiệp Premium dành cho bạn muốn một buổi chụp trọn vẹn trong ngày lễ tốt nghiệp: 2 giờ chụp với nhiếp ảnh gia và phòng chụp được xếp riêng, trang điểm cơ bản với thợ trang điểm của studio, 30 ảnh được chỉnh sửa kỹ do chính bạn chọn từ bộ ảnh xem trước, cùng đường dẫn tải ảnh gốc đã chỉnh gửi qua email sau khi bạn thanh toán phần còn lại. Bạn có thể thêm thuê lễ phục và phụ kiện nếu cần.</p>
+            </div>
+            <div class="package-bottom">
+              <p class="package-price">Trọn gói <strong>1.800.000đ</strong></p>
+              <span class="package-chat-hint">Tư vấn qua chat bên dưới ↓</span>
+            </div>
+          </article>
+
+          <article class="package package--pink">
+            <div class="package-top"><span>03 / gói chụp</span><span class="package-mark" aria-hidden="true">✿</span></div>
+            <div class="package-inner">
+              <p class="package-kicker">say cheese!</p>
+              <h3>Chân dung/CV</h3>
+              <p class="package-description">Ảnh chân dung nền đơn giản cho hồ sơ xin việc, LinkedIn và CV.</p>
+            </div>
+            <div class="package-bottom">
+              <p class="package-price">Từ <strong>690.000đ</strong></p>
+              <span class="package-chat-hint">Tư vấn qua chat bên dưới ↓</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section chat-section" id="tu-van" aria-labelledby="chat-title">
+        <div class="section-intro">
+          <p class="eyebrow">&lt; Tư vấn &gt;</p>
+          <h2 id="chat-title">Trò chuyện với studio</h2>
+          <p class="section-microcopy">Có gì cứ hỏi nha.</p>
+        </div>
+
+        <div class="chat-layout">
+          <article class="chat-window" aria-label="Hội thoại mẫu giữa Linh và DUKStudio">
+            <div class="chat-header">
+              <div class="chat-icon" aria-hidden="true">DUK</div>
+              <div class="chat-heading"><h3>DUKStudio</h3><p>Good Service. ♡</p></div>
+              <span class="chat-state">Đang tư vấn</span>
+            </div>
+            <ol class="chat-messages">
+              <li class="chat-date">Thứ Bảy, 24/10/2026 · đoạn chat mẫu</li>
+              <li class="message message--guest">
+                <p class="message-person">Linh · 10:02</p>
+                <p>Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?</p>
+              </li>
+              <li class="message message--duk">
+                <p class="message-person">DUKStudio · 10:03</p>
+                <p>Chào Linh, studio đã nhận câu hỏi. Studio sẽ kiểm tra lịch thợ trang điểm, nhiếp ảnh gia và phòng chụp rồi trả lời bạn trong chat này.</p>
+              </li>
+            </ol>
+            <div class="chat-form">
+              <label for="chat-message">Tin nhắn gửi studio</label>
+              <div class="chat-controls">
+                <textarea id="chat-message" rows="2" placeholder="Nhắn DUK nè..." disabled></textarea>
+                <button type="button" disabled>Gửi</button>
+              </div>
+              <p class="chat-hint">Chưa có ở bản mẫu này</p>
+            </div>
+          </article>
+
+          <aside class="note-card" aria-labelledby="process-title">
+            <p class="eyebrow">&lt; Quy trình &gt;</p>
+            <h3 id="process-title">Quy trình đặt lịch</h3>
+            <ol class="steps">
+              <li>
+                <span>01</span>
+                <div>
+                  <strong>Hỏi</strong>
+                  <p>Xem gói và nhắn cho studio, nêu loại chụp, giờ mong muốn, và phần thêm như trang điểm.</p>
+                </div>
+              </li>
+              <li>
+                <span>02</span>
+                <div>
+                  <strong>Kiểm tra và thống nhất</strong>
+                  <p>Studio kiểm tra lịch từng nhân viên và phòng chụp. Nếu trùng, studio nói rõ lý do và đề xuất giờ khác; bạn đồng ý trong khung chat.</p>
+                </div>
+              </li>
+              <li>
+                <span>03</span>
+                <div>
+                  <strong>Đặt cọc 30%</strong>
+                  <p>Bạn xem lại lịch ở Lịch chụp của tôi và đặt cọc 30%. Studio chỉ giữ lịch sau khi bạn đặt cọc thành công và studio kiểm tra lại nhân sự, phòng chụp.</p>
+                </div>
+              </li>
+              <li>
+                <span>04</span>
+                <div>
+                  <strong>Chụp và nhận ảnh</strong>
+                  <p>Sau buổi chụp, bạn chọn ảnh cần chỉnh, thanh toán 70% còn lại và nhận ảnh qua đường dẫn.</p>
+                </div>
+              </li>
+            </ol>
+            <p class="note-small">Studio chỉ giữ lịch sau khi bạn đặt cọc 30% thành công và studio kiểm tra lại nhân sự, phòng chụp.</p>
+
+            <!-- Link chuyển tiếp vai trò thực tế theo kịch bản GradStudio (Fix these #2 / Rule 1, 4) -->
+            <div class="role-handoff" role="note" aria-label="Tiếp tục luồng hệ thống">
+              <span class="role-handoff-hint">Đến đây Admin Thảo của studio tiếp tục xử lý:</span>
+              <a class="role-handoff-link" href="studio.html">Studio staff: open this conversation ↗</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-head">
+        <img src="assets/logo.svg" alt="DUKStudio">
+        <span>Một lịch hẹn cho cả buổi chụp — từ hỏi giá, chốt giờ đến nhận ảnh. ♡</span>
+      </div>
+      <div class="footer-meta">
+        <p><strong>DUKStudio</strong> — Giờ mở cửa: Thứ Hai – Chủ nhật, 08:30–19:00 — Email: lienhe@dukstudio.example</p>
+      </div>
+      <nav aria-label="Điều hướng chân trang">
+        <a href="index.html" aria-current="page">Dịch vụ</a>
+        <a href="booking.html">Lịch chụp của tôi</a>
+        <span class="footer-disabled">Chính sách đặt cọc — Chưa có</span>
+        <span class="footer-disabled">Liên hệ — Chưa có</span>
+      </nav>
+      <p class="footer-caption">&lt; studio ảnh tốt nghiệp &gt;</p>
+    </footer>
+  </div>
+</body>
+</html>
