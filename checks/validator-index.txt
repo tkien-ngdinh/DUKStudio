@@ -1,0 +1,12 @@
+W3C Nu HTML Checker (https://validator.w3.org/nu/)
+File: index.html
+Date checked: 2026-11-08
+Encoding: UTF-8
+Document Type: HTML5
+
+Document checking completed. No errors or warnings to show.
+The document validates according to the specified schema(s).
+Used the schema for HTML + SVG + MathML + RDFa.
+Used the HTML parser.
+Total errors: 0
+Total warnings: 0
