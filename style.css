@@ -1,6 +1,6 @@
 /* DUKSTUDIO — Mobile-first: 360px -> 768px -> 1280px
    html nối file này bằng <link rel="stylesheet" href="style.css">.
-   Font Malika nội bộ đã được đính kèm tại assets/1FTV-VIP-Malika.ttf (100% offline, ai mở cũng thấy). */
+   Font Malika cục bộ (assets/1FTV-VIP-Malika.ttf) chỉ dùng cho tiêu đề h1, h2, h3; nội dung dùng system font stack. */
 
 @font-face {
   font-family: "DUK Malika";
@@ -21,35 +21,51 @@
   --space-6: 48px;
 
   /* Colors với chuẩn tương phản WCAG AA (Contrast Ratio >= 4.5:1) */
-  --blue: #0369d6;            /* Contrast ~4.54:1 với chữ trắng */
+  --blue: #0369d6;            /* Contrast ~5.25:1 với chữ trắng */
   --deep-blue: #044fb5;       /* Contrast >6.2:1 với chữ trắng */
   --lime: #b9f656;            /* Xanh neon thương hiệu DUK */
-  --lime-ink: #325800;        /* Contrast >5.7:1 trên nền trắng/paper */
+  --lime-ink: #325800;        /* Contrast >5.7:1 trên nền trắng/lime */
+  --lime-soft: #e6ffce;
+  --lime-border: #b4ef62;
+  --lime-dashed: #9dd65b;
+  --forest-ink: #143805;
   --pink: #db2366;            /* Contrast >4.7:1 với chữ trắng */
+  --pink-hover: #c31856;
   --pink-light: #ffcae2;
   --paper: #fcfcfd;
+  --white: #ffffff;
   --ink: #172538;             /* Contrast >14.7:1 trên nền sáng */
   --ink-muted: #3d4f66;       /* Contrast >6.2:1 trên nền sáng */
   --light-blue: #eaf5ff;
+  --surface-tint: #f3f9ff;
+  --readonly-bg: #e3effc;
   --online-green: #15803d;    /* Màu xanh lá trạng thái hoạt động */
   --border-color: #cbd5e1;
+  --divider: #e2e8f0;
+  --disabled-border: #8091aa;
+  --disabled-bg: #d5dce5;
+  --disabled-ink: #3c4752;
+  --clash-ink: #8f0f45;
+  --danger-ink: #881337;
+  --warning-ink: #78350f;
 
   /* Touch Target & Bo góc */
   --tap-min: 44px;            /* Chuẩn vùng chạm tiếp cận tối thiểu 44px */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --round: 20px;
 
   /* Typography */
-  /* 1. Font Display / Tiêu đề: Font Malika (có sẵn file tại assets/1FTV-VIP-Malika.ttf) */
-  --font-display: "DUK Malika", "1FTV VIP Malika", system-ui, sans-serif;
+  /* 1. Font Display / Tiêu đề h1, h2, h3: Malika cục bộ với fallback system stack */
+  --font-display: "DUK Malika", "1FTV VIP Malika", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* 2. Font Tech/Services: Góc cạnh, dứt khoát như Chakra Petch */
-  --font-chakra: "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
-
-  /* 3. Font Chat: Trung tính, thoáng mắt, cực nét như Montserrat */
+  /* 2. System font stack cho nội dung, nhãn và chat (đủ dấu tiếng Việt trên mọi HĐH) */
   --font-chat: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-chakra: var(--font-chat);
 
-  /* Font mặc định cho body */
-  --font: var(--font-display);
+  /* Font mặc định cho body và toàn bộ nội dung */
+  --font: var(--font-chat);
 }
 
 /* ==========================================================================
@@ -109,7 +125,8 @@ table {
 a:focus-visible,
 button:focus-visible,
 textarea:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 3px solid var(--deep-blue);
   outline-offset: 3px;
 }
@@ -131,15 +148,6 @@ p {
 /* ==========================================================================
    LAYOUT CONTAINER (MOBILE-FIRST)
    ========================================================================== */
-.container {
-  width: 100%;
-  max-width: 90rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--space-4);
-  padding-right: var(--space-4);
-}
-
 .site {
   max-width: 90rem;
   margin: 0 auto;
@@ -178,10 +186,10 @@ p {
 }
 
 .brand-caption {
-  margin: -4px 0 0;
+  margin: 0;
   color: var(--lime-ink);
   font-family: var(--font-chakra);
-  font-size: .82rem;
+  font-size: .875rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: .03em;
@@ -200,12 +208,13 @@ p {
 .main-nav .nav-link {
   display: inline-flex;
   align-items: center;
+  min-width: var(--tap-min);
   min-height: var(--tap-min);
   padding: var(--space-1) var(--space-3);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-chakra);
   font-weight: 600;
-  font-size: .88rem;
+  font-size: .875rem;
   color: var(--ink);
   transition: background 0.2s ease, color 0.2s ease;
 }
@@ -217,7 +226,7 @@ p {
 
 .main-nav .nav-link.is-active {
   background: var(--deep-blue);
-  color: #ffffff;
+  color: var(--white);
 }
 
 /* Khối tài khoản khách hàng Linh (Customer) trên header */
@@ -249,13 +258,13 @@ p {
 
 .user-avatar .online-dot {
   position: absolute;
-  bottom: -1px;
-  right: -1px;
+  bottom: 0;
+  right: 0;
   width: 11px;
   height: 11px;
   border-radius: 50%;
   background: var(--online-green);
-  border: 2px solid #ffffff;
+  border: 2px solid var(--white);
 }
 
 .user-meta {
@@ -266,64 +275,20 @@ p {
 
 .user-name {
   font-family: var(--font-chat);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--ink);
 }
 
 .user-role {
   font-family: var(--font-chakra);
-  font-size: 0.75rem;
+  font-size: .875rem;
   font-weight: 700;
   color: var(--lime-ink);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* ==========================================================================
-   TABLE WRAPPER (RESPONSIVE CHO CẢ 3 MÀN HÌNH ĐỒ ÁN)
-   ========================================================================== */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin: var(--space-3) 0 var(--space-4);
-  background: #ffffff;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(23, 37, 56, 0.05);
-}
-
-.table-wrapper:focus-visible {
-  outline: 2px solid var(--deep-blue);
-  outline-offset: 2px;
-}
-
-.table-wrapper table {
-  width: 100%;
-  min-width: 520px;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 1rem;
-}
-
-.table-wrapper th,
-.table-wrapper td {
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.table-wrapper th {
-  background: var(--light-blue);
-  color: var(--deep-blue);
-  font-family: var(--font-chakra);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.table-wrapper tr:last-child td {
-  border-bottom: 0;
-}
 .hero { padding: var(--space-2) var(--space-5) var(--space-6); }
 .hero-illustration { width: 100%; max-width: 20rem; margin: 0 auto; }
 .hero-feather { position: relative; isolation: isolate; }
@@ -331,12 +296,12 @@ p {
   content: "";
   position: absolute;
   z-index: -1;
-  bottom: -3%;
+  bottom: -3%; /* hiệu ứng bóng trang trí dưới hero, không phải khoảng cách layout */
   left: 9%;
   width: 82%;
   height: 19%;
   border-radius: 50%;
-  background: #037cff;
+  background: var(--blue);
   opacity: .62;
   filter: blur(18px);
   transform: scaleY(.6);
@@ -363,22 +328,22 @@ p {
   align-items: center;
   justify-content: center;
   padding: var(--space-2) var(--space-3);
-  border-radius: 6px;
-  color: #fff;
-  background: #db2366;
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  background: var(--pink);
   text-decoration: none;
   font-size: 1.06rem;
   line-height: 1;
   box-shadow: inset 0 2px 0 rgba(255,255,255,.18);
 }
-.pink-cta:hover { background: #c31856; }
+.pink-cta:hover { background: var(--pink-hover); }
 .section { padding: var(--space-6) var(--space-5); }
 .section-intro { margin-bottom: var(--space-4); }
 .eyebrow {
   margin-bottom: 0;
   color: var(--lime-ink);
   font-family: var(--font-chakra);
-  font-size: .95rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: .03em;
 }
@@ -400,7 +365,7 @@ p {
   padding: var(--space-4);
   overflow-wrap: anywhere;
   /* Hiệu ứng feather đổ bóng mờ mềm, clean và đồng bộ tone màu như hero */
-  box-shadow: 0 16px 28px -4px rgba(3, 124, 255, 0.22), 0 6px 14px -2px rgba(23, 37, 56, 0.08);
+  box-shadow: 0 16px 28px -4px rgba(3, 105, 214, 0.22), 0 6px 14px -2px rgba(23, 37, 56, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .package:hover {
@@ -416,15 +381,15 @@ p {
 }
 .package--blue {
   background: var(--blue);
-  color: white;
+  color: var(--white);
   border-color: rgba(7, 86, 199, 0.4);
-  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
 }
 .package--blue:hover {
-  box-shadow: 0 20px 40px -4px rgba(3, 124, 255, 0.7), 0 10px 20px -2px rgba(7, 86, 199, 0.25);
+  box-shadow: 0 20px 40px -4px rgba(3, 105, 214, 0.7), 0 10px 20px -2px rgba(7, 86, 199, 0.25);
 }
 .package--pink {
-  background: #ffcae2;
+  background: var(--pink-light);
   border-color: rgba(206, 36, 103, 0.25);
   box-shadow: 0 16px 32px -4px rgba(255, 79, 131, 0.45), 0 8px 18px -2px rgba(7, 86, 199, 0.12);
 }
@@ -434,7 +399,7 @@ p {
 .package-top, .package-bottom { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); }
 .package-top {
   font-family: var(--font-chakra);
-  font-size: .88rem;
+  font-size: .875rem;
   font-weight: 600;
   letter-spacing: .02em;
 }
@@ -449,7 +414,8 @@ p {
   margin-bottom: var(--space-3);
   background: var(--paper);
   color: var(--deep-blue);
-  font-size: .84rem;
+  font-size: .875rem;
+  font-weight: 700;
   transform: rotate(-3deg);
   word-spacing: 0.1em;
 }
@@ -466,45 +432,25 @@ p {
 .package-bottom { margin-top: auto; flex-wrap: wrap; }
 .package-price {
   margin: 0;
-  font-size: .94rem;
+  font-size: 1rem;
   word-spacing: 0.08em;
 }
-.package-price strong { font-size: 1.12rem; }
-.package-price small { font-size: .81rem; }
-.package-bottom a,
+.package-price strong { font-size: 1.15rem; }
+.package-price small { font-size: .875rem; }
 .package-chat-hint {
-  display: inline-flex;
-  min-width: var(--tap-min);
-  min-height: var(--tap-min);
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2) var(--space-3);
-  border-radius: 12px;
-  text-decoration: none;
-  background: white;
-  color: var(--deep-blue);
-  box-shadow: 0 4px 10px rgba(7, 86, 199, 0.08);
   font-family: var(--font-chakra);
-  font-weight: 700;
-  font-size: .88rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  font-size: .875rem;
+  color: inherit;
 }
-.package-bottom a:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(7, 86, 199, 0.2);
-}
-.package-chat-hint {
-  cursor: default;
-}
-.chat-section { background: #f3f9ff; }
+.chat-section { background: var(--surface-tint); }
 .chat-layout { display: grid; grid-template-columns: minmax(0,1fr); gap: var(--space-5); }
 .chat-window {
   min-width: 0;
-  overflow: hidden;
   border: 3px solid var(--blue);
   border-radius: var(--round);
-  background: white;
-  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
+  background: var(--white);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
   font-family: var(--font-chat);
 }
 .chat-header {
@@ -512,8 +458,9 @@ p {
   gap: var(--space-2);
   align-items: center;
   padding: var(--space-3);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: var(--blue);
-  color: white;
+  color: var(--white);
   font-family: var(--font-chat);
 }
 .chat-icon {
@@ -522,10 +469,10 @@ p {
   flex: none;
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--lime);
   color: var(--deep-blue);
-  font-size: .78rem;
+  font-size: .875rem;
   font-weight: 700;
   font-family: var(--font-chakra);
 }
@@ -538,7 +485,7 @@ p {
 }
 .chat-heading p {
   margin: 0;
-  font-size: .82rem;
+  font-size: .875rem;
   font-family: var(--font-chat);
   opacity: .95;
 }
@@ -547,9 +494,9 @@ p {
   margin-left: auto;
   padding: var(--space-1) var(--space-2);
   border-radius: 100px;
-  color: #143805;
+  color: var(--forest-ink);
   background: var(--lime);
-  font-size: .72rem;
+  font-size: .875rem;
   font-weight: 600;
   font-family: var(--font-chat);
   text-align: center;
@@ -559,41 +506,37 @@ p {
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-3);
-  background: #eaf5ff;
+  background: var(--light-blue);
   font-family: var(--font-chat);
 }
-.chat-date {
-  margin: 0;
-  text-align: center;
-  color: #344b66;
-  font-size: .76rem;
-  font-family: var(--font-chat);
+.chat-messages:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 .message {
   max-width: 92%;
   padding: var(--space-3);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   font-family: var(--font-chat);
   line-height: 1.45;
-  font-size: .92rem;
+  font-size: 1rem;
 }
 .message p { margin-bottom: 0; }
 .message-person {
   color: #28405f;
   margin-bottom: var(--space-1);
-  font-size: .78rem;
+  font-size: .875rem;
   font-weight: 700;
   font-family: var(--font-chat);
 }
-.message--guest { align-self: flex-end; background: #fff; border-bottom-right-radius: 4px; }
-.message--duk { align-self: flex-start; background: var(--lime); border-bottom-left-radius: 4px; }
+.message--guest { align-self: flex-end; background: var(--white); border-bottom-right-radius: var(--space-1); }
+.message--duk { align-self: flex-start; background: var(--lime); border-bottom-left-radius: var(--space-1); }
 .chat-form { padding: var(--space-3); font-family: var(--font-chat); }
 .chat-form label {
   display: block;
   margin-bottom: var(--space-2);
   font-family: var(--font-chat);
   font-weight: 600;
-  font-size: .88rem;
+  font-size: 1rem;
 }
 .chat-controls { display: flex; align-items: stretch; gap: var(--space-2); }
 .chat-controls textarea {
@@ -601,8 +544,8 @@ p {
   min-height: var(--tap-min);
   flex: 1;
   padding: var(--space-2) var(--space-3);
-  border: 2px solid #8091aa;
-  border-radius: 12px;
+  border: 2px solid var(--disabled-border);
+  border-radius: var(--radius-md);
   background: #f3f5f6;
   color: #24374c;
   resize: vertical;
@@ -613,26 +556,26 @@ p {
   min-width: var(--tap-min);
   min-height: var(--tap-min);
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-3);
-  background: #d5dce5;
-  color: #3c4752;
+  background: var(--disabled-bg);
+  color: var(--disabled-ink);
   font-family: var(--font-chat);
   font-weight: 600;
   font-size: 1rem;
 }
 .chat-hint {
-  font-size: .82rem;
+  font-size: .875rem;
   color: #435268;
   margin: var(--space-2) 0 0;
   font-family: var(--font-chat);
 }
 .note-card {
   min-width: 0;
-  border: 2px solid #b4ef62;
+  border: 2px solid var(--lime-border);
   border-radius: var(--round);
   padding: var(--space-4);
-  background: #e6ffce;
+  background: var(--lime-soft);
   font-family: var(--font-chat);
 }
 .note-card h3 { margin: 0 0 var(--space-4); color: var(--blue); font-size: 1.45rem; word-spacing: 0.12em; }
@@ -642,10 +585,10 @@ p {
   gap: var(--space-3);
   align-items: flex-start;
   padding: var(--space-2) var(--space-3);
-  border-radius: 12px;
-  background: white;
+  border-radius: var(--radius-md);
+  background: var(--white);
   font-family: var(--font-chat);
-  font-size: .95rem;
+  font-size: 1rem;
 }
 .steps span {
   display: grid;
@@ -655,10 +598,10 @@ p {
   height: 36px;
   border-radius: 50%;
   background: var(--blue);
-  color: white;
+  color: var(--white);
   font-family: var(--font-chakra);
   font-weight: 700;
-  margin-top: 2px;
+  margin-top: var(--space-1);
 }
 .steps li strong {
   display: block;
@@ -668,13 +611,13 @@ p {
 }
 .steps li p {
   margin: 0;
-  font-size: .88rem;
+  font-size: 1rem;
   color: var(--ink);
   line-height: 1.4;
 }
 .note-small {
   margin: 0;
-  font-size: .9rem;
+  font-size: 1rem;
   color: #244633;
   font-family: var(--font-chat);
   line-height: 1.45;
@@ -684,14 +627,14 @@ p {
 .role-handoff {
   margin-top: var(--space-4);
   padding-top: var(--space-3);
-  border-top: 2px dashed #9dd65b;
+  border-top: 2px dashed var(--lime-dashed);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 .role-handoff-hint {
   font-family: var(--font-chat);
-  font-size: .88rem;
+  font-size: .875rem;
   font-weight: 600;
   color: #17421c;
 }
@@ -702,11 +645,11 @@ p {
   min-height: var(--tap-min);
   padding: var(--space-2) var(--space-3);
   background: var(--deep-blue);
-  color: #ffffff;
-  border-radius: 12px;
+  color: var(--white);
+  border-radius: var(--radius-md);
   font-family: var(--font-chat);
   font-weight: 700;
-  font-size: .95rem;
+  font-size: 1rem;
   text-align: center;
   box-shadow: 0 4px 12px rgba(4, 79, 181, 0.25);
   transition: transform 0.2s ease, background 0.2s ease;
@@ -716,32 +659,36 @@ p {
   transform: translateY(-1px);
 }
 .role-handoff-link:focus-visible {
-  outline: 3px solid #172538;
+  outline: 3px solid var(--ink);
   outline-offset: 2px;
 }
-.site-footer { padding: var(--space-5); background: var(--blue); color: white; }
+.site-footer { padding: var(--space-5); background: var(--blue); color: var(--white); }
 .footer-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .footer-head img { width: 9rem; }
-.footer-head span { font-size: .91rem; }
+.footer-head span { font-size: 1rem; }
 .footer-meta {
   margin: var(--space-3) 0 var(--space-2);
-  font-size: .92rem;
+  font-size: 1rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.95);
 }
 .site-footer nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: var(--space-3) 0 var(--space-4); }
 .site-footer nav a { display: inline-flex; align-items: center; min-width: var(--tap-min); min-height: var(--tap-min); border-bottom: 2px solid rgba(255,255,255,.65); text-decoration: none; }
+.site-footer a:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 3px;
+}
 .footer-disabled {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap-min);
-  font-size: .88rem;
-  color: rgba(255, 255, 255, 0.65);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
   font-style: italic;
 }
 .site-footer > p {
   margin: 0;
-  font-size: .88rem;
+  font-size: .875rem;
   font-family: var(--font-chakra);
   letter-spacing: .03em;
 }
@@ -750,7 +697,7 @@ p {
 @media (min-width: 768px) {
   .site-header { padding: var(--space-4) var(--space-6) 0; }
   .brand-link { width: 11.5rem; }
-  .brand-caption { font-size: .85rem; }
+  .brand-caption { font-size: .875rem; }
   .main-nav { order: 2; width: auto; padding-top: 0; }
   .user-badge { order: 3; padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1); }
   .user-avatar { width: 38px; height: 38px; }
@@ -783,6 +730,19 @@ p {
    STUDIO.HTML — Màn 2 (Admin Thảo): chỉ thêm class mới, không sửa quy tắc cũ
    ========================================================================== */
 .main-nav--studio { flex-wrap: wrap; }
+.nav-current {
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--deep-blue);
+  color: var(--white);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  font-size: .875rem;
+}
 .nav-pending {
   display: inline-flex;
   align-items: center;
@@ -790,15 +750,10 @@ p {
   min-height: var(--tap-min);
   padding: var(--space-1) var(--space-3);
   font-family: var(--font-chakra);
-  font-size: .88rem;
+  font-size: .875rem;
   font-style: italic;
   color: var(--ink-muted);
   overflow-wrap: anywhere;
-}
-
-select:focus-visible {
-  outline: 3px solid var(--deep-blue);
-  outline-offset: 3px;
 }
 
 .studio-main {
@@ -820,7 +775,7 @@ select:focus-visible {
   margin: 0;
   padding: var(--space-3);
   border-left: 6px solid var(--pink);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--pink-light);
   color: var(--ink);
   font-family: var(--font-chat);
@@ -838,7 +793,7 @@ select:focus-visible {
   padding: var(--space-3);
   border: 4px solid var(--deep-blue);
   border-radius: var(--round);
-  background: #ffffff;
+  background: var(--white);
   font-family: var(--font-chat);
   overflow-wrap: anywhere;
 }
@@ -857,7 +812,7 @@ select:focus-visible {
   align-items: flex-start;
   padding: var(--space-3);
   border: 2px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--paper);
 }
 .convo.is-selected { border-color: var(--deep-blue); background: var(--light-blue); }
@@ -869,7 +824,7 @@ select:focus-visible {
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--deep-blue);
-  color: #ffffff;
+  color: var(--white);
   font-weight: 700;
 }
 .convo-body { min-width: 0; flex: 1; }
@@ -880,35 +835,35 @@ select:focus-visible {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
   border-radius: 100px;
-  font-size: .88rem;
+  font-size: .875rem;
   font-weight: 700;
   border: 2px solid currentColor;
 }
 .status-badge--new { background: #ffe3e3; color: #7a1010; }
 .status-badge--advising { background: var(--light-blue); color: var(--deep-blue); }
-.status-badge--agreed { background: var(--lime); color: #143805; }
+.status-badge--agreed { background: var(--lime); color: var(--forest-ink); }
 .status-badge--done { background: #e5e9ef; color: var(--ink); }
 .selected-mark {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--deep-blue);
-  color: #ffffff;
-  font-size: .88rem;
+  color: var(--white);
+  font-size: .875rem;
   font-weight: 700;
 }
 
 /* Vùng B: chat */
 .studio-chat { margin-bottom: var(--space-4); }
-.studio-chat-name { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.chat-heading .studio-chat-name { margin: 0; font-size: 1.1rem; font-weight: 700; opacity: 1; overflow-wrap: anywhere; }
 .studio-chat .message { max-width: 100%; overflow-wrap: anywhere; }
 .studio-chat .message--system {
   align-self: stretch;
   background: var(--lime);
   border: 2px dashed var(--lime-ink);
-  color: #143805;
+  color: var(--forest-ink);
 }
-.studio-chat .message--system .message-person { color: #143805; }
+.studio-chat .message--system .message-person { color: var(--forest-ink); }
 .studio-chat .chat-hint { color: var(--ink-muted); }
 
 /* Form Booking mới — điểm nhấn của trang, cùng tông xanh thương hiệu */
@@ -920,10 +875,10 @@ select:focus-visible {
   padding: var(--space-4) var(--space-3);
   border: 4px solid var(--deep-blue);
   border-radius: var(--round);
-  background: #f3f9ff;
+  background: var(--surface-tint);
   color: var(--ink);
   font-family: var(--font-chat);
-  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.28);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.28);
 }
 .booking-form h3 {
   margin: 0;
@@ -944,15 +899,16 @@ select:focus-visible {
   min-height: var(--tap-min);
   padding: var(--space-2) var(--space-3);
   border: 2px solid var(--deep-blue);
-  border-radius: 12px;
-  background: #ffffff;
+  border-radius: var(--radius-md);
+  background: var(--white);
   color: var(--ink);
   font-size: 1rem;
   overflow-wrap: anywhere;
 }
-.field input[readonly] { background: #e3effc; }
+.field input[readonly],
+.field textarea[readonly] { background: var(--readonly-bg); }
 .field textarea { resize: vertical; }
-.field-note { margin: 0; color: var(--ink-muted); }
+.field-note { margin: 0; font-size: .875rem; color: var(--ink-muted); }
 .field-trio { display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 .slot-group {
   min-width: 0;
@@ -960,7 +916,7 @@ select:focus-visible {
   gap: var(--space-2);
   padding: var(--space-3);
   border: 2px solid var(--deep-blue);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 }
 .slot-group legend { padding: 0 var(--space-2); }
 .slot-option {
@@ -969,7 +925,7 @@ select:focus-visible {
   align-items: center;
   min-height: var(--tap-min);
   padding: var(--space-2);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 .slot-option input {
@@ -980,16 +936,16 @@ select:focus-visible {
   accent-color: var(--deep-blue);
 }
 .slot-option label { flex: 1; min-width: 0; min-height: var(--tap-min); display: flex; align-items: center; }
-.slot-option.is-chosen { background: var(--lime); color: #143805; font-weight: 700; }
+.slot-option.is-chosen { background: var(--lime); color: var(--forest-ink); font-weight: 700; }
 .slot-option.is-unavailable { background: #eef2f7; color: var(--ink-muted); text-decoration: line-through; }
 .submit-booking {
   min-width: var(--tap-min);
   min-height: var(--tap-min);
   padding: var(--space-3) var(--space-4);
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--pink);
-  color: #ffffff;
+  color: var(--white);
   font-size: 1.25rem;
   font-weight: 700;
   cursor: pointer;
@@ -998,7 +954,7 @@ select:focus-visible {
 .submit-booking:hover { background: #b81c55; }
 .submit-booking:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .flow-note { margin: 0; font-weight: 700; color: var(--deep-blue); }
-.form-fine { margin: 0; font-size: .9rem; color: var(--ink-muted); }
+.form-fine { margin: 0; font-size: .875rem; color: var(--ink-muted); }
 
 /* Vùng C: lịch tài nguyên — mỗi dòng là một thẻ đọc đủ chữ, không cuộn ngang */
 .calendar-list { min-width: 0; }
@@ -1017,8 +973,8 @@ select:focus-visible {
   padding: var(--space-3);
   border: 2px solid #b7cdea;
   border-top: 6px solid var(--blue);
-  border-radius: 12px;
-  background: #f3f9ff;
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
   overflow-wrap: anywhere;
 }
 .resource-table tbody th {
@@ -1032,7 +988,7 @@ select:focus-visible {
   content: attr(data-label);
   display: block;
   color: var(--ink-muted);
-  font-size: .88rem;
+  font-size: .875rem;
   font-weight: 700;
 }
 .resource-table td[data-label="Ghi chú"] { font-weight: 700; }
@@ -1041,15 +997,15 @@ select:focus-visible {
   border-top-color: var(--pink);
   background: #ffe9f2;
 }
-.resource-table .row-clash th { color: #8f0f45; }
-.resource-table .row-clash td::before { color: #8f0f45; }
+.resource-table .row-clash th { color: var(--clash-ink); }
+.resource-table .row-clash td::before { color: var(--clash-ink); }
 .resource-table .row-clash td[data-label="Ghi chú"] {
   margin-top: var(--space-2);
   padding: var(--space-2);
   border: 2px solid var(--pink);
-  border-radius: 8px;
-  background: #ffffff;
-  color: #8f0f45;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--clash-ink);
 }
 
 @media (min-width: 768px) {
@@ -1066,8 +1022,8 @@ select:focus-visible {
 @media (min-width: 1280px) {
   .studio-title { font-size: 3.1rem; }
   /* Laptop: hàng 1 = danh sách | chat, hàng 2 = lịch tài nguyên | form Booking mới.
-     Các ô cùng hàng cao bằng nhau (grid stretch); thẻ giữ chiều cao tự nhiên, phần thừa là khoảng trắng cuối ô. */
-  .studio-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+     Dùng align-items: start để mỗi vùng giữ chiều cao tự nhiên, tránh khoảng trắng thừa dưới hai ô tham khảo. */
+  .studio-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
   .area-list { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; }
   .area-chat { grid-column: 2; grid-row: 1; }
   .area-calendar { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; }
@@ -1088,7 +1044,7 @@ select:focus-visible {
    BOOKING — SCREEN 3 STYLES (GRADSTUDIO / DUKSTUDIO)
    Kế thừa hoàn toàn ngôn ngữ thiết kế từ index.html:
    - Màu sắc: Electric blue, Lime neon, Deep blue, Pink CTA, Paper, Ink.
-   - Typography: Font Malika (Display), Chakra/Bahnschrift (Labels), Chat (Body).
+   - Typography: Font Malika cục bộ (h1, h2, h3), System font stack (nhãn và nội dung).
    - Component: .package--blue, .chat-window, .note-card, .role-handoff.
    ========================================================================== */
 
@@ -1152,9 +1108,9 @@ select:focus-visible {
   border: 2px solid rgba(7, 86, 199, 0.4);
   border-radius: var(--round);
   background: var(--blue);
-  color: #ffffff;
+  color: var(--white);
   padding: var(--space-4);
-  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -1170,7 +1126,7 @@ select:focus-visible {
   font-family: var(--font-display);
   font-size: 1.75rem;
   line-height: 1.2;
-  color: #ffffff;
+  color: var(--white);
   letter-spacing: 0.02em;
   word-spacing: 0.12em;
   margin: 0;
@@ -1192,7 +1148,7 @@ select:focus-visible {
   background: var(--paper);
   color: var(--deep-blue);
   font-family: var(--font-chakra);
-  font-size: 0.92rem;
+  font-size: .875rem;
   font-weight: 700;
   transform: rotate(-2deg);
   margin: 0;
@@ -1201,12 +1157,12 @@ select:focus-visible {
 
 .booking-package {
   margin: var(--space-3) 0 var(--space-3);
-  color: var(--lime);
-  font-family: var(--font-display);
+  color: var(--white);
+  font-family: var(--font-chat);
   font-size: 1.35rem;
   font-weight: 700;
   line-height: 1.3;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   overflow-wrap: anywhere;
 }
 
@@ -1217,7 +1173,7 @@ select:focus-visible {
   margin: 0;
   padding: var(--space-3);
   background: rgba(255, 255, 255, 0.96);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   box-shadow: inset 0 2px 4px rgba(7, 86, 199, 0.08);
   font-family: var(--font-chat);
 }
@@ -1228,7 +1184,7 @@ select:focus-visible {
   align-items: baseline;
   gap: var(--space-2);
   padding-bottom: var(--space-2);
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--divider);
 }
 
 .booking-details > div:last-child {
@@ -1240,7 +1196,7 @@ select:focus-visible {
   color: var(--ink-muted);
   font-family: var(--font-chakra);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: 1rem;
   overflow-wrap: anywhere;
 }
 
@@ -1249,7 +1205,7 @@ select:focus-visible {
   color: var(--ink);
   font-family: var(--font-chat);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
   text-align: right;
   overflow-wrap: anywhere;
 }
@@ -1257,7 +1213,7 @@ select:focus-visible {
 /* Card chi phí & phân bổ cọc 30% (Đã xử lý bỏ đường kẻ trùng lặp) */
 .booking-summary .cost-heading {
   margin: var(--space-4) 0 var(--space-2);
-  color: #ffffff;
+  color: var(--white);
   font-family: var(--font-chakra);
   font-size: 1rem;
   font-weight: 700;
@@ -1270,7 +1226,7 @@ select:focus-visible {
   margin: 0;
   padding: var(--space-3);
   background: rgba(255, 255, 255, 0.96);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   box-shadow: inset 0 2px 4px rgba(7, 86, 199, 0.08);
   font-family: var(--font-chat);
   font-variant-numeric: tabular-nums;
@@ -1282,7 +1238,7 @@ select:focus-visible {
   align-items: baseline;
   gap: var(--space-2);
   padding-bottom: var(--space-2);
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--divider);
 }
 
 .booking-costs > div:last-child {
@@ -1292,7 +1248,7 @@ select:focus-visible {
 
 .booking-costs dt {
   color: var(--ink-muted);
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
@@ -1310,7 +1266,7 @@ select:focus-visible {
   background: var(--lime);
   color: var(--lime-ink);
   padding: var(--space-2) var(--space-3);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border-bottom: 0;
   margin: 0;
 }
@@ -1318,7 +1274,7 @@ select:focus-visible {
 .booking-costs .deposit-row dt {
   color: var(--lime-ink);
   font-family: var(--font-chakra);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
@@ -1333,17 +1289,17 @@ select:focus-visible {
   margin: var(--space-3) 0 0;
   padding: var(--space-3);
   border: 2px solid #b45309;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: #fffbeb;
-  color: #78350f;
+  color: var(--warning-ink);
   font-family: var(--font-chat);
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
 
 .booking-hold-warning strong {
-  color: #78350f;
+  color: var(--warning-ink);
 }
 
 .deposit-action {
@@ -1361,10 +1317,10 @@ select:focus-visible {
   min-height: var(--tap-min);
   width: 100%;
   padding: var(--space-2) var(--space-4);
-  border: 2px solid #8091aa;
-  border-radius: 12px;
-  background: #d5dce5;
-  color: #3c4752;
+  border: 2px solid var(--disabled-border);
+  border-radius: var(--radius-md);
+  background: var(--disabled-bg);
+  color: var(--disabled-ink);
   font-family: var(--font-chakra);
   font-weight: 700;
   font-size: 1rem;
@@ -1375,7 +1331,7 @@ select:focus-visible {
 .not-wired-note {
   margin: var(--space-1) 0 0;
   font-family: var(--font-chat);
-  font-size: 0.84rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.95);
   font-style: italic;
   overflow-wrap: anywhere;
@@ -1384,7 +1340,7 @@ select:focus-visible {
 .booking-reminder {
   margin: var(--space-2) 0 0;
   font-family: var(--font-chat);
-  font-size: 0.88rem;
+  font-size: 1rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.95);
   overflow-wrap: anywhere;
@@ -1395,10 +1351,9 @@ select:focus-visible {
 .timeline-card.chat-window {
   border: 3px solid var(--blue);
   border-radius: var(--round);
-  background: #ffffff;
-  box-shadow: 0 16px 32px -4px rgba(3, 124, 255, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
+  background: var(--white);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
   font-family: var(--font-chat);
-  overflow: hidden;
 }
 
 .booking-site .chat-header {
@@ -1406,8 +1361,9 @@ select:focus-visible {
   align-items: baseline;
   gap: var(--space-2);
   padding: var(--space-3);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: var(--blue);
-  color: #ffffff;
+  color: var(--white);
 }
 
 .booking-site .chat-header h2 {
@@ -1416,7 +1372,7 @@ select:focus-visible {
   align-items: baseline;
   gap: 0 var(--space-2);
   margin: 0;
-  color: #ffffff;
+  color: var(--white);
   font-size: 1.5rem;
   line-height: 1.2;
 }
@@ -1425,14 +1381,14 @@ select:focus-visible {
   font-family: var(--font-chakra);
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .booking-date-emphasis {
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--white);
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
 }
@@ -1444,7 +1400,8 @@ select:focus-visible {
   gap: var(--space-2);
   margin: 0;
   padding: var(--space-2);
-  background: #eaf5ff;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: var(--light-blue);
   list-style: none;
 }
 
@@ -1456,8 +1413,8 @@ select:focus-visible {
   min-height: var(--tap-min);
   padding: var(--space-2);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: #ffffff;
+  border-radius: var(--radius-sm);
+  background: var(--white);
   transition: border-color 0.15s ease;
   overflow-wrap: anywhere;
 }
@@ -1479,7 +1436,7 @@ select:focus-visible {
 .booking-site .week-grid .week-day strong {
   flex: 0 0 auto;
   min-width: 3.2rem;
-  font-family: var(--font-display);
+  font-family: var(--font-chat);
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--deep-blue);
@@ -1493,7 +1450,7 @@ select:focus-visible {
   margin-left: auto;
   text-align: right;
   font-family: var(--font-chat);
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--ink-muted);
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -1523,16 +1480,17 @@ select:focus-visible {
   gap: var(--space-3);
   margin: 0;
   padding: var(--space-3);
-  background: #eaf5ff;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: var(--light-blue);
   list-style: none;
 }
 
 .appointment-item {
   padding: var(--space-3);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   font-family: var(--font-chat);
   line-height: 1.45;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .appointment-item p {
@@ -1549,23 +1507,23 @@ select:focus-visible {
 .appointment-item.is-unavailable {
   background: #fff1f2;
   border: 2px solid #e11d48;
-  color: #881337;
+  color: var(--danger-ink);
 }
 
 .appointment-item.is-unavailable s {
   font-weight: 700;
-  color: #881337;
+  color: var(--danger-ink);
 }
 
 .appointment-item.is-unavailable strong {
-  color: #881337;
+  color: var(--danger-ink);
 }
 
 /* Mốc 1: Makeup với Mai (Phong cách .message--duk màu lime) */
 .appointment-item--makeup {
   background: var(--lime);
   color: var(--lime-ink);
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: var(--space-1);
 }
 
 .appointment-item--makeup strong,
@@ -1575,10 +1533,10 @@ select:focus-visible {
 
 /* Mốc 2: Chụp với Tuấn (Phong cách .message--guest màu trắng có viền xanh) */
 .appointment-item--shoot {
-  background: #ffffff;
+  background: var(--white);
   border: 2px solid var(--deep-blue);
   color: var(--ink);
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: var(--space-1);
 }
 
 .appointment-item--shoot strong {
@@ -1587,9 +1545,9 @@ select:focus-visible {
 
 /* 6. Location Card (Kế thừa cấu trúc .note-card) */
 .location-card.note-card {
-  border: 2px solid #b4ef62;
+  border: 2px solid var(--lime-border);
   border-radius: var(--round);
-  background: #e6ffce;
+  background: var(--lime-soft);
   padding: var(--space-4);
   font-family: var(--font-chat);
 }
@@ -1614,12 +1572,12 @@ select:focus-visible {
 .location-card address {
   font-style: normal;
   font-family: var(--font-chat);
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--ink);
-  background: #ffffff;
-  border: 1px solid #b4ef62;
-  border-radius: 12px;
+  background: var(--white);
+  border: 1px solid var(--lime-border);
+  border-radius: var(--radius-md);
   padding: var(--space-3);
   margin: 0 0 var(--space-3);
   overflow-wrap: anywhere;
@@ -1629,12 +1587,12 @@ select:focus-visible {
 .selected-photos-label {
   display: inline-block;
   font-family: var(--font-chakra);
-  font-size: 0.88rem;
+  font-size: .875rem;
   font-style: italic;
   color: var(--ink-muted);
   background: rgba(255, 255, 255, 0.75);
   padding: var(--space-1) var(--space-3);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin: 0 var(--space-2) var(--space-2) 0;
   overflow-wrap: anywhere;
 }
@@ -1643,7 +1601,7 @@ select:focus-visible {
 .booking-site .booking-return.role-handoff {
   margin-top: var(--space-5);
   padding-top: var(--space-3);
-  border-top: 2px dashed #9dd65b;
+  border-top: 2px dashed var(--lime-dashed);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -1653,7 +1611,7 @@ select:focus-visible {
 .booking-site .booking-return p {
   color: var(--ink-muted);
   font-family: var(--font-chat);
-  font-size: 0.95rem;
+  font-size: 1rem;
   margin: 0;
   overflow-wrap: anywhere;
 }
@@ -1665,9 +1623,9 @@ select:focus-visible {
   min-width: var(--tap-min);
   min-height: var(--tap-min);
   padding: var(--space-2) var(--space-4);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--pink);
-  color: #ffffff;
+  color: var(--white);
   font-family: var(--font-chat);
   font-size: 1rem;
   font-weight: 700;
@@ -1677,7 +1635,7 @@ select:focus-visible {
 }
 
 .booking-site .booking-return-link.pink-cta:hover {
-  background: #c31856;
+  background: var(--pink-hover);
   transform: translateY(-1px);
 }
 
