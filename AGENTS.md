@@ -21,7 +21,7 @@ Every difference from the teacher's brief must be listed in `PROTOTYPE.md` ("Cha
 - JavaScript is optional and may be used for progressive enhancement. Every page must retain all content, styling, navigation and essential behavior with JavaScript disabled; the prototype must not depend on JavaScript.
 - Pages must open directly from the folder (`open index.html`, no server, no network needed).
 - Every page starts with: `<!doctype html>`, `<html lang="vi">`, `<meta charset="utf-8">`, `<meta name="viewport" content="width=device-width, initial-scale=1">`, a unique `<title>`, and `<link rel="stylesheet" href="style.css">`.
-- Font: system font stack only (`system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`). It must render Vietnamese diacritics.
+- Font: system font stack (`system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`) for body text, controls, labels and chat; local `assets/1FTV-VIP-Malika.ttf` (`"DUK Malika"`, `1FTV VIP Malika Regular`, © 2026 Artolabs) is allowed strictly for `h1`, `h2`, `h3` headings with the system font stack as fallback (source, license and exception documented in `PROTOTYPE.md`; no CDN or web-font service). Both must render Vietnamese diacritics cleanly.
 - Spacing scale, defined once in `:root` and used for all margin, padding and gap:
   `--space-1: 4px; --space-2: 8px; --space-3: 16px; --space-4: 24px; --space-5: 32px; --space-6: 48px;`
   Do not write other spacing values (no `13px`, no random `margin: 22px`). `0` and `auto` are fine.
@@ -43,7 +43,7 @@ Every difference from the teacher's brief must be listed in `PROTOTYPE.md` ("Cha
 - Landmarks on every page: one `<header>`, one `<nav>` with `aria-label`, one `<main>`, one `<footer>`.
 - Exactly one `<h1>` per page. Headings go in order (`h1` → `h2` → `h3`), never skipping a level. Every `<section>` and `<aside>` has a heading.
 - `<a href>` = go to another page. `<button type="...">` = an action. Never a `<div>` or `<span>` clickable, never `onclick`, never a `<button>` inside an `<a>` (or the reverse).
-- Moving to the next screen: `<a href="studio.html">` or a `<form action="booking.html">` with a submit button. Relative file names only: `studio.html`, never `/studio.html`, never `studio/`, never `#`.
+- Moving to the next screen: `<a href="studio.html">` or a `<form action="booking.html">` with a submit button. Relative file names only: `studio.html`, never `/studio.html`, never `studio/`, never empty `#` (in-page section anchors such as `#dich-vu` for same-page jumps are allowed and documented in `PROTOTYPE.md`).
 - Every input, select and textarea has a visible `<label for>` matching a unique `id`. Placeholders do not count as labels.
 - Every `<img>` has `alt`: meaningful alt, or `alt=""` if decorative. Decorative inline SVG gets `aria-hidden="true"`.
 - No duplicate `id`. No obsolete tags or attributes. Lists use `<ul>`/`<ol>`; tables only for tabular data, with `<th scope>`.
@@ -68,13 +68,13 @@ Status names (use exactly these):
 
 State each page shows when opened directly:
 - **`index.html`**: hero and intro, three services (Kỷ yếu lớp từ 350.000đ/người; Tốt nghiệp từ 1.800.000đ; Chân dung/CV từ 690.000đ), and the chat with Linh's message "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?" and the studio reply that it will check. The chat is a normal block in the page flow, never a floating overlay. The process section must not say the studio holds the time at "Chốt lịch"; say the slot is held only after the 30% deposit succeeds and resources are re-checked.
-- **`studio.html`**: the moment after Linh agrees. Conversation `Đã chốt lịch`; 14:00 selected; `Tạo booking` enabled; note "09:00 trùng lịch vì Mai bận 08:00–12:00". Three areas (conversation list, chat with the full `Booking mới` form below it, resource calendar with suggested times) stacked in one column at 360px and side by side at 1280px, all in normal page flow. The resource calendar is a readable list or table where every booking shows full text (person/room, customer, time, type); a clash is always written in words, never only colour or hatching.
+- **`studio.html`**: the moment after Linh agrees. Conversation `Đã chốt lịch`; 14:00 selected; `Tạo booking` enabled; note "09:00 trùng lịch vì Mai bận 08:00–12:00". Three areas (conversation list, chat with the full `Booking mới` form below it, resource calendar with suggested times) stacked in one column at 360px and side by side at 1280px (implemented as a balanced 2×2 grid with `align-items: start` placing conversation list and resource calendar in column 1 and chat above `Booking mới` in column 2, as documented in `PROTOTYPE.md`), all in normal page flow. The resource calendar is a readable list or card-style table (native `<table>` with `<thead>` and `<th scope>`) where every booking shows full text (person/room, customer, time, type); a clash is always written in words, never only colour or hatching.
 - **`booking.html`**: `Lịch chụp của tôi`; GS-1024 `Đã thống nhất lịch · Chờ cọc 30%`; week view marking 24/10; timeline with 09:00 struck through (plus the text "không khả dụng") and make-up 13:00–14:00 with Mai, shoot 14:00–16:00 with Tuấn; package, price, deposit, remainder. Never say the slot is held before the deposit succeeds.
 
 Main-flow links (labels a user understands, who continues stated):
 - `index.html` → `studio.html`: "Studio staff: open this conversation".
 - `studio.html` → `booking.html`: the enabled `Tạo booking` submit button (form `action="booking.html"`) plus a note "Customer (Linh): see it in Lịch chụp của tôi".
-- `booking.html`: the final flow button links back to `index.html` ("Dịch vụ"); payment itself remains a disabled not-wired action.
+- `booking.html`: the final flow button links back to `index.html` ("Quay về trang Dịch vụ"); payment itself remains a disabled not-wired action.
 
 Not-wired controls: `Thanh toán cọc 30%`, sending a message, and any action without a page are `<button type="button" disabled>` with a short visible note (for example "Chưa có ở bản mẫu này"). Nav, footer and other controls that lead nowhere (Booking, Lịch studio, Tài nguyên, Nhân sự, Xem đường đi, Ảnh đã chọn, footer links) are removed, or shown as plain text marked "Chưa có", never as links. List them in `PROTOTYPE.md` section "Not wired yet".
 
