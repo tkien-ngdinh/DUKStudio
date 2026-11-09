@@ -1,12 +1,17 @@
-W3C Nu HTML Checker (https://validator.w3.org/nu/)
+W3C / Nu HTML5 Checker (https://validator.w3.org/nu/ & https://html5.validator.nu/)
 File: studio.html (Screen 2: Advice and clash handling)
-Date checked: 2026-11-08
+Date checked: 2026-11-09
 Encoding: UTF-8
 Document Type: HTML5
 
+Endpoint & evidence notes:
+- Manual browser check via https://validator.w3.org/nu/#file (File Upload, checked with vnu 26.11.5): Document checking completed. No errors or warnings to show. Screenshot saved in checks/validator-studio.png.
+- Automated endpoint verification via https://html5.validator.nu/ (curl multipart upload, out=json): HTTP 200 -> 0 errors, 0 info/warnings.
+
+Note on T8 (card-style resource table):
+- Removed redundant child ARIA roles and role="table" from <table class="resource-table">, relying on native <table>, <thead>, <th scope="col">, and <th scope="row">.
+- Verified in Chrome Headless Accessibility.getFullAXTree at 360px, 768px, and 1280px (JS off) that full table semantics remain intact (tables: 1, rowgroups: 1, rows: 7, columnheaders: 5, rowheaders: 6, cells: 24).
+
 Document checking completed. No errors or warnings to show.
-The document validates according to the specified schema(s).
-Used the schema for HTML + SVG + MathML + RDFa.
-Used the HTML parser.
 Total errors: 0
 Total warnings: 0

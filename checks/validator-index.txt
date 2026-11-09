@@ -1,12 +1,13 @@
-W3C Nu HTML Checker (https://validator.w3.org/nu/)
-File: index.html
-Date checked: 2026-11-08
+W3C / Nu HTML5 Checker (https://validator.w3.org/nu/ & https://html5.validator.nu/)
+File: index.html (Screen 1: Services and chat)
+Date checked: 2026-11-09
 Encoding: UTF-8
 Document Type: HTML5
 
+Endpoint & evidence notes:
+- Manual browser check via https://validator.w3.org/nu/#file (File Upload, checked with vnu 26.11.4): Document checking completed. No errors or warnings to show. Screenshot saved in checks/validator-index.png.
+- Automated endpoint verification via https://html5.validator.nu/ (curl multipart upload, out=json): HTTP 200 -> 0 errors, 0 info/warnings.
+
 Document checking completed. No errors or warnings to show.
-The document validates according to the specified schema(s).
-Used the schema for HTML + SVG + MathML + RDFa.
-Used the HTML parser.
 Total errors: 0
 Total warnings: 0
