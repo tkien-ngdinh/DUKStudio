@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#037cff">
+  <meta name="theme-color" content="#0369d6">
   <meta name="description" content="DUKStudio — Admin Thảo đọc lại cuộc trò chuyện, xem lịch tài nguyên và tạo booking mới cho Linh.">
   <title>DUKStudio — Tư vấn và tạo booking (Admin)</title>
   <link rel="stylesheet" href="style.css">
@@ -19,14 +19,15 @@
       </div>
 
       <nav class="main-nav main-nav--studio" aria-label="Điều hướng chính">
-        <a class="nav-link is-active" href="index.html">Dịch vụ</a>
+        <a class="nav-link" href="index.html">Dịch vụ</a>
+        <span class="nav-current" aria-current="page">Tư vấn (Admin)</span>
         <span class="nav-pending">Booking · Chưa có</span>
         <span class="nav-pending">Lịch studio · Chưa có</span>
         <span class="nav-pending">Tài nguyên · Chưa có</span>
         <span class="nav-pending">Nhân sự · Chưa có</span>
       </nav>
 
-      <div class="user-badge">
+      <div class="user-badge" role="group" aria-label="Tài khoản quản trị đang đăng nhập">
         <div class="user-avatar" aria-hidden="true">
           <span class="avatar-letter">T</span>
         </div>
@@ -49,8 +50,8 @@
         <section class="studio-panel area-list" aria-labelledby="list-title">
           <h2 id="list-title">Danh sách cuộc trò chuyện</h2>
           <ul class="convo-list">
-            <li class="convo is-selected">
-              <span class="convo-avatar" aria-hidden="true">N</span>
+            <li class="convo is-selected" aria-current="true">
+              <span class="convo-avatar" aria-hidden="true">L</span>
               <div class="convo-body">
                 <p class="convo-name">Nguyễn Thị Thúy Linh · Lớp Kỷ yếu 12A3 Trường THPT Chuyên Lê Hồng Phong</p>
                 <p class="convo-last">Dạ em đồng ý 14:00 ạ.</p>
@@ -133,7 +134,7 @@
 
             <div class="field">
               <label for="bk-customer">Khách hàng</label>
-              <input id="bk-customer" name="customer" type="text" readonly value="Nguyễn Thị Thúy Linh · Lớp Kỷ yếu 12A3 Trường THPT Chuyên Lê Hồng Phong">
+              <textarea id="bk-customer" name="customer" rows="3" readonly>Nguyễn Thị Thúy Linh · Lớp Kỷ yếu 12A3 Trường THPT Chuyên Lê Hồng Phong</textarea>
             </div>
 
             <div class="field">
@@ -234,7 +235,7 @@
                 <tr>
                   <th scope="row">Mai (trang điểm)</th>
                   <td data-label="Giờ">08:00–12:00</td>
-                  <td data-label="Khách">Đỗ Minh Châu (GS-1017)</td>
+                  <td data-label="Khách">Phan Ngọc Anh (GS-1017)</td>
                   <td data-label="Loại">Trang điểm, Tốt nghiệp cá nhân</td>
                   <td data-label="Ghi chú">Đã đặt lịch</td>
                 </tr>
@@ -286,7 +287,7 @@
         <span>Một lịch hẹn cho cả buổi chụp — từ hỏi giá, chốt giờ đến nhận ảnh. ♡</span>
       </div>
       <div class="footer-meta">
-        <p><strong>DUKStudio</strong> — Giờ mở cửa: Thứ Hai – Chủ nhật, 08:30–19:00 — Email: lienhe@dukstudio.example</p>
+        <p><strong>DUKStudio</strong> — Giờ mở cửa: Thứ Hai – Chủ nhật, 08:00–19:00 — Email: lienhe@dukstudio.example</p>
       </div>
       <nav aria-label="Điều hướng chân trang">
         <a href="index.html">Dịch vụ</a>
