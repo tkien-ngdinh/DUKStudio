@@ -709,10 +709,9 @@ p {
   .section { padding: var(--space-6); }
   .section h2 { font-size: 2rem; }
   .packages { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .chat-layout { grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); gap: var(--space-5); }
 }
 
-/* Desktop: ba gói song song, phần chat và bước kế tiếp tách hai cột */
+/* Desktop: ba gói song song */
 @media (min-width: 1280px) {
   .site-header { padding: var(--space-5) var(--space-6) 0; }
   .hero { padding: var(--space-5) var(--space-6) var(--space-6); max-width: 74rem; margin: auto; }
@@ -856,14 +855,40 @@ p {
 /* Vùng B: chat */
 .studio-chat { margin-bottom: var(--space-4); }
 .chat-heading .studio-chat-name { margin: 0; font-size: 1.1rem; font-weight: 700; opacity: 1; overflow-wrap: anywhere; }
-.studio-chat .message { max-width: 100%; overflow-wrap: anywhere; }
-.studio-chat .message--system {
-  align-self: stretch;
-  background: var(--lime);
-  border: 2px dashed var(--lime-ink);
-  color: var(--forest-ink);
+.studio-chat .message { max-width: 92%; overflow-wrap: anywhere; }
+
+/* Phía Admin Thảo: Thảo gửi ở bên phải (nền trắng), Linh là khách ở bên trái (nền xanh lime) */
+.studio-chat .message--admin {
+  align-self: flex-end;
+  background: var(--white);
+  border-bottom-right-radius: var(--space-1);
+  border-bottom-left-radius: var(--radius-lg);
 }
-.studio-chat .message--system .message-person { color: var(--forest-ink); }
+.studio-chat .message--customer {
+  align-self: flex-start;
+  background: var(--lime);
+  border-bottom-left-radius: var(--space-1);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+/* Thông báo hệ thống căn giữa, không hộp nền xanh */
+.studio-chat .message--system {
+  align-self: center;
+  max-width: 100%;
+  background: transparent;
+  border: none;
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+  color: #1b3d63;
+}
+.studio-chat .message--system .message-person {
+  color: #1b3d63;
+  text-align: center;
+  margin-bottom: var(--space-1);
+}
+.studio-chat .message--system p {
+  text-align: center;
+}
 .studio-chat .chat-hint { color: var(--ink-muted); }
 
 /* Form Booking mới — điểm nhấn của trang, cùng tông xanh thương hiệu */
