@@ -12,7 +12,8 @@
       "name": "Admin Thảo",
       "email": "thao@gradstudio.test",
       "password": "thao-demo",
-      "role": "admin"
+      "role": "admin",
+      "createdAt": "2026-10-01T08:00:00Z"
     },
     {
       "id": "u-mai",
@@ -158,6 +159,36 @@
           "timestamp": "2026-10-20T17:24:00Z"
         }
       ]
+    }
+  ],
+  "jobs": [
+    {
+      "id": "job-101",
+      "staffId": "u-tuan",
+      "bookingId": "GS-1023",
+      "role": "photographer",
+      "service": "Gói Tốt nghiệp Premium",
+      "customerName": "Nguyễn Thị Thúy Linh",
+      "date": "2026-10-24",
+      "time": "14:00 - 16:00",
+      "location": "Phòng B",
+      "status": "assigned",
+      "previewsCount": 0,
+      "previews": []
+    },
+    {
+      "id": "job-102",
+      "staffId": "u-mai",
+      "bookingId": "GS-1023",
+      "role": "makeup",
+      "service": "Gói Tốt nghiệp Premium",
+      "customerName": "Nguyễn Thị Thúy Linh",
+      "date": "2026-10-24",
+      "time": "13:00 - 14:00",
+      "location": "Phòng B",
+      "status": "assigned",
+      "previewsCount": 0,
+      "previews": []
     }
   ],
   "settings": {
