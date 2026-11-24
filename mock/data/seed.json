@@ -1,0 +1,167 @@
+{
+  "users": [
+    {
+      "id": "u-linh",
+      "name": "Nguyễn Thị Thúy Linh",
+      "email": "linh@gradstudio.test",
+      "password": "linh-demo",
+      "role": "customer"
+    },
+    {
+      "id": "u-thao",
+      "name": "Admin Thảo",
+      "email": "thao@gradstudio.test",
+      "password": "thao-demo",
+      "role": "admin"
+    },
+    {
+      "id": "u-mai",
+      "name": "Thợ makeup Mai",
+      "email": "mai@gradstudio.test",
+      "password": "mai-demo",
+      "role": "staff"
+    },
+    {
+      "id": "u-tuan",
+      "name": "Thợ chụp Tuấn",
+      "email": "tuan@gradstudio.test",
+      "password": "tuan-demo",
+      "role": "staff"
+    },
+    {
+      "id": "u-superadmin",
+      "name": "Superadmin",
+      "email": "superadmin@gradstudio.test",
+      "password": "superadmin-demo",
+      "role": "superadmin"
+    }
+  ],
+  "services": [
+    {
+      "id": "s-ky-yeu",
+      "title": "Kỷ yếu lớp",
+      "startingPrice": 350000,
+      "unit": "người",
+      "description": "Dành cho tập thể lớp, lưu giữ thanh xuân trường học với concept sáng tạo.",
+      "packages": [
+        {
+          "id": "pkg-ky-yeu-standard",
+          "name": "Gói Kỷ yếu Tiêu chuẩn",
+          "price": 350000,
+          "durationHours": 3,
+          "features": ["30 file ảnh chỉnh sửa", "Chụp toàn bộ lớp + ảnh nhóm nhỏ", "Hỗ trợ 1 trang phục cử nhân"]
+        }
+      ]
+    },
+    {
+      "id": "s-tot-nghiep",
+      "title": "Tốt nghiệp cá nhân / nhóm",
+      "startingPrice": 1800000,
+      "unit": "buổi",
+      "description": "Chụp tốt nghiệp phong cách thanh lịch, chuyên nghiệp, hỗ trợ makeup và phòng studio hiện đại.",
+      "packages": [
+        {
+          "id": "pkg-tot-nghiep-premium",
+          "name": "Gói Tốt nghiệp Premium",
+          "price": 1800000,
+          "deposit30": 540000,
+          "remaining70": 1260000,
+          "durationHours": 2,
+          "editedPhotos": 30,
+          "features": ["2 giờ chụp studio & sân vườn", "30 ảnh chỉnh sửa chuyên sâu", "Trang điểm & làm tóc chuyên nghiệp 1 giờ", "Phòng chụp B tiện nghi"]
+        }
+      ]
+    },
+    {
+      "id": "s-chan-dung",
+      "title": "Chân dung / Profile CV",
+      "startingPrice": 690000,
+      "unit": "buổi",
+      "description": "Ảnh chân dung doanh nhân, profile xin việc, định hình hình ảnh cá nhân uy tín.",
+      "packages": [
+        {
+          "id": "pkg-chan-dung-standard",
+          "name": "Gói Chân dung Profile",
+          "price": 690000,
+          "durationHours": 1,
+          "features": ["10 ảnh chỉnh sửa hoàn thiện", "Phông nền studio chuyên nghiệp"]
+        }
+      ]
+    }
+  ],
+  "bookings": [
+    {
+      "id": "GS-1023",
+      "customerId": "u-linh",
+      "customerName": "Nguyễn Thị Thúy Linh",
+      "packageId": "pkg-tot-nghiep-premium",
+      "packageName": "Gói Tốt nghiệp Premium",
+      "shootType": "Tốt nghiệp cá nhân",
+      "date": "2026-10-24",
+      "makeupTime": "13:00 - 14:00",
+      "shootTime": "14:00 - 16:00",
+      "makeupStaff": "Mai",
+      "photographer": "Tuấn",
+      "room": "Phòng B",
+      "totalPrice": 1800000,
+      "depositAmount": 540000,
+      "remainingAmount": 1260000,
+      "status": "Chờ cọc 30%",
+      "hasDeposit": false,
+      "hasFinalPayment": false,
+      "photos": [],
+      "finalFileLink": null
+    }
+  ],
+  "conversations": [
+    {
+      "id": "c-linh-01",
+      "customerId": "u-linh",
+      "customerName": "Nguyễn Thị Thúy Linh",
+      "status": "Đã chốt lịch",
+      "lastMessageAt": "2026-10-20T17:21:00Z",
+      "bookingId": "GS-1023",
+      "messages": [
+        {
+          "id": "m-01",
+          "sender": "customer",
+          "senderName": "Linh",
+          "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?",
+          "timestamp": "2026-10-20T17:20:00Z"
+        },
+        {
+          "id": "m-02",
+          "sender": "admin",
+          "senderName": "DUKStudio",
+          "text": "Để mình kiểm tra lịch cho bạn nhé.",
+          "timestamp": "2026-10-20T17:21:00Z"
+        },
+        {
+          "id": "m-03",
+          "sender": "admin",
+          "senderName": "DUKStudio",
+          "text": "Bạn ơi, khung 09:00 ngày 24/10 bị trùng vì thợ makeup Mai bận 08:00–12:00. Studio đề xuất dời sang makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) nhé!",
+          "timestamp": "2026-10-20T17:23:00Z",
+          "proposal": {
+            "date": "2026-10-24",
+            "makeup": "13:00 - 14:00",
+            "shoot": "14:00 - 16:00",
+            "room": "Phòng B",
+            "status": "agreed"
+          }
+        },
+        {
+          "id": "m-04",
+          "sender": "customer",
+          "senderName": "Linh",
+          "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ạ!",
+          "timestamp": "2026-10-20T17:24:00Z"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "openingHours": "08:00 - 19:00",
+    "reminderHoursBefore": 24
+  }
+}
