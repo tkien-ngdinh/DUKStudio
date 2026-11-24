@@ -10,3 +10,22 @@ Thumbs.db
 
 # Local tool caches
 .impeccable/
+
+# Internal documentation and course notes (Do NOT push to GitHub)
+brief.md
+AI-LOG.md
+PLAN*.md
+project-links.txt
+SELF_ASSESSMENT_REPORT.md
+PROTOTYPE.md
+ORAL_DEFENSE*.md
+docs/*.pdf
+docs/*.txt
+docs/contract-check-README.md
+docs/contract-check.mjs
+
+# Node & Build artifacts
+node_modules/
+.env
+.env.local
+
