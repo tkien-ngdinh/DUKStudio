@@ -1,123 +1,188 @@
-# GradStudio PA#2 — Rules for the assistant
+# DUKStudio PA#3 — Complete Project Context & Assistant Rules
 
-Team project name: DUKstudio. Product name shown on the pages: **GradStudio**. Course: CSC13008 Web Application Development. Teacher's brief: "GradStudio — final project brief" (screens in `docs/pa1/`, never edit that folder).
+Team project name: **DUKStudio**. Product name displayed on pages: **GradStudio**.  
+Course: **CSC13008 Web Application Development**, HCMUS (HK1 2026–2027).  
+Assignment: **PA#3 — Front end in React on a written API contract and a mock** (7% of course, 100 points).  
+Teacher's brief: "GradStudio — final project brief" (screens in `docs/pa1/`, never edit that directory).
 
-## 1. Goal
+---
 
-Build three static, responsive HTML pages, in main-flow order:
+## 1. Project & Team Identity
 
-| Order | File | GradStudio screen | Role |
-|---|---|---|---|
-| 1 | `index.html` | Services and chat | Customer (Linh) |
-| 2 | `studio.html` | Advice and clash handling | Admin (Thảo) |
-| 3 | `booking.html` | Review the appointment and pay the deposit | Customer (Linh) |
+| # | Student Name | Student ID | Responsibilities in PA#3 |
+|:---:|---|:---:|---|
+| 1 | Nguyễn Đình Trung Kiên | 24120195 | Architecture, Core Mock Server, Auth, Staff Jobs & Admin (G2, G8, G11) |
+| 2 | Nguyễn Thanh Hạ Uyên | 24120243 | Conversations, Schedule Clash Check, Booking Administration (G4, G5, G6, G10) |
+| 3 | Dương Thị Bích Diệp | 24120247 | Catalog/Home, Customer Chat, Booking/Deposit Checkout, Photo Gallery (G1, G3, G7, G9) |
 
-Shared stylesheet: `style.css` (one file for all pages). Do not add other pages. Three finished pages beat six half-finished ones.
-Every difference from the teacher's brief must be listed in `PROTOTYPE.md` ("Changed since the brief") with a reason.
+---
 
-## 2. Stack
+## 2. System Architecture & Project Scope
 
-- Semantic HTML5 and **plain CSS only**. Framework count = 0. No CDN, no icon library, no web-font service, no build step, no `node_modules`.
-- JavaScript is optional and may be used for progressive enhancement. Every page must retain all content, styling, navigation and essential behavior with JavaScript disabled; the prototype must not depend on JavaScript.
-- Pages must open directly from the folder (`open index.html`, no server, no network needed).
-- Every page starts with: `<!doctype html>`, `<html lang="vi">`, `<meta charset="utf-8">`, `<meta name="viewport" content="width=device-width, initial-scale=1">`, a unique `<title>`, and `<link rel="stylesheet" href="style.css">`.
-- Font: system font stack (`system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`) for body text, controls, labels and chat; local `assets/1FTV-VIP-Malika.ttf` (`"DUK Malika"`, `1FTV VIP Malika Regular`, © 2026 Artolabs) is allowed strictly for `h1`, `h2`, `h3` headings with the system font stack as fallback (source, license and exception documented in `PROTOTYPE.md`; no CDN or web-font service). Both must render Vietnamese diacritics cleanly.
-- Spacing scale, defined once in `:root` and used for all margin, padding and gap:
-  `--space-1: 4px; --space-2: 8px; --space-3: 16px; --space-4: 24px; --space-5: 32px; --space-6: 48px;`
-  Do not write other spacing values (no `13px`, no random `margin: 22px`). `0` and `auto` are fine.
-- Colours, radius and `--tap-min: 44px` are also custom properties in `:root`. Check every text/background pair in the DevTools colour picker.
+The goal of PA#3 is to implement the complete 11-step main flow of GradStudio (steps G1–G11) as a Single Page Application (SPA) in `client/` using **React** and **Vite**, driven by a contract-first API and an independent mock server in `mock/server.mjs`. In PA#4, an Express backend will replace the mock server without any alterations to the React frontend.
 
-## 3. Responsive layout (mobile-first)
+- **Client (`client/`)**: Built with React 18+, Vite, and `react-router-dom` (`BrowserRouter`). All data requests use relative paths `/api/...` proxied to port 3001.
+- **Contract-first API (`docs/api/`)**: Master specification in `docs/api/README.md` and 10 detailed contract files. Front-end code must NOT be written before its corresponding endpoint contract is documented.
+- **Mock Server (`mock/server.mjs`)**: Built strictly with Node.js built-in modules (`node:http`, `node:fs`, `node:path`, `node:url`) with **zero `npm install`**. Supports 4 runtime modes (`normal`, `slow`, `error`, `empty`).
+- **Contract Verification Tool (`tools/contract-check.mjs`)**: Automated verification runner that sends example requests from `docs/api/*.md` to the live API server and checks status codes and JSON response schemas.
 
-- Write base CSS mobile-first for 360px. Use `@media (min-width: 768px)` and `@media (min-width: 1280px)` as the layout grows; at 768px, add columns only when the content remains readable, and use the wider layout at 1280px. Avoid `max-width` media queries.
-- Layout must change with the screen, not just stretch: one column at 360px, adding columns at 768px only when content remains readable, and using the wider layout at 1280px. Put page content in a centred wrapper with `max-width` (for example `80rem`); never stretch a phone column across a laptop.
-- No fixed `width`/`height` on pages, cards, chat or calendar labels. Use `max-width`, `min-width: 0`, `%`, `rem`, `fr`, `auto`.
-- Long text wraps: set `overflow-wrap: anywhere` on text containers. Each page must contain at least one long item (for example `Nguyễn Thị Thúy Linh · Lớp Kỷ yếu 12A3 Trường THPT Chuyên Lê Hồng Phong` or `Gói Tốt nghiệp Premium · 2 giờ · 30 ảnh chỉnh`) to prove it does not break the layout.
-- Images and SVG: `max-width: 100%; height: auto`.
-- Only a table may scroll horizontally, and only inside its own wrapper (`overflow-x: auto`, with a visible label). Never put `overflow-x: hidden` on `html`, `body` or any wrapper to hide overflow.
-- Do not use `position: fixed` or `position: sticky`, `100vh`/`100vw` heights or widths, or `overflow: auto/scroll` on columns. All content is read by scrolling the page.
-- Never truncate text: no `text-overflow: ellipsis`, no `line-clamp`, no clipped labels.
+---
 
-## 4. Semantics and valid HTML (0 errors on validator.w3.org/nu)
+## 3. Main User Flow (Steps G1–G11) & Business Rules
 
-- Landmarks on every page: one `<header>`, one `<nav>` with `aria-label`, one `<main>`, one `<footer>`.
-- Exactly one `<h1>` per page. Headings go in order (`h1` → `h2` → `h3`), never skipping a level. Every `<section>` and `<aside>` has a heading.
-- `<a href>` = go to another page. `<button type="...">` = an action. Never a `<div>` or `<span>` clickable, never `onclick`, never a `<button>` inside an `<a>` (or the reverse).
-- Moving to the next screen: `<a href="studio.html">` or a `<form action="booking.html">` with a submit button. Relative file names only: `studio.html`, never `/studio.html`, never `studio/`, never empty `#` (in-page section anchors such as `#dich-vu` for same-page jumps are allowed and documented in `PROTOTYPE.md`).
-- Every input, select and textarea has a visible `<label for>` matching a unique `id`. Placeholders do not count as labels.
-- Every `<img>` has `alt`: meaningful alt, or `alt=""` if decorative. Decorative inline SVG gets `aria-hidden="true"`.
-- No duplicate `id`. No obsolete tags or attributes. Lists use `<ul>`/`<ol>`; tables only for tabular data, with `<th scope>`.
-- Valid is not the same as semantic: check both the W3C result and the DevTools Accessibility pane.
+1. **G1: Discovery & Service Catalog (`/`, `GET /api/catalog`)**
+   - Public view. Displays graduation photography packages, starting prices, service features, studio amenities, and customer feedback.
+2. **G2: Authentication (`/login`, `POST /api/auth/login`, `GET /api/auth/me`, `POST /api/auth/logout`)**
+   - Single sign-in portal for all 4 roles. Issues stable tokens (`token-<account_name>`).
+3. **G3: Customer Chat & Booking Request (`/chat`, `POST /api/conversations`)**
+   - Customer initiates inquiry, specifies preferred shoot date, package, and questions.
+4. **G4: Studio Conversation Management (`/admin/conversations`, `GET /api/conversations`)**
+   - Admin manages customer inquiries organized across 4 status tabs: *Waiting for Studio*, *Studio Answered*, *Deposit Pending*, *Done*.
+5. **G5: Schedule Clash Check (`POST /api/schedule/clash-check`)**
+   - Admin checks photographer, makeup artist, and studio room availability for requested timeslots.
+   - **Mandatory narrative explanation**: Clash checks must return plain-text narrative explanations (e.g., *"09:00 clashes because Mai is busy 08:00–12:00"*) and propose alternative open slots (e.g., 14:00).
+6. **G6: Slot Proposal & Booking Creation (`POST /api/conversations/:id/propose-time`, `POST /api/conversations/:id/respond-proposal`, `POST /api/bookings`)**
+   - Admin posts proposed shoot timeslot to chat. Customer accepts or declines.
+   - **Conflict guard (409 Conflict)**: `POST /api/bookings` MUST return `409 Conflict` if the admin attempts to create a confirmed booking before the customer has explicitly agreed to the proposed slot.
+7. **G7: Booking Details, Reminders & Deposit (`/my-bookings`, `/bookings/:id`, `GET /api/reminders`, `POST /api/payments/deposit`, `/payment/test`)**
+   - Customer views shoot itinerary and automated reminders.
+   - Customer checks out with 30% deposit payment. Interactive payment sandbox at `/payment/test` provides "Success" and "Failure" outcomes simulating third-party payment gateway redirects.
+8. **G8: Staff Job Dashboard & Previews Upload (`/staff/jobs`, `GET /api/staff/jobs`, `PATCH /api/staff/jobs/:id`, `POST /api/staff/jobs/:id/previews`)**
+   - Staff (photographer/makeup artist) reviews assigned shoots. Staff updates task status and uploads watermarked preview photos.
+9. **G9: Photo Selection, Final Balance & Completion (`/gallery/:id`, `POST /api/gallery/:id/select`, `POST /api/payments/remaining`, `POST /api/gallery/:id/receive`)**
+   - Customer selects up to **30 photos** for retouching.
+   - Customer settles the remaining 70% balance.
+   - Customer clicks "Receive photos" to finalize delivery and mark the booking *Completed*.
+10. **G10: Master Booking Management & Final Links (`/admin/bookings`, `GET /api/bookings`, `PATCH /api/bookings/:id`, `POST /api/bookings/:id/final-link`)**
+    - Admin monitors all studio bookings, reschedules appointments (subject to clash check), handles cancellations, and attaches the final downloadable photo archive link.
+11. **G11: Superadmin Administration & Settings (`/superadmin/settings`, `GET /api/admin/accounts`, `POST /api/admin/accounts`, `GET /api/admin/settings`, `PUT /api/admin/settings`)**
+    - Superadmin provisions and manages Admin accounts, configures studio operating hours and automated reminder schedules. Non-superadmin requests return `403 Forbidden`.
 
-## 5. Design system
+---
 
-- Body text ≥ 16px (`1rem`). Use `rem`, not `px`, for font sizes. Smaller secondary text is allowed when it remains readable and meets the contrast requirement.
-- Contrast ≥ 4.5:1 for body text, button text and disabled-button text (verify in the DevTools colour picker; do not use pale grey).
-- At every width, every standalone button and link has `min-height: var(--tap-min)` and `min-width: var(--tap-min)`; this includes nav links, disabled buttons and footer items. Links inside a sentence are exempt.
-- Each page has one clearly most important thing (Screen 1: the studio reply to Linh's question and the three services; Screen 2: Booking mới with Tạo booking; Screen 3: the booking card with the deposit). Make it visually dominant.
-- Never use `!important` in `style.css`.
-- Every focusable element has a visible focus style.
+## 4. Demo Accounts & Authentication Tokens
 
-## 6. Content and states (one story on all pages)
+The application maintains 5 permanent demo accounts covering all 4 roles. In automated contract checking (`contract-check`), token placeholders follow the syntax `{{token:<Name in examples>}}`:
 
-Story: **Linh** wants a graduation shoot with make-up on Saturday **24/10/2026 at 09:00**. Make-up artist **Mai** is busy 08:00–12:00, so the studio proposes make-up 13:00–14:00 with **Mai** and a shoot 14:00–16:00 with **Tuấn** in **Phòng B**. Admin **Thảo** creates booking **GS-1024**, package **Gói Tốt nghiệp Premium** (2 giờ, 30 ảnh chỉnh), shoot type **Tốt nghiệp cá nhân**, price **1.800.000đ**, deposit 30% **540.000đ**, remaining **1.260.000đ**. Use real Vietnamese sample content; never Lorem ipsum.
+| Name in examples | Role | E-mail or User name | Password | Stable Token | Description |
+|---|---|---|---|---|---|
+| `linh` | customer | `linh@gradstudio.test` | `linh-demo` | `token-linh` | Customer booking graduation shoot |
+| `thao` | admin | `thao@gradstudio.test` | `thao-demo` | `token-thao` | Studio Admin managing chat, clash check & bookings |
+| `mai` | staff | `mai@gradstudio.test` | `mai-demo` | `token-mai` | Makeup artist (busy 08:00–12:00 on Oct 24) |
+| `tuan` | staff | `tuan@gradstudio.test` | `tuan-demo` | `token-tuan` | Photographer (assigned to GS-1024 / GS-1023) |
+| `superadmin` | superadmin | `superadmin@gradstudio.test` | `superadmin-demo` | `token-superadmin` | Superadmin (opening hours & reminder settings) |
 
-Status names (use exactly these):
-- Conversations: `Chưa trả lời`, `Đang tư vấn`, `Đã chốt lịch`, `Hoàn thành`.
-- Bookings: `Chờ cọc 30%` (Screen 3 may show `Đã thống nhất lịch · Chờ cọc 30%`), `Đã đặt lịch`, `Hoàn thành`. Never `Đã xác nhận` for a conversation.
+---
 
-State each page shows when opened directly:
-- **`index.html`**: hero and intro, three services (Kỷ yếu lớp từ 350.000đ/người; Tốt nghiệp từ 1.800.000đ; Chân dung/CV từ 690.000đ), and the chat with Linh's message "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?" and the studio reply that it will check. The chat is a normal block in the page flow, never a floating overlay. The process section must not say the studio holds the time at "Chốt lịch"; say the slot is held only after the 30% deposit succeeds and resources are re-checked.
-- **`studio.html`**: the moment after Linh agrees. Conversation `Đã chốt lịch`; 14:00 selected; `Tạo booking` enabled; note "09:00 trùng lịch vì Mai bận 08:00–12:00". Three areas (conversation list, chat with the full `Booking mới` form below it, resource calendar with suggested times) stacked in one column at 360px and side by side at 1280px (implemented as a balanced 2×2 grid with `align-items: start` placing conversation list and resource calendar in column 1 and chat above `Booking mới` in column 2, as documented in `PROTOTYPE.md`), all in normal page flow. The resource calendar is a readable list or card-style table (native `<table>` with `<thead>` and `<th scope>`) where every booking shows full text (person/room, customer, time, type); a clash is always written in words, never only colour or hatching.
-- **`booking.html`**: `Lịch chụp của tôi`; GS-1024 `Đã thống nhất lịch · Chờ cọc 30%`; week view marking 24/10; timeline with 09:00 struck through (plus the text "không khả dụng") and make-up 13:00–14:00 with Mai, shoot 14:00–16:00 with Tuấn; package, price, deposit, remainder. Never say the slot is held before the deposit succeeds.
+## 5. Master Endpoint Catalog (29 Endpoints)
 
-Main-flow links (labels a user understands, who continues stated):
-- `index.html` → `studio.html`: "Studio staff: open this conversation".
-- `studio.html` → `booking.html`: the enabled `Tạo booking` submit button (form `action="booking.html"`) plus a note "Customer (Linh): see it in Lịch chụp của tôi".
-- `booking.html`: the final flow button links back to `index.html` ("Quay về trang Dịch vụ"); payment itself remains a disabled not-wired action.
+| Method | Path | Roles | File Contract | Main Flow Step |
+|---|---|---|---|---|
+| POST | /api/auth/login | Visitor | `01-auth.md` | G2: Sign in to system |
+| POST | /api/auth/logout | Authenticated | `01-auth.md` | G2: Sign out |
+| GET | /api/auth/me | Authenticated | `01-auth.md` | G2: Current authenticated user profile |
+| GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, price list, accessories, feedback |
+| GET | /api/conversations | Admin | `03-chat.md` | G4: Conversation list grouped by 4 status tabs |
+| POST | /api/conversations | Customer | `03-chat.md` | G3: Customer initiates inquiry / booking request |
+| GET | /api/conversations/:id | Customer, Admin | `03-chat.md` | G3, G4: Conversation details and message history |
+| POST | /api/conversations/:id/messages | Customer, Admin | `03-chat.md` | G3, G4: Send new message |
+| POST | /api/conversations/:id/propose-time | Admin | `03-chat.md` | G5, G6: Admin posts proposed shoot schedule to chat |
+| POST | /api/conversations/:id/respond-proposal | Customer | `03-chat.md` | G6: Customer accepts or rejects proposed shoot schedule |
+| POST | /api/schedule/clash-check | Admin | `04-schedule.md` | G5: Check staff/room availability & suggest free slots |
+| POST | /api/bookings | Admin | `05-bookings.md` | G6: Create confirmed booking from chat (409 if not agreed) |
+| GET | /api/bookings | Customer, Admin | `05-bookings.md` | G7, G10: List my bookings / list all studio bookings |
+| GET | /api/bookings/:id | Customer, Admin, Staff | `05-bookings.md` | G7, G10: Booking details |
+| PATCH | /api/bookings/:id | Admin | `05-bookings.md` | G10: Modify booking schedule (with clash check) or cancel |
+| POST | /api/bookings/:id/final-link | Admin | `05-bookings.md` | G10: Attach final downloadable photos link |
+| POST | /api/payments/deposit | Customer | `06-payments.md` | G7: Initiate 30% deposit payment |
+| POST | /api/payments/test-result | Customer | `06-payments.md` | G7: Handle test payment gateway outcome (Success/Fail) |
+| POST | /api/payments/remaining | Customer | `06-payments.md` | G9: Initiate 70% remaining balance payment |
+| GET | /api/reminders | Customer | `07-reminders.md` | G7: List upcoming reminders and notification status |
+| GET | /api/staff/jobs | Staff | `08-jobs.md` | G8: Assigned staff tasks and shoot sessions |
+| PATCH | /api/staff/jobs/:id | Staff | `08-jobs.md` | G8: Update staff job status |
+| POST | /api/staff/jobs/:id/previews | Staff | `08-jobs.md` | G8: Upload watermarked preview photos |
+| POST | /api/gallery/:id/select | Customer | `09-gallery.md` | G9: Customer submits up to 30 selected photos for retouch |
+| POST | /api/gallery/:id/receive | Customer | `09-gallery.md` | G9: Customer confirms photo receipt -> Marks booking Done |
+| GET | /api/admin/accounts | Superadmin | `10-admin.md` | G11: List administrator accounts |
+| POST | /api/admin/accounts | Superadmin | `10-admin.md` | G11: Create new administrator account |
+| GET | /api/admin/settings | Superadmin | `10-admin.md` | G11: View studio opening hours and reminder configurations |
+| PUT | /api/admin/settings | Superadmin | `10-admin.md` | G11: Update studio configurations |
 
-Not-wired controls: `Thanh toán cọc 30%`, sending a message, and any action without a page are `<button type="button" disabled>` with a short visible note (for example "Chưa có ở bản mẫu này"). Nav, footer and other controls that lead nowhere (Booking, Lịch studio, Tài nguyên, Nhân sự, Xem đường đi, Ảnh đã chọn, footer links) are removed, or shown as plain text marked "Chưa có", never as links. List them in `PROTOTYPE.md` section "Not wired yet".
+---
 
-Remove all demo controls: `Màn 1 / Màn 2 / Màn 3`, `Đặt lại demo`, `Mô phỏng phản hồi của Linh`, `Mô phỏng thanh toán`.
+## 6. One Error Shape Standard
 
-People images: no photos of real people. Use initials avatars or illustrations. A licensed photo is allowed only if its source is named in `PROTOTYPE.md`.
+Every error response returned by the system (HTTP $\ge 400$) MUST conform strictly to this JSON format:
 
-## 7. Files and workflow
+```json
+{
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Invalid request payload.",
+    "fields": {
+      "email": "Email or username is required",
+      "password": "Password is required"
+    }
+  }
+}
+```
+- `code` (string, required): SCREAMING_SNAKE_CASE identifier (`BAD_REQUEST`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `INTERNAL_SERVER_ERROR`).
+- `message` (string, required): Human-readable error message.
+- `fields` (object, required for 400 Bad Request): Maps invalid field names to error messages for direct inline form feedback.
 
-Repository root: `index.html`, `studio.html`, `booking.html`, `style.css`, `AGENTS.md`, `PROTOTYPE.md`, `brief.md`, `AI-LOG.md`, `SELF_ASSESSMENT_REPORT.md`, `docs/pa1/`, `screenshots/`, `checks/`, `.git/`.
+---
 
-- First commit contains this rules file. Then one commit per page, one commit for the responsive pass, one for docs. Messages say what changed ("Add studio.html with clash note and Booking mới form"), never "update".
-- Each team member sets `git config user.name` and `user.email` and commits their own work.
-- `brief.md` holds the real prompts given to the assistant, pasted in order, not a later summary.
-- `AI-LOG.md`: one entry per page or task: tool, request, **Changed**, **Rejected**, what the assistant got wrong, which check caught it (a width, W3C, Accessibility pane), and what we told it to fix. Never write it after the fact; never write "none" everywhere.
-- `PROTOTYPE.md` has 6 sections: Team (full names + MSSV), How to open it, Screens, Changed since the brief, Not wired yet, CSS (plain CSS, spacing scale, breakpoints).
-- `SELF_ASSESSMENT_REPORT.md`: one row per rubric criterion (7), our score, and evidence (file, screenshot, checker result or commit), plus "What we did not do". The total equals the number in the ZIP name. Score honestly: the gap must stay within ±10.
-- Zip the whole repository folder with `.git`, without `node_modules`.
+## 7. Mock Server & Testing Modes
 
-## NEVER list
+The mock server in `mock/server.mjs` runs on Node.js built-ins only (`node mock/server.mjs`, port 3001). It responds with clean single-line logs (`<METHOD> <PATH> <STATUS>`). It supports 4 modes via the `MOCK_MODE` environment variable:
+1. `MOCK_MODE=normal`: Standard response time (~150ms).
+2. `MOCK_MODE=slow`: 2000ms delay on every response. Used to test visual loading indicators.
+3. `MOCK_MODE=error`: Returns HTTP 500 on all endpoints except `/api/auth/login`. Used to test in-place retry mechanisms.
+4. `MOCK_MODE=empty`: Recursively transforms all array entities to `[]`. Used to test friendly empty-state views.
 
-- NEVER add a framework, dependency, CDN link, icon library or build step. NEVER make content, styling, navigation or essential behavior depend on JavaScript; any JavaScript must be optional progressive enhancement.
-- NEVER omit the viewport meta tag, hide overflow with `overflow-x: hidden`, or use fixed-width layouts.
-- NEVER use `href="#"`, root-relative links, links to missing files, `onclick`, or clickable `<div>`/`<span>`. NEVER make the final flow button on `booking.html` a payment-only dead end; it returns to `index.html`.
-- NEVER skip heading levels, use more than one `<h1>`, drop landmarks, or use a placeholder instead of a label.
-- NEVER put body text under 16px, a standalone mobile tap target under 44px tall, or body/button text below 4.5:1 contrast.
-- NEVER use `!important`, spacing values outside the scale, `position: fixed/sticky`, or independent column scrollbars.
-- NEVER truncate calendar or booking labels, or show a clash only by colour or pattern.
-- NEVER say a slot is held before the deposit succeeds, or change names, times, package, prices, booking code or status names between pages.
-- NEVER leave demo controls, Lorem ipsum, real-person photos without a named licence, or an unexplained difference from the brief.
-- NEVER claim a check passed without running it.
+---
 
-## Done checks (run before calling a page complete)
+## 8. Frontend UX & Responsive Standards
 
-1. Open the page straight from the folder with JavaScript disabled (DevTools → Ctrl+Shift+P → Disable JavaScript → reload). Its required state is visible and every main-flow link opens.
-2. For each width 360, 768 and 1280, in the Console:
-   - `document.documentElement.clientWidth` equals the width you set.
-   - `document.documentElement.scrollWidth > document.documentElement.clientWidth` prints `false`.
-   - `[...document.querySelectorAll('body *')].filter(e => e.getBoundingClientRect().right > document.documentElement.clientWidth)` prints `[]` (except inside a table's scroll wrapper).
-3. At 360px, every standalone link and button is ≥ 44px tall; body text ≥ 16px; contrast ≥ 4.5:1.
-4. DevTools → Elements → Accessibility: landmarks, one `<h1>`, heading order, labels, alt.
-5. Run each page through validator.w3.org/nu (File upload), 0 errors. Save `checks/validator-index.png`, `checks/validator-studio.png`, `checks/validator-booking.png` (or `.txt`).
-6. Compare with the brief and go through every "Fix these" item.
-7. Save 9 full-page screenshots with JavaScript off: `screenshots/index-360.png`, `index-768.png`, `index-1280.png`, `studio-360.png`, `studio-768.png`, `studio-1280.png`, `booking-360.png`, `booking-768.png`, `booking-1280.png` (DevTools device toolbar → ⋮ → Capture full size screenshot).
+- **Three Essential UX States for Every Data-Fetching Screen**:
+  1. **Loading State**: Clear visual indication while data is in flight (skeleton or spinner).
+  2. **Error State with Retry**: Informative error message accompanied by an in-place **"Retry"** button that re-fetches the data **without a full page refresh**.
+  3. **Empty State**: Friendly UI when arrays are empty `[]` (never a blank white container or crash).
+- **Request Efficiency**: Exactly **one request** per entity loaded. No infinite polling or redundant network waterfalls.
+- **Form Semantics & Accessibility**:
+  - Every form control (`input`, `select`, `textarea`) must have a visible `<label for="...">` linked to a unique `id`. Placeholders do not replace labels.
+  - Client-side validation before sending; inline field-by-field server error display for HTTP 400 `fields`.
+  - Disable submit buttons during in-flight requests. Never wipe user-entered inputs on submission failure.
+- **Mobile-first Responsive**:
+  - Full usability at **360px**, **768px**, and **1280px**.
+  - **Zero horizontal scroll** across all widths. NEVER use `overflow-x: hidden` to mask layout overflow.
+  - Standalone touch targets must be at least **44px $\times$ 44px** at 360px.
+- **Offline Capable**:
+  - The production build in `client/dist/` must function without an internet connection (`npx vite preview`). No CDN scripts or web font dependencies.
 
+---
 
+## 9. THE NEVER LIST (Absolute Project Constraints)
+
+1. **NEVER call an endpoint not defined in `docs/api/`**. If an endpoint is missing, define it in the contract first.
+2. **NEVER edit `docs/api/` or `mock/` to fix a client-side discrepancy** without explicit instruction. The contract is the source of truth.
+3. **NEVER use absolute URLs** like `http://localhost:3001/api/...`. Always use relative paths `/api/...`.
+4. **NEVER hardcode mock data in React components**. All dynamic content must be fetched from the API.
+5. **NEVER omit Loading, Error (with in-place Retry), or Empty state** on any data-fetching view.
+6. **NEVER add npm dependencies** without explicit approval from the team.
+7. **NEVER use `overflow-x: hidden`** on `html`, `body`, or container wrappers to conceal layout bugs.
+8. **NEVER use placeholders instead of visible `<label>` elements**.
+9. **NEVER create floating popups that cover page content** on mobile (360px).
+10. **NEVER commit or push internal files** (`brief.md`, `AI-LOG.md`, `PLAN*.md`, `.env`, secrets, course PDFs) to the Git repository. Keep them strictly local.
+11. **NEVER use any language other than English** across all documentation, API contracts, rules, code comments, commit messages, and assistant responses.
+
+---
+
+## 10. Definition of Done & Handover Verification
+
+Before declaring any feature or step complete:
+1. **Mock Modes Verification**: Verify the view under `MOCK_MODE=normal`, `slow`, `error`, and `empty`. Confirm loading indicator, in-place retry, and empty state.
+2. **Direct Route & Refresh Check**: Direct navigation via URL bar and browser refresh (`F5`) must load cleanly without state crash.
+3. **Responsive Verification**: Verify at 360px, 768px, and 1280px in DevTools. Ensure zero horizontal scroll and tap targets $\ge 44\text{px}$.
+4. **Contract Check Run**: Run `node tools/contract-check.mjs --base http://localhost:3001` against a freshly started mock server. Must pass with 0 FAIL lines.
+5. **W3C Validation Check**: Copy rendered HTML from DevTools into W3C validator to guarantee 0 errors.
