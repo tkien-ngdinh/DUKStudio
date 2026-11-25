@@ -67,16 +67,17 @@ List of client routes in the React SPA (using `BrowserRouter`):
 |---|---|---|---|---|
 | `/` | Visitor, Customer | G1 | `GET /api/catalog` | Home landing page, package catalog, pricing table, customer reviews |
 | `/login` | Everyone | G2 | `POST /api/auth/login` | Unified authentication view across all 4 roles |
-| `/chat` | Customer | G3, G6 | `GET /api/conversations/:id`, `POST /api/conversations/:id/messages`, `POST /api/conversations/:id/proposal/respond` | Real-time chat inquiry and shoot schedule proposal confirmation |
-| `/admin/conversations` | Admin | G4 | `GET /api/conversations` | Studio conversation list grouped into 4 status tabs |
-| `/admin/conversations/:id` | Admin | G4, G5, G6 | `GET /api/conversations/:id`, `POST /api/schedule/clash-check`, `POST /api/conversations/:id/propose-time`, `POST /api/bookings` | Admin chat view with clash check and booking creation |
+| `/chat` | Customer | G3, G6 | `GET /api/conversations`, `POST /api/conversations`, `GET /api/conversations/:id`, `POST /api/conversations/:id/messages`, `POST /api/conversations/:id/respond-proposal` | Chat with the studio, booking request form, accept or decline the proposed time |
+| `/admin/conversations` | Admin | G4 | `GET /api/conversations`, `GET /api/conversations/:id` | Studio conversation list grouped into 4 status tabs (Chưa trả lời, Đang tư vấn, Đã chốt lịch, Hoàn thành) |
+| `/admin/conversations/c-1003` | Admin | G4, G5, G6 | `GET /api/conversations/:id`, `POST /api/conversations/:id/messages`, `GET /api/schedule`, `POST /api/schedule/clash-check`, `POST /api/conversations/:id/propose-time`, `POST /api/bookings` | Admin chat view: reply, clash check, propose a time, Tạo booking (disabled with the reason until the customer agrees) |
 | `/my-bookings` | Customer | G7 | `GET /api/bookings`, `GET /api/reminders` | Customer shoot schedule list and reminder notifications |
-| `/bookings/GS-1023` | Customer | G7 | `GET /api/bookings/GS-1023`, `POST /api/payments/deposit` | Booking confirmation details and 30% deposit checkout |
-| `/payment/test` | Customer | G7 | `POST /api/payments/test-result` | Test payment sandbox route (simulating gateway success/failure) |
+| `/bookings/GS-1023` | Customer | G7 | `GET /api/bookings/GS-1023` | Booking details: package, agreed times, price, 30% deposit (already paid) and remainder |
+| `/bookings/GS-1024` (after G6) | Customer | G7 | `GET /api/bookings/GS-1024`, `POST /api/payments/deposit` | New booking at Chờ cọc 30% and the deposit button; before G6 it shows a not-found message |
+| `/payment/test` (after G7) | Customer | G7 | `POST /api/payments/test-result` | Test payment page, labelled as a test, with a successful and a failed payment; opened without a payment it shows a message |
 | `/staff/jobs` | Staff | G8 | `GET /api/staff/jobs`, `PATCH /api/staff/jobs/:id`, `POST /api/staff/jobs/:id/previews` | Staff task assignment dashboard and preview photo upload |
 | `/gallery/GS-1023` | Customer | G9 | `GET /api/bookings/GS-1023`, `POST /api/gallery/GS-1023/select`, `POST /api/payments/remaining`, `POST /api/gallery/GS-1023/receive` | Photo gallery to select up to 30 photos, settle 70% balance, mark received |
 | `/admin/bookings` | Admin | G10 | `GET /api/bookings` | Studio master booking management dashboard |
-| `/admin/bookings/GS-1023`| Admin | G10 | `GET /api/bookings/GS-1023`, `PATCH /api/bookings/GS-1023`, `POST /api/bookings/GS-1023/final-link` | Booking detail management, schedule alteration, cancel, final deliverables link |
+| `/admin/bookings/GS-1023` | Admin | G10 | `GET /api/bookings/GS-1023`, `GET /api/schedule`, `PATCH /api/bookings/GS-1023`, `POST /api/bookings/GS-1023/final-link` | Booking management: reschedule with the clash check, cancel, add the final file link |
 | `/superadmin/settings` | Superadmin | G11 | `GET /api/admin/accounts`, `POST /api/admin/accounts`, `GET /api/admin/settings`, `PUT /api/admin/settings` | Administrator account provisioning and studio configuration |
 
 ---
@@ -96,3 +97,12 @@ Key architectural and product decisions agreed upon with the team:
 - `react-router-dom`: Client-side SPA navigation via `BrowserRouter`.
 - `vite`: Fast frontend build tooling, development server, and `/api` proxying.
 - *Zero extraneous UI frameworks or CSS libraries*: Styles inherit from the semantic design token architecture established in PA#2 (`style.css`).
+
+---
+
+## 7. Not done
+
+Updated as the work goes on; the final list is written before submission.
+
+- The React client in `client/` is not built yet (task 7, from 2026-11-26), so no step G1–G11 works in a browser yet.
+- Contracts and mock routes for `02-catalog`, `03-chat`, `04-schedule`, `05-bookings`, `06-payments`, `07-reminders` and `09-gallery` are in progress; `contract-check` still lists their endpoints as having no example.
