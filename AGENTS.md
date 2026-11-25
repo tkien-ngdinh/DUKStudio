@@ -37,12 +37,13 @@ The goal of PA#3 is to implement the complete 11-step main flow of GradStudio (s
 3. **G3: Customer Chat & Booking Request (`/chat`, `POST /api/conversations`)**
    - Customer initiates inquiry, specifies preferred shoot date, package, and questions.
 4. **G4: Studio Conversation Management (`/admin/conversations`, `GET /api/conversations`)**
-   - Admin manages customer inquiries organized across 4 status tabs: *Waiting for Studio*, *Studio Answered*, *Deposit Pending*, *Done*.
-5. **G5: Schedule Clash Check (`POST /api/schedule/clash-check`)**
+   - Admin manages customer inquiries organized across 4 status tabs named exactly as in the brief: *Chưa trả lời*, *Đang tư vấn*, *Đã chốt lịch*, *Hoàn thành*.
+5. **G5: Schedule Clash Check (`GET /api/schedule`, `POST /api/schedule/clash-check`)**
    - Admin checks photographer, makeup artist, and studio room availability for requested timeslots.
    - **Mandatory narrative explanation**: Clash checks must return plain-text narrative explanations (e.g., *"09:00 clashes because Mai is busy 08:00–12:00"*) and propose alternative open slots (e.g., 14:00).
 6. **G6: Slot Proposal & Booking Creation (`POST /api/conversations/:id/propose-time`, `POST /api/conversations/:id/respond-proposal`, `POST /api/bookings`)**
    - Admin posts proposed shoot timeslot to chat. Customer accepts or declines.
+   - Until the customer agrees, the **Tạo booking** button (exact label from the brief) is disabled and the screen says why. A new booking starts at status *Chờ cọc 30%*.
    - **Conflict guard (409 Conflict)**: `POST /api/bookings` MUST return `409 Conflict` if the admin attempts to create a confirmed booking before the customer has explicitly agreed to the proposed slot.
 7. **G7: Booking Details, Reminders & Deposit (`/my-bookings`, `/bookings/:id`, `GET /api/reminders`, `POST /api/payments/deposit`, `/payment/test`)**
    - Customer views shoot itinerary and automated reminders.
@@ -52,7 +53,7 @@ The goal of PA#3 is to implement the complete 11-step main flow of GradStudio (s
 9. **G9: Photo Selection, Final Balance & Completion (`/gallery/:id`, `POST /api/gallery/:id/select`, `POST /api/payments/remaining`, `POST /api/gallery/:id/receive`)**
    - Customer selects up to **30 photos** for retouching.
    - Customer settles the remaining 70% balance.
-   - Customer clicks "Receive photos" to finalize delivery and mark the booking *Completed*.
+   - Once the final file link exists, the customer presses **Nhận ảnh** (exact label from the brief) and the booking becomes *Hoàn thành*.
 10. **G10: Master Booking Management & Final Links (`/admin/bookings`, `GET /api/bookings`, `PATCH /api/bookings/:id`, `POST /api/bookings/:id/final-link`)**
     - Admin monitors all studio bookings, reschedules appointments (subject to clash check), handles cancellations, and attaches the final downloadable photo archive link.
 11. **G11: Superadmin Administration & Settings (`/superadmin/settings`, `GET /api/admin/accounts`, `POST /api/admin/accounts`, `GET /api/admin/settings`, `PUT /api/admin/settings`)**
@@ -74,7 +75,7 @@ The application maintains 5 permanent demo accounts covering all 4 roles. In aut
 
 ---
 
-## 5. Master Endpoint Catalog (29 Endpoints)
+## 5. Master Endpoint Catalog (30 Endpoints)
 
 | Method | Path | Roles | File Contract | Main Flow Step |
 |---|---|---|---|---|
@@ -82,12 +83,13 @@ The application maintains 5 permanent demo accounts covering all 4 roles. In aut
 | POST | /api/auth/logout | Authenticated | `01-auth.md` | G2: Sign out |
 | GET | /api/auth/me | Authenticated | `01-auth.md` | G2: Current authenticated user profile |
 | GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, price list, accessories, feedback |
-| GET | /api/conversations | Admin | `03-chat.md` | G4: Conversation list grouped by 4 status tabs |
+| GET | /api/conversations | Customer, Admin | `03-chat.md` | G3, G4: Admin gets all conversations by 4 status tabs; Customer gets only their own |
 | POST | /api/conversations | Customer | `03-chat.md` | G3: Customer initiates inquiry / booking request |
 | GET | /api/conversations/:id | Customer, Admin | `03-chat.md` | G3, G4: Conversation details and message history |
 | POST | /api/conversations/:id/messages | Customer, Admin | `03-chat.md` | G3, G4: Send new message |
 | POST | /api/conversations/:id/propose-time | Admin | `03-chat.md` | G5, G6: Admin posts proposed shoot schedule to chat |
 | POST | /api/conversations/:id/respond-proposal | Customer | `03-chat.md` | G6: Customer accepts or rejects proposed shoot schedule |
+| GET | /api/schedule | Admin | `04-schedule.md` | G5, G10: Staff, rooms and busy slots of one day (`?date=YYYY-MM-DD`) |
 | POST | /api/schedule/clash-check | Admin | `04-schedule.md` | G5: Check staff/room availability & suggest free slots |
 | POST | /api/bookings | Admin | `05-bookings.md` | G6: Create confirmed booking from chat (409 if not agreed) |
 | GET | /api/bookings | Customer, Admin | `05-bookings.md` | G7, G10: List my bookings / list all studio bookings |
@@ -102,7 +104,7 @@ The application maintains 5 permanent demo accounts covering all 4 roles. In aut
 | PATCH | /api/staff/jobs/:id | Staff | `08-jobs.md` | G8: Update staff job status |
 | POST | /api/staff/jobs/:id/previews | Staff | `08-jobs.md` | G8: Upload watermarked preview photos |
 | POST | /api/gallery/:id/select | Customer | `09-gallery.md` | G9: Customer submits up to 30 selected photos for retouch |
-| POST | /api/gallery/:id/receive | Customer | `09-gallery.md` | G9: Customer confirms photo receipt -> Marks booking Done |
+| POST | /api/gallery/:id/receive | Customer | `09-gallery.md` | G9: Customer presses Nhận ảnh -> booking becomes Hoàn thành |
 | GET | /api/admin/accounts | Superadmin | `10-admin.md` | G11: List administrator accounts |
 | POST | /api/admin/accounts | Superadmin | `10-admin.md` | G11: Create new administrator account |
 | GET | /api/admin/settings | Superadmin | `10-admin.md` | G11: View studio opening hours and reminder configurations |
