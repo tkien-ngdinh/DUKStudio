@@ -24,7 +24,7 @@ Authorization: Bearer {{token:tuan}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"jobs": [{"id": "job-101", "bookingId": "GS-1023", "role": "photographer", "service": "Gói Tốt nghiệp Premium", "customerName": "Nguyễn Thị Thúy Linh", "date": "2026-10-24", "time": "14:00 - 16:00", "location": "Phòng B", "status": "assigned", "previewsCount": 0}]}
+{"jobs": [{"id": "job-101", "bookingId": "GS-1023", "role": "photographer", "service": "Gói Tốt nghiệp Premium", "customerName": "Linh", "date": "2026-10-17", "time": "14:00 - 16:00", "location": "Phòng B", "status": "assigned", "previewsCount": 0}]}
 ```
 
 ### Access Denied Example (403 Forbidden)
@@ -51,7 +51,7 @@ Content-Type: application/json
 Updates the operational progress state of a specific assigned task (`assigned` -> `in_progress` -> `completed` -> `cancelled`).
 
 - **Endpoint**: `PATCH /api/staff/jobs/:id`
-- **Permissions**: Staff role (`staff`).
+- **Permissions**: Staff role (`staff`), and only the staff member the job is assigned to (`403` otherwise).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Request Body**:
   - `status` (string, required): New status (`assigned`, `in_progress`, `completed`, `cancelled`).
@@ -70,7 +70,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"job": {"id": "job-101", "bookingId": "GS-1023", "status": "in_progress", "updatedAt": "2026-10-24T14:05:00Z"}}
+{"job": {"id": "job-101", "bookingId": "GS-1023", "status": "in_progress", "updatedAt": "2026-10-17T14:05:00Z"}}
 ```
 
 ### Invalid Status Example (400 Bad Request)
@@ -107,6 +107,25 @@ Content-Type: application/json
 {"error": {"code": "NOT_FOUND", "message": "Job job-999 not found"}}
 ```
 
+### Job of Another Staff Member Example (403 Forbidden)
+
+Returned when a staff member updates a job assigned to someone else (photographer Tuấn changing make-up artist Mai's job).
+
+```http
+PATCH /api/staff/jobs/job-102
+Authorization: Bearer {{token:tuan}}
+Content-Type: application/json
+
+{"status": "completed"}
+```
+
+```http
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+
+{"error": {"code": "FORBIDDEN", "message": "Access denied. This job is assigned to another staff member"}}
+```
+
 ---
 
 ## 3. Upload Watermarked Preview Photos (POST /api/staff/jobs/:id/previews)
@@ -114,7 +133,8 @@ Content-Type: application/json
 Uploads watermarked, low-resolution preview images to a booking session for customer review and selection (G8/G9 flow). Maximum file size is 10MB. Permitted MIME types are `image/jpeg` and `image/png`.
 
 - **Endpoint**: `POST /api/staff/jobs/:id/previews`
-- **Permissions**: Staff role (`staff`).
+- **Permissions**: Staff role (`staff`), and only the staff member the job is assigned to (`403` otherwise).
+- **Effect**: The preview is also added to the `previews` list of the job's booking, so the customer sees it in the gallery (G9).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Content-Type**: `multipart/form-data`
 - **Form Fields**:
@@ -132,7 +152,7 @@ curl -i http://localhost:3001/api/staff/jobs/job-101/previews \
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-{"success": true, "preview": {"id": "prev-01", "jobId": "job-101", "filename": "preview-01.png", "url": "/uploads/preview-01.png", "size": 204800, "uploadedAt": "2026-10-24T16:15:00Z"}}
+{"success": true, "preview": {"id": "prev-01", "jobId": "job-101", "filename": "preview-01.png", "url": "/uploads/preview-01.png", "size": 204800, "uploadedAt": "2026-10-17T16:15:00Z"}}
 ```
 
 ### File Too Large Example (400 Bad Request)
@@ -176,3 +196,8 @@ Content-Type: application/json
 - **2026-11-24** (Trung Kiên):
   - Initialized staff jobs and preview photo upload contract specification in `docs/api/08-jobs.md`.
   - Added endpoints for job assignment listing (`GET /api/staff/jobs`), status update (`PATCH /api/staff/jobs/:id`), and preview photo upload (`POST /api/staff/jobs/:id/previews`) with multipart format checks and 10MB size limits.
+
+- **2026-11-25** (Hạ Uyên, for Trung Kiên's review items):
+  - Example values follow the mock data: GS-1023 is Linh's earlier shoot on 2026-10-17 (moved off 2026-10-24 so the 14:00 slot is free for GS-1024 in G5–G6), and `customerName` is the short name `Linh`.
+  - `PATCH` and `POST …/previews` now answer `403` when the job belongs to another staff member; added an example.
+  - An uploaded preview is also added to the booking's `previews`, so G9 shows what G8 uploaded. Preview ids are unique (`prev-01`, `prev-02`, …).
