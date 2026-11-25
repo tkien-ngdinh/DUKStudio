@@ -165,7 +165,7 @@ To confirm photo receipt and complete the booking:
 2. The remaining 70% balance payment must have been settled successfully (`hasFinalPayment: true`).
 3. The studio administrator must have attached the final downloadable archive link (`finalFileLink` is not null).
 
-When all prerequisites are met, the successful operation transitions booking status to *Completed* (`Hoàn thành`):
+When all prerequisites are met, the successful operation transitions booking status to *Completed* (`Hoàn thành`). The response schema is shown below, but a runnable success request is blocked until the detailed `05-bookings.md` contract and mock flow can attach `finalFileLink`; the current seed has `finalFileLink: null` and this gallery contract does not invent the admin final-link request schema.
 
 ```json
 {
@@ -248,3 +248,4 @@ Content-Type: application/json
   - Added explicit field-level HTTP 400 validation error examples for `photoIds`: missing field, empty selection (`photoIds: []`), and exceeding the 30-photo maximum limit.
   - Updated `POST /api/gallery/:id/receive` request body to `{}` without undocumented fields (`bypassPayment`).
   - Aligned the 409 Conflict response with current sequential state: because remaining 70% balance was already paid in `06-payments.md`, the 409 example accurately reflects the missing final deliverables archive link (`finalFileLink: null`), avoiding contradictory unpaid-balance claims while documenting the success response shape and dependency blocker.
+  - Marked the receive-success payload as a response schema rather than a runnable example until the detailed admin final-link contract and mock setup are available.

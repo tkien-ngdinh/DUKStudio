@@ -135,7 +135,7 @@ Processes the simulated payment result dispatched by the interactive client sand
 - **Required Header**: `Authorization: Bearer <token>`
 - **Request Body**:
   - `transactionId` (string, required): Existing pending transaction identifier.
-  - `result` (string, required): Gateway outcome result (`success` or `failed`).
+  - `result` (string, required): Gateway outcome result (`success` or `failure`).
 
 ### Simulated Failure Outcome Example (200 OK)
 
@@ -146,7 +146,7 @@ POST /api/payments/test-result
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
-{"transactionId": "tx-dep-1023-fail", "result": "failed"}
+{"transactionId": "tx-dep-1023-fail", "result": "failure"}
 ```
 
 ```http
@@ -177,7 +177,7 @@ Content-Type: application/json
 
 ### Simulated Success Outcome Example (200 OK)
 
-Customer simulates a successful deposit transaction on the new transaction `tx-dep-1023`. Booking status transitions to `Đã cọc 30%` with `hasDeposit: true`.
+Customer simulates a successful deposit transaction on the new transaction `tx-dep-1023`. Booking status transitions to `Đã đặt lịch` with `hasDeposit: true`.
 
 ```http
 POST /api/payments/test-result
@@ -191,7 +191,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"payment": {"transactionId": "tx-dep-1023", "bookingId": "GS-1023", "type": "deposit", "amount": 540000, "status": "paid", "paidAt": "2026-10-21T10:00:00Z"}, "booking": {"id": "GS-1023", "status": "Đã cọc 30%", "hasDeposit": true}}
+{"payment": {"transactionId": "tx-dep-1023", "bookingId": "GS-1023", "type": "deposit", "amount": 540000, "status": "paid", "paidAt": "2026-10-21T10:00:00Z"}, "booking": {"id": "GS-1023", "status": "Đã đặt lịch", "hasDeposit": true}}
 ```
 
 ### Combined Validation Error Example (400 Bad Request)
@@ -210,7 +210,7 @@ Content-Type: application/json
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
-{"error": {"code": "BAD_REQUEST", "message": "Invalid payment result payload", "fields": {"transactionId": "Transaction ID is required", "result": "Result must be 'success' or 'failed'"}}}
+{"error": {"code": "BAD_REQUEST", "message": "Invalid payment result payload", "fields": {"transactionId": "Transaction ID is required", "result": "Result must be 'success' or 'failure'"}}}
 ```
 
 ### Individual Field Validation — Missing Transaction ID (400 Bad Request)
@@ -244,7 +244,7 @@ Content-Type: application/json
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
-{"error": {"code": "BAD_REQUEST", "message": "Invalid payment result payload", "fields": {"result": "Result must be 'success' or 'failed'"}}}
+{"error": {"code": "BAD_REQUEST", "message": "Invalid payment result payload", "fields": {"result": "Result must be 'success' or 'failure'"}}}
 ```
 
 ### Transaction Not Found Example (404 Not Found)
@@ -268,7 +268,7 @@ Content-Type: application/json
 
 ## 3. Initiate 70% Remaining Balance Payment (POST /api/payments/remaining)
 
-Initiates checkout for the remaining 70% balance (1,260,000 VND on `GS-1023`) after the photo shoot and selection phase (Step G9).
+Initiates checkout for the remaining 70% balance (1,260,000 VND on `GS-1023`) after the shoot and successful deposit (Step G9). In the customer journey, photo selection should happen before this payment; however, the contract checker processes `06-payments.md` before `09-gallery.md`, so the examples in these two files cannot demonstrate that cross-file order in one alphabetical run. The remaining-payment example verifies its documented payment prerequisite (`hasDeposit: true`) and does not claim that photo selection has already been submitted.
 
 - **Endpoint**: `POST /api/payments/remaining`
 - **Permissions**: Customer role (`customer` - booking owner).
@@ -282,6 +282,7 @@ Initiates checkout for the remaining 70% balance (1,260,000 VND on `GS-1023`) af
 
 1. **Deposit Prerequisite**: The 30% deposit must have already been settled (`hasDeposit: true`). If attempted while deposit is unpaid, the API returns `409 Conflict`.
 2. **Double-Payment Guard**: If the remaining balance has already been paid (`hasFinalPayment: true`), subsequent remaining balance requests return `409 Conflict`.
+3. Photo selection belongs to the G9 customer flow and should precede balance settlement in the product journey. It is not asserted as a precondition of this payment endpoint in the sequential contract examples because the selection example is documented later in `09-gallery.md`.
 
 ### Success Example (200 OK)
 
@@ -372,7 +373,7 @@ Content-Type: application/json
 
 ### Simulated Remaining Balance Settlement via Test Result (200 OK)
 
-Simulating successful payment completion for the 70% remaining balance transaction `tx-rem-1023` in `/payment/test`. Marks booking `hasFinalPayment: true` while preserving status `Đã cọc 30%` until deliverables are confirmed in Step G9.
+Simulating successful payment completion for the 70% remaining balance transaction `tx-rem-1023` in `/payment/test`. Marks booking `hasFinalPayment: true` while preserving status `Đã đặt lịch` until deliverables are confirmed in Step G9.
 
 ```http
 POST /api/payments/test-result
@@ -386,7 +387,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"payment": {"transactionId": "tx-rem-1023", "bookingId": "GS-1023", "type": "remaining", "amount": 1260000, "status": "paid", "paidAt": "2026-10-25T11:00:00Z"}, "booking": {"id": "GS-1023", "status": "Đã cọc 30%", "hasDeposit": true, "hasFinalPayment": true}}
+{"payment": {"transactionId": "tx-rem-1023", "bookingId": "GS-1023", "type": "remaining", "amount": 1260000, "status": "paid", "paidAt": "2026-10-25T11:00:00Z"}, "booking": {"id": "GS-1023", "status": "Đã đặt lịch", "hasDeposit": true, "hasFinalPayment": true}}
 ```
 
 ---
@@ -397,5 +398,6 @@ Content-Type: application/json
   - Revised `docs/api/06-payments.md` to ensure sequential state consistency and strict alignment with `AGENTS.md`.
   - Removed any claim that shoot slots are held before deposit succeeds; clarified that studio slots are held only upon successful deposit payment.
   - Separated failed and successful transactions: simulated failure uses `tx-dep-1023-fail`, followed by an explicit deposit retry request generating `tx-dep-1023` before its successful result example.
-  - Aligned booking status names strictly with `AGENTS.md` and `seed.json` (`Chờ cọc 30%` and `Đã cọc 30%`), removing invented status labels.
+  - Aligned booking status names strictly with `AGENTS.md` and `seed.json` (`Chờ cọc 30%` and `Đã đặt lịch`), removing invented status labels.
   - Documented status code `200 OK` for payment initiation as a successful operation returning transaction session metadata and relative client redirect route `/payment/test`.
+  - Clarified that the remaining-payment example verifies the deposit prerequisite only; the full G9 selection-before-payment journey cannot be demonstrated in a single alphabetical contract-check run because `09-gallery.md` follows this file.
