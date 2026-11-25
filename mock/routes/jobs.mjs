@@ -1,4 +1,4 @@
-import { findUserByToken, getJobs, findJobById, updateJob, addJobPreview } from '../data/store.mjs';
+import { findUserByToken, getJobs, findJobById, updateJob, addJobPreview, nextPreviewId } from '../data/store.mjs';
 
 const ALLOWED_STATUSES = ['assigned', 'in_progress', 'completed', 'cancelled'];
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10MB
@@ -69,6 +69,15 @@ export function register(router) {
       });
     }
 
+    if (job.staffId !== user.id) {
+      return res.status(403).json({
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Access denied. This job is assigned to another staff member'
+        }
+      });
+    }
+
     const { status } = req.body || {};
     if (!status || !ALLOWED_STATUSES.includes(status)) {
       return res.status(400).json({
@@ -88,7 +97,7 @@ export function register(router) {
         id: updated.id,
         bookingId: updated.bookingId,
         status: updated.status,
-        updatedAt: '2026-10-24T14:05:00Z'
+        updatedAt: '2026-10-17T14:05:00Z'
       }
     });
   });
@@ -123,6 +132,15 @@ export function register(router) {
         error: {
           code: 'NOT_FOUND',
           message: `Job ${jobId} not found`
+        }
+      });
+    }
+
+    if (job.staffId !== user.id) {
+      return res.status(403).json({
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Access denied. This job is assigned to another staff member'
         }
       });
     }
@@ -163,12 +181,12 @@ export function register(router) {
     const matchName = rawBody.match(/filename="([^"]+)"/);
     const filename = matchName ? matchName[1] : 'preview-01.png';
     const preview = {
-      id: 'prev-01',
+      id: nextPreviewId(),
       jobId: job.id,
       filename,
       url: `/uploads/${filename}`,
       size: 204800,
-      uploadedAt: '2026-10-24T16:15:00Z'
+      uploadedAt: '2026-10-17T16:15:00Z'
     };
 
     addJobPreview(job.id, preview);

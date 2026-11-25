@@ -27,7 +27,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"token": "token-linh", "user": {"id": "u-linh", "name": "Nguyễn Thị Thúy Linh", "email": "linh@gradstudio.test", "role": "customer"}}
+{"token": "token-linh", "user": {"id": "u-linh", "name": "Linh", "email": "linh@gradstudio.test", "role": "customer"}}
 ```
 
 ### Validation Error Example (400 Bad Request)
@@ -84,7 +84,7 @@ Authorization: Bearer {{token:linh}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"user": {"id": "u-linh", "name": "Nguyễn Thị Thúy Linh", "email": "linh@gradstudio.test", "role": "customer"}}
+{"user": {"id": "u-linh", "name": "Linh", "email": "linh@gradstudio.test", "role": "customer"}}
 ```
 
 ### Unauthenticated or Expired Token Example (401 Unauthorized)
@@ -133,3 +133,7 @@ Content-Type: application/json
 - **2026-11-23** (Trung Kiên):
   - Initialized authentication contract specification `docs/api/01-auth.md`.
   - Added standardized `http` examples for `POST /api/auth/login`, `GET /api/auth/me`, and `POST /api/auth/logout` verified by `contract-check`.
+
+- **2026-11-25** (Hạ Uyên, for Trung Kiên's review items):
+  - `user.name` in the examples is now the short name from the brief (`Linh`); the full name stays in the mock data only, so the answer fields are unchanged.
+  - Sign-in now requires the exact password of the account, and a token must be exactly `token-<account name>`; any other password answers `401`, any other token answers `401`.

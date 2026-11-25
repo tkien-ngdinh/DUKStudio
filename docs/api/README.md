@@ -32,6 +32,8 @@ Where `<account_name>` corresponds to the identifier defined in the **Demo Accou
 
 Tokens are granted via the sign-in endpoint `POST /api/auth/login`. During the Mock API stage (PA#3), tokens maintain the stable format `token-<account_name>` to ensure valid sessions persist across server restarts and testing modes.
 
+Every endpoint except `POST /api/auth/login` and the public `GET /api/catalog` requires this header. A request with a missing, malformed or unknown token answers `401 Unauthorized`; a valid token whose role is not listed in the endpoint's **Roles** column answers `403 Forbidden`. Each resource file may omit these two examples when the answer is exactly this rule.
+
 ---
 
 ## 3. One Error Shape
@@ -77,7 +79,7 @@ Every error response returned by the system (HTTP status $\ge 400$) **must** adh
 
 ## 5. Master Endpoint Table
 
-This table enumerates all 29 endpoints across the 11 main-flow steps (G1–G11), mapped to 10 granular contract files in `docs/api/`.
+This table enumerates all 30 endpoints across the 11 main-flow steps (G1–G11), mapped to 10 granular contract files in `docs/api/`.
 
 | Method | Path | Roles | File Contract | Main Flow Step |
 |---|---|---|---|---|
@@ -85,12 +87,13 @@ This table enumerates all 29 endpoints across the 11 main-flow steps (G1–G11),
 | POST | /api/auth/logout | Authenticated | `01-auth.md` | G2: Sign out |
 | GET | /api/auth/me | Authenticated | `01-auth.md` | G2: Current authenticated user profile |
 | GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, price list, accessories, feedback |
-| GET | /api/conversations | Admin | `03-chat.md` | G4: Conversation list grouped by 4 state tabs |
+| GET | /api/conversations | Customer, Admin | `03-chat.md` | G3, G4: Admin gets all conversations by 4 status tabs; Customer gets only their own |
 | POST | /api/conversations | Customer | `03-chat.md` | G3: Customer initiates inquiry / booking request |
 | GET | /api/conversations/:id | Customer, Admin | `03-chat.md` | G3, G4: Conversation details and message history |
 | POST | /api/conversations/:id/messages | Customer, Admin | `03-chat.md` | G3, G4: Send new message |
 | POST | /api/conversations/:id/propose-time | Admin | `03-chat.md` | G5, G6: Admin posts proposed shoot schedule to chat |
 | POST | /api/conversations/:id/respond-proposal | Customer | `03-chat.md` | G6: Customer accepts or rejects proposed shoot schedule |
+| GET | /api/schedule | Admin | `04-schedule.md` | G5, G10: Staff, rooms and busy slots of one day (`?date=YYYY-MM-DD`) |
 | POST | /api/schedule/clash-check | Admin | `04-schedule.md` | G5: Check staff/room availability & suggest free slots |
 | POST | /api/bookings | Admin | `05-bookings.md` | G6: Create confirmed booking from chat (409 if not agreed) |
 | GET | /api/bookings | Customer, Admin | `05-bookings.md` | G7, G10: List my bookings / list all studio bookings |
@@ -105,7 +108,7 @@ This table enumerates all 29 endpoints across the 11 main-flow steps (G1–G11),
 | PATCH | /api/staff/jobs/:id | Staff | `08-jobs.md` | G8: Update staff job status |
 | POST | /api/staff/jobs/:id/previews | Staff | `08-jobs.md` | G8: Upload watermarked preview photos |
 | POST | /api/gallery/:id/select | Customer | `09-gallery.md` | G9: Customer submits up to 30 selected photos for retouch |
-| POST | /api/gallery/:id/receive | Customer | `09-gallery.md` | G9: Customer confirms photo receipt -> Marks booking Done |
+| POST | /api/gallery/:id/receive | Customer | `09-gallery.md` | G9: Customer presses Nhận ảnh -> booking becomes Hoàn thành |
 | GET | /api/admin/accounts | Superadmin | `10-admin.md` | G11: List administrator accounts |
 | POST | /api/admin/accounts | Superadmin | `10-admin.md` | G11: Create new administrator account |
 | GET | /api/admin/settings | Superadmin | `10-admin.md` | G11: View studio opening hours and reminder configurations |
@@ -120,3 +123,8 @@ This table enumerates all 29 endpoints across the 11 main-flow steps (G1–G11),
   - Standardized `/api` base path and `Bearer {{token:<name>}}` authentication header format.
   - Formalized `One Error Shape` schema with dedicated `fields` object for `400 Bad Request`.
   - Defined master table of 29 standard endpoints across 11 main-flow steps (G1–G11) and 4 user roles.
+
+- **2026-11-25** (Hạ Uyên, agreed by the team in the endpoint review):
+  - Added `GET /api/schedule` (Admin, `04-schedule.md`) so the clash check (G5) and reschedule (G10) forms load staff, rooms and busy slots from the API instead of hard-coding them. The table now lists 30 endpoints.
+  - Opened `GET /api/conversations` to Customer (own conversations only) so `/chat` can find the signed-in customer's conversation when opened directly.
+  - Stated the general 401/403 rule for authenticated endpoints in section 2.
