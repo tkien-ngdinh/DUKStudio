@@ -27,30 +27,36 @@ export function getStore() {
 }
 
 /**
- * Find user by email or username (supports demo account shortcuts)
+ * Account name used in tokens and as user name at sign-in: the user id without "u-"
+ */
+function accountName(user) {
+  return user.id.replace(/^u-/, '');
+}
+
+/**
+ * Find user by e-mail or user name; the password must match exactly
  */
 export function findUserByCredentials(login, password) {
-  return state.users.find(
-    (u) =>
-      (u.email === login || u.id === login || u.id === `u-${login}`) &&
-      (!password || u.password === password || password === `${login}-demo` || password.includes('demo'))
+  if (!login || !password) return null;
+  const wanted = String(login).trim().toLowerCase();
+  return (
+    state.users.find(
+      (u) =>
+        ((u.email && u.email.toLowerCase() === wanted) || accountName(u) === wanted) &&
+        u.password === password
+    ) || null
   );
 }
 
 /**
- * Resolve user from stable token format token-<userId> or token-<name>
+ * Resolve user from the stable token format token-<account name> (exact match only)
  */
 export function findUserByToken(token) {
   if (!token) return null;
-  const clean = token.replace(/^Bearer\s+/i, '').trim();
+  const clean = String(token).replace(/^Bearer\s+/i, '').trim();
   const match = clean.match(/^token-(.+)$/);
   if (!match) return null;
-  const nameOrId = match[1];
-  return (
-    state.users.find(
-      (u) => u.id === nameOrId || u.id === `u-${nameOrId}` || u.email.startsWith(nameOrId)
-    ) || null
-  );
+  return state.users.find((u) => accountName(u) === match[1]) || null;
 }
 
 /**
@@ -92,14 +98,32 @@ export function updateJob(id, updates) {
 }
 
 /**
- * Add preview photo to job
+ * Next preview id, unique across all jobs (prev-01, prev-02, ...)
+ */
+export function nextPreviewId() {
+  const total = (state.jobs || []).reduce((n, j) => n + (j.previews ? j.previews.length : 0), 0);
+  return `prev-${String(total + 1).padStart(2, '0')}`;
+}
+
+/**
+ * Add preview photo to job, and to the job's booking so the customer gallery (G9) shows it
  */
 export function addJobPreview(jobId, preview) {
   const job = findJobById(jobId);
   if (!job) return null;
   job.previews = job.previews || [];
   job.previews.push(preview);
-  job.previewsCount = job.previews.length;
+  job.previewsCount = (job.previewsCount || 0) + 1;
+
+  const booking = (state.bookings || []).find((b) => b.id === job.bookingId);
+  if (booking) {
+    booking.previews = booking.previews || [];
+    booking.previews.push({
+      id: preview.id,
+      url: preview.url,
+      alt: `Ảnh xem trước ${preview.filename} (${booking.id})`
+    });
+  }
   return preview;
 }
 

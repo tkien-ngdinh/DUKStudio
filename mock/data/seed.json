@@ -2,7 +2,8 @@
   "users": [
     {
       "id": "u-linh",
-      "name": "Nguyễn Thị Thúy Linh",
+      "name": "Linh",
+      "fullName": "Nguyễn Thị Thúy Linh",
       "email": "linh@gradstudio.test",
       "password": "linh-demo",
       "role": "customer"
@@ -17,14 +18,14 @@
     },
     {
       "id": "u-mai",
-      "name": "Thợ makeup Mai",
+      "name": "Mai",
       "email": "mai@gradstudio.test",
       "password": "mai-demo",
       "role": "staff"
     },
     {
       "id": "u-tuan",
-      "name": "Thợ chụp Tuấn",
+      "name": "Tuấn",
       "email": "tuan@gradstudio.test",
       "password": "tuan-demo",
       "role": "staff"
@@ -94,11 +95,11 @@
     {
       "id": "GS-1023",
       "customerId": "u-linh",
-      "customerName": "Nguyễn Thị Thúy Linh",
+      "customerName": "Linh",
       "packageId": "pkg-tot-nghiep-premium",
       "packageName": "Gói Tốt nghiệp Premium",
       "shootType": "Tốt nghiệp cá nhân",
-      "date": "2026-10-24",
+      "date": "2026-10-17",
       "makeupTime": "13:00 - 14:00",
       "shootTime": "14:00 - 16:00",
       "makeupStaff": "Mai",
@@ -118,7 +119,7 @@
     {
       "id": "c-linh-01",
       "customerId": "u-linh",
-      "customerName": "Nguyễn Thị Thúy Linh",
+      "customerName": "Linh",
       "status": "Đã chốt lịch",
       "lastMessageAt": "2026-10-20T17:21:00Z",
       "bookingId": "GS-1023",
@@ -168,8 +169,8 @@
       "bookingId": "GS-1023",
       "role": "photographer",
       "service": "Gói Tốt nghiệp Premium",
-      "customerName": "Nguyễn Thị Thúy Linh",
-      "date": "2026-10-24",
+      "customerName": "Linh",
+      "date": "2026-10-17",
       "time": "14:00 - 16:00",
       "location": "Phòng B",
       "status": "assigned",
@@ -182,8 +183,8 @@
       "bookingId": "GS-1023",
       "role": "makeup",
       "service": "Gói Tốt nghiệp Premium",
-      "customerName": "Nguyễn Thị Thúy Linh",
-      "date": "2026-10-24",
+      "customerName": "Linh",
+      "date": "2026-10-17",
       "time": "13:00 - 14:00",
       "location": "Phòng B",
       "status": "assigned",
