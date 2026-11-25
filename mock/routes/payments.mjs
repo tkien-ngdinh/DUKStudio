@@ -72,7 +72,9 @@ export function register(router) {
     const hasPriorFailed = store.payments.some(
       (p) => p.bookingId === booking.id && p.type === 'deposit' && p.status === 'failed'
     );
-    const transactionId = hasPriorFailed ? `tx-dep-${booking.id.replace('GS-', '')}` : `tx-dep-${booking.id.replace('GS-', '')}-fail`;
+    const transactionId = hasPriorFailed
+      ? `tx-dep-${booking.id.replace('GS-', '')}`
+      : `tx-dep-${booking.id.replace('GS-', '')}-fail`;
 
     const payment = {
       transactionId,
@@ -161,6 +163,16 @@ export function register(router) {
         error: {
           code: 'FORBIDDEN',
           message: 'Access denied. Only the booking owner can submit payment results'
+        }
+      });
+    }
+
+    // Terminal status protection: once terminal ('paid' or 'failed'), cannot transition to opposite state
+    if (payment.status !== 'pending') {
+      return res.status(409).json({
+        error: {
+          code: 'CONFLICT',
+          message: `Transaction ${payment.transactionId} has already reached terminal status '${payment.status}'`
         }
       });
     }

@@ -42,8 +42,26 @@ export function register(router) {
     }
 
     const store = getStore();
+    let conversations = store.conversations || [];
+
+    const statusFilter = req.query.status;
+    if (statusFilter) {
+      const statusMap = {
+        'waiting_for_studio': 'Chưa trả lời',
+        'waiting': 'Chưa trả lời',
+        'studio_answered': 'Đang tư vấn',
+        'advising': 'Đang tư vấn',
+        'deposit_pending': 'Đã chốt lịch',
+        'done': 'Hoàn thành'
+      };
+      const normalized = statusMap[statusFilter.toLowerCase()] || statusFilter;
+      conversations = conversations.filter(
+        (c) => c.status === normalized || c.status === statusFilter
+      );
+    }
+
     return res.status(200).json({
-      conversations: store.conversations || []
+      conversations
     });
   });
 
@@ -228,6 +246,11 @@ export function register(router) {
     conversation.messages.push(message);
     conversation.lastMessageAt = timestamp;
 
+    // Advance conversation state to 'Đang tư vấn' when admin replies
+    if (user.role === 'admin') {
+      conversation.status = 'Đang tư vấn';
+    }
+
     return res.status(201).json({
       message
     });
@@ -320,6 +343,9 @@ export function register(router) {
     conversation.activeProposal = proposal;
     conversation.messages.push(message);
     conversation.lastMessageAt = timestamp;
+
+    // Advance conversation state to 'Đang tư vấn' when admin proposes a time
+    conversation.status = 'Đang tư vấn';
 
     return res.status(200).json({
       proposal,

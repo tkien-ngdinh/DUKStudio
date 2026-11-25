@@ -44,6 +44,7 @@ export function register(router) {
       });
     }
 
+    // Validate 30-photo cap before checking ID existence
     if (body.photoIds.length > 30) {
       return res.status(400).json({
         error: {
@@ -78,7 +79,29 @@ export function register(router) {
       });
     }
 
-    booking.photos = body.photoIds;
+    // Resolve valid previews for this booking from associated staff jobs
+    const validPreviewIds = new Set();
+    const jobs = (store.jobs || []).filter((j) => j.bookingId === booking.id);
+    for (const j of jobs) {
+      for (const p of j.previews || []) {
+        validPreviewIds.add(p.id);
+      }
+    }
+
+    const invalidIds = body.photoIds.filter((id) => !validPreviewIds.has(id));
+    if (invalidIds.length > 0) {
+      return res.status(400).json({
+        error: {
+          code: 'BAD_REQUEST',
+          message: 'Invalid photo selection',
+          fields: {
+            photoIds: `Invalid preview photo ID(s): ${invalidIds.join(', ')}`
+          }
+        }
+      });
+    }
+
+    booking.photos = [...body.photoIds];
     booking.status = 'Đang chỉnh sửa';
 
     return res.status(200).json({
