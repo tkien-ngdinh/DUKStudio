@@ -52,3 +52,113 @@ export function findUserByToken(token) {
     ) || null
   );
 }
+
+/**
+ * Retrieve jobs assigned to a staff member (or all if omitted)
+ */
+export function getJobs(staffId) {
+  state.jobs = state.jobs || [];
+  const list = staffId ? state.jobs.filter((j) => j.staffId === staffId) : state.jobs;
+  return list.map((j) => ({
+    id: j.id,
+    bookingId: j.bookingId,
+    role: j.role,
+    service: j.service,
+    customerName: j.customerName,
+    date: j.date,
+    time: j.time,
+    location: j.location,
+    status: j.status,
+    previewsCount: j.previewsCount || (j.previews ? j.previews.length : 0)
+  }));
+}
+
+/**
+ * Find job by id
+ */
+export function findJobById(id) {
+  state.jobs = state.jobs || [];
+  return state.jobs.find((j) => j.id === id) || null;
+}
+
+/**
+ * Update job status or fields
+ */
+export function updateJob(id, updates) {
+  const job = findJobById(id);
+  if (!job) return null;
+  Object.assign(job, updates);
+  return job;
+}
+
+/**
+ * Add preview photo to job
+ */
+export function addJobPreview(jobId, preview) {
+  const job = findJobById(jobId);
+  if (!job) return null;
+  job.previews = job.previews || [];
+  job.previews.push(preview);
+  job.previewsCount = job.previews.length;
+  return preview;
+}
+
+/**
+ * List administrator accounts
+ */
+export function getAdminAccounts() {
+  return (state.users || [])
+    .filter((u) => u.role === 'admin')
+    .map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      createdAt: u.createdAt || '2026-10-01T08:00:00Z'
+    }));
+}
+
+/**
+ * Create administrator account
+ */
+export function createAdminAccount({ name, email, password }) {
+  const existing = state.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  if (existing) return { error: 'DUPLICATE_EMAIL' };
+  const baseId = email.split('@')[0].replace(/[^a-zA-Z0-9_-]/g, '');
+  const id = `u-${baseId}`;
+  const newAccount = {
+    id,
+    name,
+    email,
+    password,
+    role: 'admin',
+    createdAt: new Date().toISOString()
+  };
+  state.users.push(newAccount);
+  return {
+    account: {
+      id: newAccount.id,
+      name: newAccount.name,
+      email: newAccount.email,
+      role: newAccount.role,
+      createdAt: newAccount.createdAt
+    }
+  };
+}
+
+/**
+ * Get studio settings
+ */
+export function getSettings() {
+  return state.settings || { openingHours: '08:00 - 19:00', reminderHoursBefore: 24 };
+}
+
+/**
+ * Update studio settings
+ */
+export function updateSettings(updates) {
+  state.settings = state.settings || {};
+  Object.assign(state.settings, updates);
+  return state.settings;
+}
+
