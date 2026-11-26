@@ -28,9 +28,10 @@ export default function Layout({ children }) {
   const navItems = NAV_BY_ROLE[roleKey] || NAV_BY_ROLE.visitor;
   const homePath = isAuthenticated ? getHomePathForRole(user?.role) : '/';
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
+  const handleLogout = () => {
+    // Navigate to /login before clearing auth so ProtectedRoute does not record the old route in state.from
+    navigate('/login', { replace: true, state: null });
+    void logout();
   };
 
   return (
