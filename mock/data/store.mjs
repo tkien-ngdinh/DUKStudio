@@ -404,33 +404,46 @@ export function getDaySchedule(date) {
  * `time` is the shoot start. The package gives the shoot length and the make-up length;
  * make-up is placed right before the shoot. Suggestions are start times on the hour on the
  * same day where the whole make-up + shoot block fits inside opening hours and the make-up
- * artist, photographer and room are all free. `makeupMinutes` and `shootMinutes` are optional
- * overrides (used when a booking keeps the lengths it already has).
+ * artist, photographer and room are all free. Both lengths come only from the package data;
+ * a package without a numeric length is a data error, never treated as 0.
+ * The room must be the package's room, the make-up artist must have the role `makeup` and the
+ * photographer the role `photographer` (04-schedule.md, Changes 2026-11-26).
  *
  * Returns { clash, explanation, conflicts, suggestions }, or { invalid: { field: message } }
- * when the request itself is incomplete.
+ * when the request itself is incomplete or wrong.
  */
-export function checkClash({
-  date, time, packageId, makeupArtistId, photographerId, roomId, ignoreBookingId, makeupMinutes, shootMinutes
-}) {
+export function checkClash({ date, time, packageId, makeupArtistId, photographerId, roomId, ignoreBookingId }) {
   const invalid = {};
   if (!isValidDate(date)) invalid.date = 'Date is required in format YYYY-MM-DD';
   if (!isValidTime(time)) invalid.time = 'Time is required in format HH:MM';
 
   const pkg = (state.packages || []).find((p) => p.id === packageId);
   if (!pkg) invalid.packageId = packageId ? 'Unknown package' : 'Package is required';
+  else if (typeof pkg.makeupMinutes !== 'number' || typeof pkg.shootMinutes !== 'number') {
+    invalid.packageId = `Package ${pkg.id} has no make-up or shoot length in the data`;
+  }
 
-  const makeupLength = typeof makeupMinutes === 'number' ? makeupMinutes : (pkg && pkg.makeupMinutes) || 0;
-  const shootLength = typeof shootMinutes === 'number' ? shootMinutes : (pkg && pkg.shootMinutes) || 60;
+  const makeupLength = pkg && typeof pkg.makeupMinutes === 'number' ? pkg.makeupMinutes : 0;
+  const shootLength = pkg && typeof pkg.shootMinutes === 'number' ? pkg.shootMinutes : 0;
   const needMakeup = makeupLength > 0;
   const needRoom = pkg ? pkg.roomId !== null : true;
 
   const makeupArtist = lookupStaff(makeupArtistId);
   const photographer = lookupStaff(photographerId);
   const room = lookupRoom(roomId);
-  if (needMakeup && !makeupArtist) invalid.makeupArtistId = makeupArtistId ? 'Unknown make-up artist' : 'Make-up artist is required';
+  if (needMakeup) {
+    if (!makeupArtist) invalid.makeupArtistId = makeupArtistId ? 'Unknown make-up artist' : 'Make-up artist is required';
+    else if (makeupArtist.role !== 'makeup') invalid.makeupArtistId = `Staff ${makeupArtist.id} is not a make-up artist`;
+  }
   if (!photographer) invalid.photographerId = photographerId ? 'Unknown photographer' : 'Photographer is required';
-  if (needRoom && !room) invalid.roomId = roomId ? 'Unknown room' : 'Room is required';
+  else if (photographer.role !== 'photographer') invalid.photographerId = `Staff ${photographer.id} is not a photographer`;
+  if (needRoom) {
+    if (!room) invalid.roomId = roomId ? 'Unknown room' : 'Room is required';
+    else if (pkg && pkg.roomId && room.id !== pkg.roomId) {
+      const packageRoom = lookupRoom(pkg.roomId);
+      invalid.roomId = `This package requires ${packageRoom ? packageRoom.name : pkg.roomId} (${pkg.roomId})`;
+    }
+  }
   if (Object.keys(invalid).length) return { invalid };
 
   const hours = openingWindow();
@@ -536,6 +549,12 @@ export function checkClash({
     });
   }
 
+  // Say in words when no other time is free that day (G5: "which time is free instead")
+  if (!suggestions.length) {
+    const [, month, day] = date.split('-');
+    sentences.push(`Ngày ${day}/${month} không còn giờ trống cho gói ${shortName} với những người và phòng này.`);
+  }
+
   return { clash: true, explanation: sentences.join(' '), conflicts, suggestions };
 }
 
@@ -638,10 +657,6 @@ export function createBookingFromConversation(conversationId) {
   return { booking };
 }
 
-function minutesBetween(start, end) {
-  return toMinutes(end) - toMinutes(start);
-}
-
 /**
  * Reschedule {date, time} (with the same clash check as 04) or cancel {status: "Đã huỷ", cancelReason}
  * (PATCH /api/bookings/:id). On a clash the booking is left unchanged and the error message is the
@@ -678,14 +693,6 @@ export function updateBooking(id, body) {
   if (booking.status === CANCELLED) return fail('CONFLICT', `Booking ${id} is cancelled and cannot be rescheduled`);
   if (booking.status === COMPLETED) return fail('CONFLICT', `Booking ${id} is completed and cannot be rescheduled`);
 
-  const pkg = (state.packages || []).find((p) => p.id === booking.packageId);
-  const makeupLength = pkg && typeof pkg.makeupMinutes === 'number'
-    ? pkg.makeupMinutes
-    : (booking.makeup ? minutesBetween(booking.makeup.start, booking.makeup.end) : 0);
-  const shootLength = pkg && typeof pkg.shootMinutes === 'number'
-    ? pkg.shootMinutes
-    : minutesBetween(booking.shoot.start, booking.shoot.end);
-
   const clash = checkClash({
     date,
     time,
@@ -693,13 +700,15 @@ export function updateBooking(id, body) {
     makeupArtistId: booking.makeup ? booking.makeup.staffId : undefined,
     photographerId: booking.shoot.staffId,
     roomId: booking.shoot.roomId,
-    ignoreBookingId: id,
-    makeupMinutes: makeupLength,
-    shootMinutes: shootLength
+    ignoreBookingId: id
   });
   if (clash.invalid) return fail('BAD_REQUEST', 'Invalid booking update', clash.invalid);
   if (clash.clash) return { ...fail('CONFLICT', clash.explanation), clash };
 
+  // Same lengths as the clash check: both come from the package data
+  const pkg = (state.packages || []).find((p) => p.id === booking.packageId);
+  const makeupLength = pkg.makeupMinutes;
+  const shootLength = pkg.shootMinutes;
   const shootStart = toMinutes(time);
   booking.date = date;
   if (booking.makeup && makeupLength > 0) {
