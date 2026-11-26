@@ -46,12 +46,14 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(initial?.user || null);
   const [token, setToken] = useState(initial?.token || null);
   const [isInitializing, setIsInitializing] = useState(Boolean(initial?.token));
+  const [sessionError, setSessionError] = useState('');
   const [authNotice, setAuthNotice] = useState('');
 
   const clearAuth = useCallback((noticeMessage = '') => {
     clearStoredSession();
     setToken(null);
     setUser(null);
+    setSessionError('');
     setAuthNotice(noticeMessage);
   }, []);
 
@@ -62,42 +64,37 @@ export function AuthProvider({ children }) {
     return () => setUnauthorizedHandler(null);
   }, [clearAuth]);
 
-  useEffect(() => {
-    let active = true;
+  const verifyCurrentSession = useCallback(async () => {
     const stored = getStoredSession();
     if (!stored?.token) {
       setIsInitializing(false);
-      return () => {
-        active = false;
-      };
+      setSessionError('');
+      return;
     }
 
-    verifyTokenOnce(stored.token)
-      .then((data) => {
-        if (!active) return;
-        if (data?.user) {
-          setUser(data.user);
-          setToken(stored.token);
-          setStoredSession({ token: stored.token, user: data.user });
-        }
-      })
-      .catch((err) => {
-        if (!active) return;
-        // Clear session only on 401; keep stored session if server is in error mode (500)
-        if (err?.status === 401) {
-          clearAuth('Phiên đăng nhập đã hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setIsInitializing(false);
-        }
-      });
-
-    return () => {
-      active = false;
-    };
+    setIsInitializing(true);
+    setSessionError('');
+    try {
+      const data = await verifyTokenOnce(stored.token);
+      if (data?.user) {
+        setUser(data.user);
+        setToken(stored.token);
+        setStoredSession({ token: stored.token, user: data.user });
+      }
+    } catch (err) {
+      if (err?.status === 401) {
+        clearAuth('Phiên đăng nhập đã hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+      } else {
+        setSessionError(err?.message || 'Không thể xác thực phiên đăng nhập.');
+      }
+    } finally {
+      setIsInitializing(false);
+    }
   }, [clearAuth]);
+
+  useEffect(() => {
+    verifyCurrentSession();
+  }, [verifyCurrentSession]);
 
   const login = useCallback(async (email, password) => {
     const data = await apiFetch('/api/auth/login', {
@@ -108,6 +105,7 @@ export function AuthProvider({ children }) {
     setStoredSession({ token: data.token, user: data.user });
     setToken(data.token);
     setUser(data.user);
+    setSessionError('');
     setAuthNotice('');
     return data;
   }, []);
@@ -136,8 +134,10 @@ export function AuthProvider({ children }) {
     token,
     isAuthenticated: Boolean(user && token),
     isInitializing,
+    sessionError,
     authNotice,
     clearNotice,
+    retrySession: verifyCurrentSession,
     login,
     logout
   };
