@@ -97,15 +97,23 @@
   border-color: var(--danger-border);
 }
 
-.state-card--error h2 {
-  color: var(--danger-ink);
-}
-
 .state-card--empty {
   background: var(--lime-soft);
   border-color: var(--lime-border);
 }
 
+.state-card h1 {
+  color: var(--deep-blue);
+  font-size: 1.85rem;
+  line-height: 1.15;
+}
+
+.state-card--error h1,
+.state-card--error h2 {
+  color: var(--danger-ink);
+}
+
+.state-card--empty h1,
 .state-card--empty h2 {
   color: var(--forest-ink);
 }
