@@ -82,8 +82,8 @@
       "priceUnit": "buổi",
       "deposit": 1350000,
       "remaining": 3150000,
-      "includes": ["Trang điểm theo nhóm", "Chụp 180 phút", "Phòng A"],
-      "makeupMinutes": null,
+      "includes": ["Trang điểm theo nhóm 60 phút ngay trước giờ chụp", "Chụp 180 phút", "Phòng A"],
+      "makeupMinutes": 60,
       "shootMinutes": 180,
       "roomId": "room-a",
       "maxSelect": 50
