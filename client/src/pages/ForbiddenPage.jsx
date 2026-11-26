@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getHomePathForRole, useAuth } from '../context/AuthContext.jsx';
 
@@ -11,6 +12,10 @@ const ROLE_LABELS = {
 export default function ForbiddenPage({ requiredRoles = [] }) {
   const { user } = useAuth();
   const homePath = getHomePathForRole(user?.role);
+
+  useEffect(() => {
+    document.title = 'DUKStudio — Không có quyền truy cập (403)';
+  }, []);
 
   return (
     <div className="page-main">

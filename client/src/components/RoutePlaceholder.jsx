@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getHomePathForRole, useAuth } from '../context/AuthContext.jsx';
 
@@ -9,6 +10,10 @@ export default function RoutePlaceholder({ step, title, description, endpoints =
   const { id } = useParams();
   const { isAuthenticated, user } = useAuth();
   const homePath = isAuthenticated ? getHomePathForRole(user?.role) : '/';
+
+  useEffect(() => {
+    document.title = `DUKStudio — ${id ? `${title} (${id})` : title}`;
+  }, [title, id]);
 
   return (
     <div className="page-main">

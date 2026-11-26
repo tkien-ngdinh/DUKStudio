@@ -1,9 +1,14 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getHomePathForRole, useAuth } from '../context/AuthContext.jsx';
 
 export default function NotFoundPage() {
   const { isAuthenticated, user } = useAuth();
   const homePath = isAuthenticated ? getHomePathForRole(user?.role) : '/';
+
+  useEffect(() => {
+    document.title = 'DUKStudio — Không tìm thấy trang (404)';
+  }, []);
 
   return (
     <div className="page-main">

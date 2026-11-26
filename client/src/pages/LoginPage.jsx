@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getHomePathForRole, useAuth } from '../context/AuthContext.jsx';
 
@@ -14,6 +14,10 @@ export default function LoginPage() {
   const { user, isAuthenticated, authNotice, clearNotice, login, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    document.title = 'DUKStudio — Đăng nhập';
+  }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

@@ -74,7 +74,10 @@ export function clearStoredSession() {
  * and standardized One Error Shape parsing.
  */
 export async function apiFetch(path, options = {}) {
-  if (typeof path !== 'string' || !path.startsWith('/api')) {
+  const isValidRelativeApi =
+    typeof path === 'string' &&
+    (path === '/api' || path.startsWith('/api/') || path.startsWith('/api?'));
+  if (!isValidRelativeApi) {
     throw new Error(`Relative /api path required; received "${String(path)}"`);
   }
 
@@ -91,7 +94,7 @@ export async function apiFetch(path, options = {}) {
   const stored = getStoredSession();
   const activeToken = explicitToken ?? stored?.token;
 
-  if (!skipAuth && activeToken && !headers.Authorization) {
+  if (!skipAuth && activeToken && !headers.Authorization && !headers.authorization) {
     headers.Authorization = `Bearer ${activeToken}`;
   }
 
