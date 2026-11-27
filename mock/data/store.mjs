@@ -570,7 +570,7 @@ export function createBookingFromConversation(conversationId) {
   if (!conversation) return fail('NOT_FOUND', `Conversation ${conversationId} not found`);
 
   const proposalMessage = (conversation.messages || []).slice().reverse().find((m) => m.proposal);
-  if (!proposalMessage || !['accepted', 'agreed'].includes(proposalMessage.proposal.status)) {
+  if (!proposalMessage || proposalMessage.proposal.status !== 'agreed') {
     return fail('CONFLICT', 'The customer has not accepted the proposed time yet');
   }
   if (conversation.bookingId) {
