@@ -186,7 +186,7 @@
       "makeupMinutes": 60,
       "shootMinutes": 180,
       "roomId": "room-a",
-      "maxSelect": 50
+      "maxSelect": 30
     },
     {
       "id": "pkg-ky-yeu",
@@ -331,31 +331,31 @@
       "customerId": "u-linh",
       "customerName": "Nguyễn Thị Thúy Linh",
       "status": "Đã chốt lịch",
-      "lastMessageAt": "2026-10-20T17:21:00Z",
+      "lastMessageAt": "2026-10-20T17:24:00Z",
       "bookingId": "GS-1023",
       "messages": [
         {
           "id": "m-01",
           "sender": "customer",
           "senderName": "Linh",
-          "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?",
-          "timestamp": "2026-10-20T17:20:00Z"
+          "text": "Gói tốt nghiệp có makeup còn lịch 17/10 lúc 13:00 không?",
+          "timestamp": "2026-10-12T01:00:00Z"
         },
         {
           "id": "m-02",
           "sender": "admin",
           "senderName": "DUKStudio",
-          "text": "Để mình kiểm tra lịch cho bạn nhé.",
-          "timestamp": "2026-10-20T17:21:00Z"
+          "text": "Dạ, studio kiểm tra lịch ngày 17/10 và sẽ xác nhận với em ngay nhé.",
+          "timestamp": "2026-10-12T01:05:00Z"
         },
         {
           "id": "m-03",
           "sender": "admin",
           "senderName": "DUKStudio",
-          "text": "Bạn ơi, khung 09:00 ngày 24/10 bị trùng vì thợ makeup Mai bận 08:00–12:00. Studio đề xuất dời sang makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) nhé!",
-          "timestamp": "2026-10-20T17:23:00Z",
+          "text": "Studio đề xuất makeup 13:00–14:00 và chụp 14:00–16:00 ngày 17/10 tại Phòng B nhé!",
+          "timestamp": "2026-10-12T01:10:00Z",
           "proposal": {
-            "date": "2026-10-24",
+            "date": "2026-10-17",
             "makeup": "13:00 - 14:00",
             "shoot": "14:00 - 16:00",
             "room": "Phòng B",
@@ -366,8 +366,60 @@
           "id": "m-04",
           "sender": "customer",
           "senderName": "Linh",
-          "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ạ!",
+          "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ngày 17/10 ạ!",
+          "timestamp": "2026-10-12T01:15:00Z"
+        },
+        {
+          "id": "m-05",
+          "sender": "customer",
+          "senderName": "Linh",
+          "text": "Dạ em hỏi studio khi nào sẽ gửi ảnh xem trước để em chọn ạ?",
           "timestamp": "2026-10-20T17:24:00Z"
+        }
+      ]
+    },
+    {
+      "id": "c-linh-05",
+      "customerId": "u-linh",
+      "customerName": "Linh",
+      "status": "Đã chốt lịch",
+      "lastMessageAt": "2026-10-20T10:29:00Z",
+      "bookingId": null,
+      "request": {
+        "packageId": "pkg-tn-premium",
+        "preferredDate": "2026-10-25",
+        "preferredTime": "15:00",
+        "extras": [
+          "ex-makeup"
+        ],
+        "notes": "Cần hỗ trợ 1 bộ áo cử nhân"
+      },
+      "messages": [
+        {
+          "id": "m-linh-05-01",
+          "sender": "admin",
+          "senderName": "DUKStudio",
+          "text": "Studio đề xuất ngày 25/10, makeup 14:00–15:00, chụp 15:00–17:00 tại Phòng B.",
+          "timestamp": "2026-10-20T10:28:00Z",
+          "proposal": {
+            "id": "p-linh-05-01",
+            "date": "2026-10-25",
+            "makeupStart": "14:00",
+            "makeupEnd": "15:00",
+            "shootStart": "15:00",
+            "shootEnd": "17:00",
+            "makeupArtistId": "u-mai",
+            "photographerId": "u-tuan",
+            "roomId": "room-b",
+            "status": "accepted"
+          }
+        },
+        {
+          "id": "m-linh-05-02",
+          "sender": "customer",
+          "senderName": "Linh",
+          "text": "Dạ em đồng ý lịch này ạ.",
+          "timestamp": "2026-10-20T10:29:00Z"
         }
       ]
     },
@@ -497,7 +549,7 @@
       "status": "Đã đặt lịch",
       "paymentStatus": "Đã cọc 30%",
       "photoStatus": "Chưa có ảnh",
-      "maxSelect": 50,
+      "maxSelect": 30,
       "previews": [],
       "selectedPhotoIds": [],
       "finalLink": null,
@@ -1466,7 +1518,7 @@
       "date": "2026-10-17",
       "time": "14:00 - 16:00",
       "location": "Phòng B",
-      "status": "completed",
+      "status": "Hoàn thành",
       "previewsCount": 40,
       "previews": []
     },
@@ -1480,7 +1532,7 @@
       "date": "2026-10-17",
       "time": "13:00 - 14:00",
       "location": "Khu trang điểm, tầng 1",
-      "status": "completed",
+      "status": "Hoàn thành",
       "previewsCount": 0,
       "previews": []
     },
@@ -1494,7 +1546,7 @@
       "date": "2026-10-24",
       "time": "08:00 - 12:00",
       "location": "Khu trang điểm, tầng 1",
-      "status": "assigned",
+      "status": "Chưa bắt đầu",
       "previewsCount": 0,
       "previews": []
     },
@@ -1508,7 +1560,7 @@
       "date": "2026-10-24",
       "time": "16:30 - 17:30",
       "location": "Phòng A",
-      "status": "assigned",
+      "status": "Chưa bắt đầu",
       "previewsCount": 0,
       "previews": []
     },
@@ -1522,7 +1574,7 @@
       "date": "2026-10-31",
       "time": "15:00 - 16:00",
       "location": "Phòng A",
-      "status": "assigned",
+      "status": "Chưa bắt đầu",
       "previewsCount": 0,
       "previews": []
     },
@@ -1536,7 +1588,7 @@
       "date": "2026-10-14",
       "time": "13:00 - 14:00",
       "location": "Khu trang điểm, tầng 1",
-      "status": "completed",
+      "status": "Hoàn thành",
       "previewsCount": 0,
       "previews": []
     },
@@ -1550,7 +1602,7 @@
       "date": "2026-10-14",
       "time": "14:00 - 16:00",
       "location": "Phòng B",
-      "status": "completed",
+      "status": "Hoàn thành",
       "previewsCount": 40,
       "previews": []
     }

@@ -28,7 +28,7 @@ export function register(router) {
     }
 
     const store = getStore();
-    const customerBookings = (store.bookings || []).filter((b) => b.customerId === user.id);
+    const customerBookings = (store.bookings || []).filter((b) => b.customerId === user.id && b.status !== 'Đã huỷ' && b.status !== 'Đã hủy');
     const bookingIds = new Set(customerBookings.map((b) => b.id));
 
     const reminders = (store.reminders || []).filter((r) => bookingIds.has(r.bookingId));
