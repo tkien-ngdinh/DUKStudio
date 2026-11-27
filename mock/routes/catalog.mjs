@@ -61,6 +61,7 @@ export function register(router) {
 
       return res.status(200).json({
         services: [matched],
+        extras: (store.extras || []).map(({ id, name }) => ({ id, name })),
         accessories: store.accessories || [],
         samplePhotos,
         reviews
@@ -69,6 +70,7 @@ export function register(router) {
 
     return res.status(200).json({
       services: catalogServices,
+      extras: (store.extras || []).map(({ id, name }) => ({ id, name })),
       accessories: store.accessories || [],
       samplePhotos: store.samplePhotos || [],
       reviews: (store.reviews || []).map((r) => ({

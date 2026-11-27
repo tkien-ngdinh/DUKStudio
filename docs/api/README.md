@@ -86,7 +86,7 @@ This table enumerates all 30 endpoints across the 11 main-flow steps (G1–G11),
 | POST | /api/auth/login | Visitor | `01-auth.md` | G2: Sign in to system |
 | POST | /api/auth/logout | Authenticated | `01-auth.md` | G2: Sign out |
 | GET | /api/auth/me | Authenticated | `01-auth.md` | G2: Current authenticated user profile |
-| GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, price list, accessories, feedback |
+| GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, prices, extras, accessories, feedback |
 | GET | /api/conversations | Customer, Admin | `03-chat.md` | G3, G4: Admin gets all conversations by 4 status tabs; Customer gets only their own |
 | POST | /api/conversations | Customer | `03-chat.md` | G3: Customer initiates inquiry / booking request |
 | GET | /api/conversations/:id | Customer, Admin | `03-chat.md` | G3, G4: Conversation details and message history |

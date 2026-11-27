@@ -227,8 +227,6 @@
     {
       "id": "ex-makeup",
       "name": "Trang điểm",
-      "price": 300000,
-      "unit": "buổi",
       "includedIn": [
         "pkg-tn-premium",
         "pkg-tn-nhom"
@@ -237,22 +235,16 @@
     {
       "id": "ex-hair",
       "name": "Làm tóc",
-      "price": 200000,
-      "unit": "buổi",
       "includedIn": []
     },
     {
       "id": "ex-gown",
       "name": "Thuê lễ phục cử nhân",
-      "price": 150000,
-      "unit": "người",
       "includedIn": []
     },
     {
       "id": "ex-flowers",
       "name": "Hoa bó tốt nghiệp",
-      "price": 250000,
-      "unit": "bó",
       "includedIn": []
     }
   ],
@@ -382,7 +374,7 @@
       "id": "c-linh-05",
       "customerId": "u-linh",
       "customerName": "Linh",
-      "status": "Đã chốt lịch",
+      "status": "Đang tư vấn",
       "lastMessageAt": "2026-10-20T10:29:00Z",
       "bookingId": null,
       "request": {
@@ -411,17 +403,24 @@
             "makeupArtistId": "u-mai",
             "photographerId": "u-tuan",
             "roomId": "room-b",
-            "status": "agreed"
+            "status": "pending"
           }
         },
         {
           "id": "m-linh-05-02",
           "sender": "customer",
           "senderName": "Linh",
-          "text": "Dạ em đồng ý lịch này ạ.",
+          "text": "Dạ để em kiểm tra lịch cá nhân rồi phản hồi studio ạ.",
           "timestamp": "2026-10-20T10:29:00Z"
         }
-      ]
+      ],
+      "activeProposal": {
+        "date": "2026-10-25",
+        "makeup": "14:00 - 15:00",
+        "shoot": "15:00 - 17:00",
+        "room": "Phòng B",
+        "status": "pending"
+      }
     },
     {
       "id": "c-1002",

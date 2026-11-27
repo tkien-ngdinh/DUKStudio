@@ -162,7 +162,7 @@ Initiates a new customer inquiry and consultation thread for a photography shoot
 
 ### Success Example (201 Created)
 
-Customer Linh sends a new booking request. Her latest conversation `c-linh-01` already has booking GS-1023, so this request starts a new conversation. The seed also contains an older thread (`c-linh-05`) whose proposal is in the `agreed` state but has no booking; it is not reused because it is not the latest conversation.
+Customer Linh sends a new booking request. Her latest conversation `c-linh-01` already has booking GS-1023, so this request starts a new conversation. The seed also contains an older thread (`c-linh-05`) with a pending proposal but no booking; it is not reused because it is not the latest conversation.
 
 ```http
 POST /api/conversations
@@ -531,54 +531,14 @@ Customer accepts or declines the studio's proposed shoot schedule (Step G6).
   - `decision` (string, required): Customer decision, either `accept` or `decline`.
 
 > [!NOTE]
-> **Sequential Execution & State Ordering**:
-> Responding to a schedule proposal requires an active proposal in `pending` status. Each proposal can only be answered once. In the sequential flow below:
-> 1. Customer Linh declines the initial proposed slot established in Section 5 (`decision: "decline"`). Proposal status becomes `declined` and conversation status returns to `Đang tư vấn`.
-> 2. Admin Thảo posts an alternative timeslot proposal (`POST /api/conversations/c-linh-06/propose-time`), creating a new active `pending` proposal.
-> 3. Customer Linh accepts the revised timeslot (`decision: "accept"`). Proposal status becomes `agreed` and conversation status advances to `Đã chốt lịch`.
-> If running examples independently, ensure the target conversation contains an active pending proposal.
+> **Sequential execution and separate scenarios**:
+> - The main booking flow follows PA2: Linh asks about 24/10 at 09:00; after the clash check, Admin proposes makeup 13:00-14:00 and shooting 14:00-16:00 in Phong B. Linh accepts this proposal, and GS-1024 is created from it.
+> - The decline-and-reproposal example is a separate seeded conversation, c-linh-05. It has a pending proposal and no booking, so declining it leaves the conversation in Đang tư vấn; Admin can then propose another time in that same conversation.
+> Each proposal may be answered only once. A new proposal supersedes the previous proposal and becomes pending. If running examples independently, ensure the target conversation contains an active pending proposal.
 
-### Decline Proposal Example (200 OK)
+### Accept Proposal Example - PA2 Main Flow (200 OK)
 
-Customer Linh declines the initial active proposal established in Section 5.
-
-```http
-POST /api/conversations/c-linh-06/respond-proposal
-Authorization: Bearer {{token:linh}}
-Content-Type: application/json
-
-{"decision": "decline"}
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"status": "Đang tư vấn", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "declined"}, "message": {"id": "m-03", "sender": "customer", "senderName": "Linh", "text": "Dạ khung giờ này em bận mất rồi, studio còn giờ nào khác không ạ?", "timestamp": "2026-10-21T09:02:00Z"}}
-```
-
-### Studio Proposes Alternative Slot (200 OK)
-
-Following the customer's decline, Admin Thảo posts an alternative timeslot proposal into the conversation, superseding the declined proposal and setting active state to `pending`.
-
-```http
-POST /api/conversations/c-linh-06/propose-time
-Authorization: Bearer {{token:thao}}
-Content-Type: application/json
-
-{"date": "2026-10-25", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "text": "Studio đề xuất thêm khung giờ dự phòng ngày 25/10: makeup 14:00–15:00 và chụp 15:00–17:00 (Tuấn, Phòng B) nhé!"}
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"proposal": {"date": "2026-10-25", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "pending"}, "message": {"id": "m-04", "sender": "admin", "senderName": "DUKStudio", "text": "Studio đề xuất thêm khung giờ dự phòng ngày 25/10: makeup 14:00–15:00 và chụp 15:00–17:00 (Tuấn, Phòng B) nhé!", "timestamp": "2026-10-21T09:03:00Z", "proposal": {"date": "2026-10-25", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "pending"}}}
-```
-
-### Accept Proposal Example (200 OK)
-
-Customer Linh agrees to the studio's alternative proposed schedule.
+Customer Linh accepts the 24/10 at 14:00 shoot proposal.
 
 ```http
 POST /api/conversations/c-linh-06/respond-proposal
@@ -592,7 +552,64 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"status":"Đã chốt lịch","proposal":{"date":"2026-10-25","makeup":"14:00 - 15:00","shoot":"15:00 - 17:00","room":"Phòng B","status":"agreed"},"message":{"id":"m-05","sender":"customer","senderName":"Linh","text":"Dạ em đồng ý lịch 14:00 makeup và 15:00 chụp ạ!","timestamp":"2026-10-21T09:04:00Z"}}
+{"status":"Đã chốt lịch","proposal":{"date":"2026-10-24","makeup":"13:00 - 14:00","shoot":"14:00 - 16:00","room":"Phòng B","status":"agreed"},"message":{"id":"m-03","sender":"customer","senderName":"Linh","text":"D\u1ea1 em \u0111\u1ed3ng \u00fd l\u1ecbch 13:00 makeup v\u00e0 14:00 ch\u1ee5p \u1ea1!","timestamp":"2026-10-21T09:02:00Z"}}
+```
+
+### Decline Proposal Example (200 OK)
+
+Customer Linh declines the pending proposal in the separate seeded conversation c-linh-05.
+
+```http
+POST /api/conversations/c-linh-05/respond-proposal
+Authorization: Bearer {{token:linh}}
+Content-Type: application/json
+
+{"decision": "decline"}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"status": "Đang tư vấn", "proposal": {"date": "2026-10-25", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "declined"}, "message": {"id": "m-03", "sender": "customer", "senderName": "Linh", "text": "D\u1ea1 khung gi\u1edd n\u00e0y em b\u1eadn m\u1ea5t r\u1ed3i, studio c\u00f2n gi\u1edd n\u00e0o kh\u00e1c kh\u00f4ng \u1ea1?", "timestamp": "2026-10-20T10:30:00Z"}}
+```
+
+### Studio Proposes Alternative Slot (200 OK)
+
+Following the decline, Admin Thao proposes another time in c-linh-05. The conversation remains available for further proposals until Linh agrees to one.
+
+```http
+POST /api/conversations/c-linh-05/propose-time
+Authorization: Bearer {{token:thao}}
+Content-Type: application/json
+
+{"date": "2026-10-26", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "text": "Studio proposes another slot on 26/10: makeup 13:00-14:00 and shoot 14:00-16:00 in Phòng B."}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"proposal": {"date": "2026-10-26", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}, "message": {"id": "m-04", "sender": "admin", "senderName": "DUKStudio", "text": "Studio proposes another slot on 26/10: makeup 13:00-14:00 and shoot 14:00-16:00 in Phòng B.", "timestamp": "2026-10-20T10:31:00Z", "proposal": {"date": "2026-10-26", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}}}
+```
+
+### Accept Revised Proposal Example (200 OK)
+
+Customer Linh accepts the alternative time in c-linh-05.
+
+```http
+POST /api/conversations/c-linh-05/respond-proposal
+Authorization: Bearer {{token:linh}}
+Content-Type: application/json
+
+{"decision": "accept"}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"status":"Đã chốt lịch","proposal":{"date":"2026-10-26","makeup":"13:00 - 14:00","shoot":"14:00 - 16:00","room":"Phòng B","status":"agreed"},"message":{"id":"m-05","sender":"customer","senderName":"Linh","text":"D\u1ea1 em \u0111\u1ed3ng \u00fd l\u1ecbch 13:00 makeup v\u00e0 14:00 ch\u1ee5p \u1ea1!","timestamp":"2026-10-20T10:32:00Z"}}
 ```
 
 ### Validation Error Example — Missing Decision (400 Bad Request)
@@ -684,6 +701,7 @@ Content-Type: application/json
   - Formatted strictly increasing timestamps (`17:25:00Z` through `17:30:00Z`) and sequential message IDs (`m-05` through `m-10`) across all `c-linh-06` message and proposal interactions.
 
 - **2026-11-27**:
-  - Aligned the ordered G3–G6 examples with the one-booking-per-conversation rule: the seeded `c-linh-05` has an `agreed` proposal but no booking, while `c-linh-01` already links to GS-1023, a new booking request creates `c-linh-06`, and all proposal examples use that new conversation.
-  - Documented the optional `extras` request field and that extras are coordination data and do not alter the package price.
+  - Aligned the main G3-G6 booking path with the PA2 example (Linh agrees to 24/10 at 14:00); retained decline and re-proposal coverage in the separate seeded c-linh-05 conversation.
+  - Documented the optional `extras` request field as coordination data only; extras have no separate booking price and do not alter the package price.
+  - Removed legacy price and unit fields from seeded extras so their stored data cannot imply that they add charges to bookings.
   - Renamed the English label for `Đã chốt lịch` to *Schedule Confirmed* to distinguish conversation state from the booking's deposit state.

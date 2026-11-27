@@ -31,7 +31,7 @@ The goal of PA#3 is to implement the complete 11-step main flow of GradStudio (s
 ## 3. Main User Flow (Steps G1–G11) & Business Rules
 
 1. **G1: Discovery & Service Catalog (`/`, `GET /api/catalog`)**
-   - Public view. Displays graduation photography packages, starting prices, service features, studio amenities, and customer feedback.
+   - Public view. Displays graduation photography packages, starting prices, service features, selectable coordination extras, studio amenities, and customer feedback.
 2. **G2: Authentication (`/login`, `POST /api/auth/login`, `GET /api/auth/me`, `POST /api/auth/logout`)**
    - Single sign-in portal for all 4 roles. Issues stable tokens (`token-<account_name>`).
 3. **G3: Customer Chat & Booking Request (`/chat`, `POST /api/conversations`)**
@@ -82,7 +82,7 @@ The application maintains 5 permanent demo accounts covering all 4 roles. In aut
 | POST | /api/auth/login | Visitor | `01-auth.md` | G2: Sign in to system |
 | POST | /api/auth/logout | Authenticated | `01-auth.md` | G2: Sign out |
 | GET | /api/auth/me | Authenticated | `01-auth.md` | G2: Current authenticated user profile |
-| GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, price list, accessories, feedback |
+| GET | /api/catalog | Visitor, Customer | `02-catalog.md` | G1: Packages, services, prices, extras, accessories, feedback |
 | GET | /api/conversations | Customer, Admin | `03-chat.md` | G3, G4: Admin gets all conversations by 4 status tabs; Customer gets only their own |
 | POST | /api/conversations | Customer | `03-chat.md` | G3: Customer initiates inquiry / booking request |
 | GET | /api/conversations/:id | Customer, Admin | `03-chat.md` | G3, G4: Conversation details and message history |

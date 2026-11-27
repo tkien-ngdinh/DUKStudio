@@ -24,7 +24,7 @@ Authorization: Bearer {{token:tuan}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"jobs":[{"id":"job-101","bookingId":"GS-1023","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Linh","date":"2026-10-17","time":"14:00 - 16:00","location":"Phòng B","status":"Hoàn thành","previewsCount":40},{"id":"job-104","bookingId":"GS-1018","role":"photographer","service":"Gói Chân dung Profile","customerName":"Lương Đức Thịnh","date":"2026-10-24","time":"16:30 - 17:30","location":"Phòng A","status":"Chưa bắt đầu","previewsCount":0},{"id":"job-107","bookingId":"GS-1021","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Lê Bảo Nhi","date":"2026-10-14","time":"14:00 - 16:00","location":"Phòng B","status":"Hoàn thành","previewsCount":40},{"id":"job-109","bookingId":"GS-1024","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Linh","date":"2026-10-25","time":"15:00 - 17:00","location":"Phòng B","status":"Chưa bắt đầu","previewsCount":0}]}
+{"jobs":[{"id":"job-101","bookingId":"GS-1023","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Linh","date":"2026-10-17","time":"14:00 - 16:00","location":"Phòng B","status":"Hoàn thành","previewsCount":40},{"id":"job-104","bookingId":"GS-1018","role":"photographer","service":"Gói Chân dung Profile","customerName":"Lương Đức Thịnh","date":"2026-10-24","time":"16:30 - 17:30","location":"Phòng A","status":"Chưa bắt đầu","previewsCount":0},{"id":"job-107","bookingId":"GS-1021","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Lê Bảo Nhi","date":"2026-10-14","time":"14:00 - 16:00","location":"Phòng B","status":"Hoàn thành","previewsCount":40},{"id":"job-109","bookingId":"GS-1024","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Linh","date":"2026-10-24","time":"14:00 - 16:00","location":"Phòng B","status":"Chưa bắt đầu","previewsCount":0}]}
 ```
 
 ### Access Denied Example (403 Forbidden)
@@ -203,4 +203,5 @@ Content-Type: application/json
   - An uploaded preview is also added to the booking's `previews`, so G9 shows what G8 uploaded. Preview ids are unique (`prev-01`, `prev-02`, …).
 
 - **2026-11-27**:
+  - Aligned the GS-1024 photographer job example with the PA2 booking schedule: 2026-10-24 at 14:00-16:00.
   - Changed the shared makeup, photography and retouching task status vocabulary to `Chưa bắt đầu`, `Đang làm`, and `Hoàn thành`; staff may update only their own job. Job status changes do not change booking status.
