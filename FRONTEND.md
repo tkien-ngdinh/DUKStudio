@@ -105,4 +105,3 @@ Key architectural and product decisions agreed upon with the team:
 Updated as the work goes on; the final list is written before submission.
 
 - Task 7 (`client/` Vite + React Router scaffold, `vite.config.js` `/api` proxy, `AuthContext` + `useAuth`, `ProtectedRoute`, `apiFetch`, shared `Loading`/`Error+Retry`/`Empty` states, `Layout`, `NotFoundPage`, and `/login`) is complete; feature screens for G1 and G3–G11 are pending in Tasks 8–12 (currently routed to clean scaffold placeholders).
-- Contracts and mock routes for `02-catalog`, `03-chat`, `04-schedule`, `05-bookings`, `06-payments`, `07-reminders` and `09-gallery` are in progress on teammate branches; `contract-check` still lists their 20 endpoints as having no example on `main`.
