@@ -1,28 +1,99 @@
 {
   "users": [
-    {"id": "u-linh", "name": "Linh", "fullName": "Nguyễn Thị Thúy Linh", "email": "linh@gradstudio.test", "password": "linh-demo", "role": "customer"},
-    {"id": "u-thao", "name": "Admin Thảo", "email": "thao@gradstudio.test", "password": "thao-demo", "role": "admin", "createdAt": "2026-10-01T08:00:00Z"},
-    {"id": "u-mai", "name": "Mai", "email": "mai@gradstudio.test", "password": "mai-demo", "role": "staff"},
-    {"id": "u-tuan", "name": "Tuấn", "email": "tuan@gradstudio.test", "password": "tuan-demo", "role": "staff"},
-    {"id": "u-superadmin", "name": "Superadmin", "email": "superadmin@gradstudio.test", "password": "superadmin-demo", "role": "superadmin"}
+    {
+      "id": "u-linh",
+      "name": "Linh",
+      "fullName": "Nguyễn Thị Thúy Linh",
+      "email": "linh@gradstudio.test",
+      "password": "linh-demo",
+      "role": "customer"
+    },
+    {
+      "id": "u-thao",
+      "name": "Admin Thảo",
+      "email": "thao@gradstudio.test",
+      "password": "thao-demo",
+      "role": "admin",
+      "createdAt": "2026-10-01T08:00:00Z"
+    },
+    {
+      "id": "u-mai",
+      "name": "Mai",
+      "email": "mai@gradstudio.test",
+      "password": "mai-demo",
+      "role": "staff"
+    },
+    {
+      "id": "u-tuan",
+      "name": "Tuấn",
+      "email": "tuan@gradstudio.test",
+      "password": "tuan-demo",
+      "role": "staff"
+    },
+    {
+      "id": "u-superadmin",
+      "name": "Superadmin",
+      "email": "superadmin@gradstudio.test",
+      "password": "superadmin-demo",
+      "role": "superadmin"
+    }
   ],
   "customers": [
-    {"id": "cus-anh", "name": "Phan Ngọc Anh"},
-    {"id": "cus-thinh", "name": "Lương Đức Thịnh"},
-    {"id": "cus-ha", "name": "Huỳnh Thu Hà"},
-    {"id": "cus-bao", "name": "Võ Gia Bảo"},
-    {"id": "cus-khoi", "name": "Trương Minh Khôi"},
-    {"id": "cus-chau", "name": "Đỗ Minh Châu"},
-    {"id": "cus-nhi", "name": "Lê Bảo Nhi"}
+    {
+      "id": "cus-anh",
+      "name": "Phan Ngọc Anh"
+    },
+    {
+      "id": "cus-thinh",
+      "name": "Lương Đức Thịnh"
+    },
+    {
+      "id": "cus-ha",
+      "name": "Huỳnh Thu Hà"
+    },
+    {
+      "id": "cus-bao",
+      "name": "Võ Gia Bảo"
+    },
+    {
+      "id": "cus-khoi",
+      "name": "Trương Minh Khôi"
+    },
+    {
+      "id": "cus-chau",
+      "name": "Đỗ Minh Châu"
+    },
+    {
+      "id": "cus-nhi",
+      "name": "Lê Bảo Nhi"
+    }
   ],
   "staff": [
-    {"id": "u-mai", "name": "Mai", "role": "makeup"},
-    {"id": "u-tuan", "name": "Tuấn", "role": "photographer"},
-    {"id": "st-khoa", "name": "Khoa", "role": "photographer"}
+    {
+      "id": "u-mai",
+      "name": "Mai",
+      "role": "makeup"
+    },
+    {
+      "id": "u-tuan",
+      "name": "Tuấn",
+      "role": "photographer"
+    },
+    {
+      "id": "st-khoa",
+      "name": "Khoa",
+      "role": "photographer"
+    }
   ],
   "rooms": [
-    {"id": "room-a", "name": "Phòng A"},
-    {"id": "room-b", "name": "Phòng B"}
+    {
+      "id": "room-a",
+      "name": "Phòng A"
+    },
+    {
+      "id": "room-b",
+      "name": "Phòng B"
+    }
   ],
   "busyBlocks": [
     {
@@ -37,13 +108,30 @@
     }
   ],
   "scheduleReasons": {
-    "GS-1017": {"makeup": "Trang điểm nhóm 4 người", "shoot": "Chụp nhóm"},
-    "GS-1018": {"shoot": "Chụp chân dung"}
+    "GS-1017": {
+      "makeup": "Trang điểm nhóm 4 người",
+      "shoot": "Chụp nhóm"
+    },
+    "GS-1018": {
+      "shoot": "Chụp chân dung"
+    }
   },
   "services": [
-    {"id": "svc-tot-nghiep", "name": "Chụp tốt nghiệp", "description": "Ảnh tốt nghiệp cá nhân hoặc nhóm, có trang điểm và phòng chụp riêng."},
-    {"id": "svc-ky-yeu", "name": "Chụp kỷ yếu", "description": "Chụp tập thể lớp, concept theo yêu cầu của lớp."},
-    {"id": "svc-chan-dung", "name": "Chân dung / Profile CV", "description": "Ảnh chân dung cho hồ sơ xin việc và mạng nghề nghiệp."}
+    {
+      "id": "svc-tot-nghiep",
+      "name": "Chụp tốt nghiệp",
+      "description": "Ảnh tốt nghiệp cá nhân hoặc nhóm, có trang điểm và phòng chụp riêng."
+    },
+    {
+      "id": "svc-ky-yeu",
+      "name": "Chụp kỷ yếu",
+      "description": "Chụp tập thể lớp, concept theo yêu cầu của lớp."
+    },
+    {
+      "id": "svc-chan-dung",
+      "name": "Chân dung / Profile CV",
+      "description": "Ảnh chân dung cho hồ sơ xin việc và mạng nghề nghiệp."
+    }
   ],
   "packages": [
     {
@@ -54,7 +142,11 @@
       "priceUnit": "buổi",
       "deposit": 360000,
       "remaining": 840000,
-      "includes": ["Chụp 60 phút", "Phòng A", "Không trang điểm"],
+      "includes": [
+        "Chụp 60 phút",
+        "Phòng A",
+        "Không trang điểm"
+      ],
       "makeupMinutes": 0,
       "shootMinutes": 60,
       "roomId": "room-a",
@@ -68,7 +160,11 @@
       "priceUnit": "buổi",
       "deposit": 540000,
       "remaining": 1260000,
-      "includes": ["Trang điểm 60 phút ngay trước giờ chụp", "Chụp 120 phút", "Phòng B"],
+      "includes": [
+        "Trang điểm 60 phút ngay trước giờ chụp",
+        "Chụp 120 phút",
+        "Phòng B"
+      ],
       "makeupMinutes": 60,
       "shootMinutes": 120,
       "roomId": "room-b",
@@ -82,7 +178,11 @@
       "priceUnit": "buổi",
       "deposit": 1350000,
       "remaining": 3150000,
-      "includes": ["Trang điểm theo nhóm 60 phút ngay trước giờ chụp", "Chụp 180 phút", "Phòng A"],
+      "includes": [
+        "Trang điểm theo nhóm 60 phút ngay trước giờ chụp",
+        "Chụp 180 phút",
+        "Phòng A"
+      ],
       "makeupMinutes": 60,
       "shootMinutes": 180,
       "roomId": "room-a",
@@ -96,7 +196,10 @@
       "priceUnit": "người",
       "deposit": null,
       "remaining": null,
-      "includes": ["Chụp 180 phút tại trường", "Cọc 30%, còn lại 70% của tổng"],
+      "includes": [
+        "Chụp 180 phút tại trường",
+        "Cọc 30%, còn lại 70% của tổng"
+      ],
       "makeupMinutes": 0,
       "shootMinutes": 180,
       "roomId": null,
@@ -110,7 +213,10 @@
       "priceUnit": "buổi",
       "deposit": 207000,
       "remaining": 483000,
-      "includes": ["Chụp 60 phút", "Phòng A"],
+      "includes": [
+        "Chụp 60 phút",
+        "Phòng A"
+      ],
       "makeupMinutes": 0,
       "shootMinutes": 60,
       "roomId": "room-a",
@@ -118,18 +224,69 @@
     }
   ],
   "extras": [
-    {"id": "ex-makeup", "name": "Trang điểm", "price": 300000, "unit": "buổi", "includedIn": ["pkg-tn-premium", "pkg-tn-nhom"]},
-    {"id": "ex-hair", "name": "Làm tóc", "price": 200000, "unit": "buổi", "includedIn": []},
-    {"id": "ex-gown", "name": "Thuê lễ phục cử nhân", "price": 150000, "unit": "người", "includedIn": []},
-    {"id": "ex-flowers", "name": "Hoa bó tốt nghiệp", "price": 250000, "unit": "bó", "includedIn": []}
+    {
+      "id": "ex-makeup",
+      "name": "Trang điểm",
+      "price": 300000,
+      "unit": "buổi",
+      "includedIn": [
+        "pkg-tn-premium",
+        "pkg-tn-nhom"
+      ]
+    },
+    {
+      "id": "ex-hair",
+      "name": "Làm tóc",
+      "price": 200000,
+      "unit": "buổi",
+      "includedIn": []
+    },
+    {
+      "id": "ex-gown",
+      "name": "Thuê lễ phục cử nhân",
+      "price": 150000,
+      "unit": "người",
+      "includedIn": []
+    },
+    {
+      "id": "ex-flowers",
+      "name": "Hoa bó tốt nghiệp",
+      "price": 250000,
+      "unit": "bó",
+      "includedIn": []
+    }
   ],
   "samples": [
-    {"id": "smp-01", "url": "/samples/cap-steps.svg", "alt": "Minh hoạ: mũ cử nhân đặt trên bậc thềm giảng đường"},
-    {"id": "smp-02", "url": "/samples/gown-hanger.svg", "alt": "Minh hoạ: lễ phục cử nhân treo trong phòng chụp"},
-    {"id": "smp-03", "url": "/samples/diploma-flowers.svg", "alt": "Minh hoạ: bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-    {"id": "smp-04", "url": "/samples/studio-room-b.svg", "alt": "Minh hoạ: Phòng B với phông nền và đèn chụp"},
-    {"id": "smp-05", "url": "/samples/campus-gate.svg", "alt": "Minh hoạ: cổng trường lúc chiều"},
-    {"id": "smp-06", "url": "/samples/class-board.svg", "alt": "Minh hoạ: bảng lớp ghi lời chúc tốt nghiệp"}
+    {
+      "id": "smp-01",
+      "url": "/samples/cap-steps.svg",
+      "alt": "Minh hoạ: mũ cử nhân đặt trên bậc thềm giảng đường"
+    },
+    {
+      "id": "smp-02",
+      "url": "/samples/gown-hanger.svg",
+      "alt": "Minh hoạ: lễ phục cử nhân treo trong phòng chụp"
+    },
+    {
+      "id": "smp-03",
+      "url": "/samples/diploma-flowers.svg",
+      "alt": "Minh hoạ: bằng tốt nghiệp và bó hoa trên bàn gỗ"
+    },
+    {
+      "id": "smp-04",
+      "url": "/samples/studio-room-b.svg",
+      "alt": "Minh hoạ: Phòng B với phông nền và đèn chụp"
+    },
+    {
+      "id": "smp-05",
+      "url": "/samples/campus-gate.svg",
+      "alt": "Minh hoạ: cổng trường lúc chiều"
+    },
+    {
+      "id": "smp-06",
+      "url": "/samples/class-board.svg",
+      "alt": "Minh hoạ: bảng lớp ghi lời chúc tốt nghiệp"
+    }
   ],
   "reviews": [
     {
@@ -139,52 +296,78 @@
       "packageId": "pkg-tn-premium",
       "text": "Studio báo lịch rõ ràng, chọn ảnh dễ, nhận ảnh đúng hẹn."
     },
-    {"id": "rv-02", "author": "Phan Ngọc Anh", "stars": 5, "packageId": "pkg-tn-nhom", "text": "Nhóm 4 người trang điểm nhanh, chụp rất vui."},
-    {"id": "rv-03", "author": "Lương Đức Thịnh", "stars": 4, "packageId": "pkg-chan-dung", "text": "Ảnh CV chuyên nghiệp, chỉ phải chờ ảnh hơi lâu."}
+    {
+      "id": "rv-02",
+      "author": "Phan Ngọc Anh",
+      "stars": 5,
+      "packageId": "pkg-tn-nhom",
+      "text": "Nhóm 4 người trang điểm nhanh, chụp rất vui."
+    },
+    {
+      "id": "rv-03",
+      "author": "Lương Đức Thịnh",
+      "stars": 4,
+      "packageId": "pkg-chan-dung",
+      "text": "Ảnh CV chuyên nghiệp, chỉ phải chờ ảnh hơi lâu."
+    },
+    {
+      "id": "rev-01",
+      "author": "Nguyễn Thị Thúy Linh",
+      "stars": 5,
+      "packageId": "pkg-tn-premium",
+      "text": "Studio làm việc chuyên nghiệp, thợ makeup Mai trang điểm rất tự nhiên và anh Tuấn chụp ảnh hướng dẫn tạo dáng nhiệt tình!"
+    },
+    {
+      "id": "rev-02",
+      "author": "Trần Hoàng Nam",
+      "stars": 5,
+      "packageId": "pkg-ky-yeu",
+      "text": "Bộ ảnh lớp mình ai cũng khen, màu ảnh trong trẻo, giao file nhanh đúng hẹn."
+    }
   ],
   "conversations": [
     {
-      "id": "c-1001",
+      "id": "c-linh-01",
       "customerId": "u-linh",
-      "customerName": "Linh",
+      "customerName": "Nguyễn Thị Thúy Linh",
       "status": "Đã chốt lịch",
-      "lastMessageAt": "2026-10-12T01:30:00Z",
+      "lastMessageAt": "2026-10-20T17:21:00Z",
       "bookingId": "GS-1023",
-      "request": {"shootType": "Tốt nghiệp cá nhân", "packageId": "pkg-tn-premium", "preferredDate": "2026-10-17", "preferredTime": "14:00", "extras": []},
       "messages": [
         {
-          "id": "m-1001-01",
+          "id": "m-01",
           "sender": "customer",
           "senderName": "Linh",
-          "text": "Studio còn lịch chụp tốt nghiệp gói Premium chiều 17/10 không ạ?",
-          "sentAt": "2026-10-11T09:00:00Z"
+          "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?",
+          "timestamp": "2026-10-20T17:20:00Z"
         },
         {
-          "id": "m-1001-02",
+          "id": "m-02",
           "sender": "admin",
-          "senderName": "Thảo",
-          "text": "Chào Linh, ngày 17/10 studio còn trang điểm 13:00–14:00 với Mai và chụp 14:00–16:00 với Tuấn ở Phòng B. Bạn đồng ý giờ này không?",
-          "sentAt": "2026-10-11T09:10:00Z",
+          "senderName": "DUKStudio",
+          "text": "Để mình kiểm tra lịch cho bạn nhé.",
+          "timestamp": "2026-10-20T17:21:00Z"
+        },
+        {
+          "id": "m-03",
+          "sender": "admin",
+          "senderName": "DUKStudio",
+          "text": "Bạn ơi, khung 09:00 ngày 24/10 bị trùng vì thợ makeup Mai bận 08:00–12:00. Studio đề xuất dời sang makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) nhé!",
+          "timestamp": "2026-10-20T17:23:00Z",
           "proposal": {
-            "id": "p-1001-01",
-            "date": "2026-10-17",
-            "makeupStart": "13:00",
-            "makeupEnd": "14:00",
-            "shootStart": "14:00",
-            "shootEnd": "16:00",
-            "makeupArtistId": "u-mai",
-            "photographerId": "u-tuan",
-            "roomId": "room-b",
-            "status": "accepted"
+            "date": "2026-10-24",
+            "makeup": "13:00 - 14:00",
+            "shoot": "14:00 - 16:00",
+            "room": "Phòng B",
+            "status": "agreed"
           }
         },
-        {"id": "m-1001-03", "sender": "customer", "senderName": "Linh", "text": "Dạ em đồng ý ạ.", "sentAt": "2026-10-12T01:20:00Z"},
         {
-          "id": "m-1001-04",
-          "sender": "system",
-          "senderName": "Hệ thống",
-          "text": "Đã tạo booking GS-1023 · Chờ cọc 30%. Studio chỉ giữ lịch sau khi bạn đặt cọc thành công.",
-          "sentAt": "2026-10-12T01:30:00Z"
+          "id": "m-04",
+          "sender": "customer",
+          "senderName": "Linh",
+          "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ạ!",
+          "timestamp": "2026-10-20T17:24:00Z"
         }
       ]
     },
@@ -195,7 +378,13 @@
       "status": "Chưa trả lời",
       "lastMessageAt": "2026-10-23T03:15:00Z",
       "bookingId": null,
-      "request": {"shootType": "Kỷ yếu lớp", "packageId": "pkg-ky-yeu", "preferredDate": null, "preferredTime": null, "extras": []},
+      "request": {
+        "shootType": "Kỷ yếu lớp",
+        "packageId": "pkg-ky-yeu",
+        "preferredDate": null,
+        "preferredTime": null,
+        "extras": []
+      },
       "messages": [
         {
           "id": "m-1002-01",
@@ -213,7 +402,13 @@
       "status": "Đang tư vấn",
       "lastMessageAt": "2026-10-22T08:20:00Z",
       "bookingId": null,
-      "request": {"shootType": "Chân dung / Profile CV", "packageId": "pkg-chan-dung", "preferredDate": "2026-10-31", "preferredTime": "10:00", "extras": []},
+      "request": {
+        "shootType": "Chân dung / Profile CV",
+        "packageId": "pkg-chan-dung",
+        "preferredDate": "2026-10-31",
+        "preferredTime": "10:00",
+        "extras": []
+      },
       "messages": [
         {
           "id": "m-1003-01",
@@ -250,7 +445,13 @@
       "status": "Hoàn thành",
       "lastMessageAt": "2026-10-14T05:00:00Z",
       "bookingId": "GS-1019",
-      "request": {"shootType": "Tốt nghiệp cá nhân", "packageId": "pkg-tn-premium", "preferredDate": "2026-10-10", "preferredTime": "14:00", "extras": []},
+      "request": {
+        "shootType": "Tốt nghiệp cá nhân",
+        "packageId": "pkg-tn-premium",
+        "preferredDate": "2026-10-10",
+        "preferredTime": "14:00",
+        "extras": []
+      },
       "messages": [
         {
           "id": "m-1004-01",
@@ -274,9 +475,25 @@
       "packageName": "Gói Tốt nghiệp Nhóm (tối đa 5 người)",
       "extras": [],
       "date": "2026-10-24",
-      "makeup": {"start": "08:00", "end": "12:00", "staffId": "u-mai", "staffName": "Mai"},
-      "shoot": {"start": "09:30", "end": "12:30", "staffId": "st-khoa", "staffName": "Khoa", "roomId": "room-a", "roomName": "Phòng A"},
-      "price": {"total": 4500000, "deposit": 1350000, "remaining": 3150000},
+      "makeup": {
+        "start": "08:00",
+        "end": "12:00",
+        "staffId": "u-mai",
+        "staffName": "Mai"
+      },
+      "shoot": {
+        "start": "09:30",
+        "end": "12:30",
+        "staffId": "st-khoa",
+        "staffName": "Khoa",
+        "roomId": "room-a",
+        "roomName": "Phòng A"
+      },
+      "price": {
+        "total": 4500000,
+        "deposit": 1350000,
+        "remaining": 3150000
+      },
       "status": "Đã đặt lịch",
       "paymentStatus": "Đã cọc 30%",
       "photoStatus": "Chưa có ảnh",
@@ -299,8 +516,19 @@
       "extras": [],
       "date": "2026-10-24",
       "makeup": null,
-      "shoot": {"start": "16:30", "end": "17:30", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-a", "roomName": "Phòng A"},
-      "price": {"total": 690000, "deposit": 207000, "remaining": 483000},
+      "shoot": {
+        "start": "16:30",
+        "end": "17:30",
+        "staffId": "u-tuan",
+        "staffName": "Tuấn",
+        "roomId": "room-a",
+        "roomName": "Phòng A"
+      },
+      "price": {
+        "total": 690000,
+        "deposit": 207000,
+        "remaining": 483000
+      },
       "status": "Đã đặt lịch",
       "paymentStatus": "Đã cọc 30%",
       "photoStatus": "Chưa có ảnh",
@@ -322,54 +550,230 @@
       "packageName": "Gói Tốt nghiệp Premium",
       "extras": [],
       "date": "2026-10-10",
-      "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"},
-      "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"},
-      "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000},
+      "makeup": {
+        "start": "13:00",
+        "end": "14:00",
+        "staffId": "u-mai",
+        "staffName": "Mai"
+      },
+      "shoot": {
+        "start": "14:00",
+        "end": "16:00",
+        "staffId": "u-tuan",
+        "staffName": "Tuấn",
+        "roomId": "room-b",
+        "roomName": "Phòng B"
+      },
+      "price": {
+        "total": 1800000,
+        "deposit": 540000,
+        "remaining": 1260000
+      },
       "status": "Hoàn thành",
       "paymentStatus": "Đã thanh toán đủ",
       "photoStatus": "Đã nhận ảnh",
       "maxSelect": 30,
       "previews": [
-        {"id": "pv-1019-01", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 01 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1019-02", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 02 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1019-03", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 03 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1019-04", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 04 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1019-05", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 05 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1019-06", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 06 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1019-07", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 07 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1019-08", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 08 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1019-09", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 09 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1019-10", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 10 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1019-11", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 11 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1019-12", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 12 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1019-13", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 13 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1019-14", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 14 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1019-15", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 15 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1019-16", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 16 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1019-17", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 17 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1019-18", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 18 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1019-19", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 19 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1019-20", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 20 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1019-21", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 21 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1019-22", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 22 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1019-23", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 23 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1019-24", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 24 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1019-25", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 25 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1019-26", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 26 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1019-27", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 27 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1019-28", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 28 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1019-29", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 29 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1019-30", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 30 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1019-31", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 31 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1019-32", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 32 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1019-33", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 33 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1019-34", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 34 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1019-35", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 35 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1019-36", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 36 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1019-37", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 37 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1019-38", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 38 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1019-39", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 39 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1019-40", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 40 (minh hoạ): hành lang giảng đường buổi sáng"}
+        {
+          "id": "pv-1019-01",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 01 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1019-02",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 02 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1019-03",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 03 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1019-04",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 04 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1019-05",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 05 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1019-06",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 06 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1019-07",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 07 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1019-08",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 08 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1019-09",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 09 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1019-10",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 10 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1019-11",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 11 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1019-12",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 12 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1019-13",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 13 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1019-14",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 14 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1019-15",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 15 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1019-16",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 16 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1019-17",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 17 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1019-18",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 18 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1019-19",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 19 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1019-20",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 20 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1019-21",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 21 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1019-22",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 22 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1019-23",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 23 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1019-24",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 24 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1019-25",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 25 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1019-26",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 26 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1019-27",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 27 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1019-28",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 28 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1019-29",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 29 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1019-30",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 30 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1019-31",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 31 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1019-32",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 32 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1019-33",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 33 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1019-34",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 34 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1019-35",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 35 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1019-36",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 36 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1019-37",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 37 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1019-38",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 38 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1019-39",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 39 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1019-40",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 40 (minh hoạ): hành lang giảng đường buổi sáng"
+        }
       ],
       "selectedPhotoIds": [
         "pv-1019-01",
@@ -419,8 +823,19 @@
       "extras": [],
       "date": "2026-10-31",
       "makeup": null,
-      "shoot": {"start": "15:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-a", "roomName": "Phòng A"},
-      "price": {"total": 690000, "deposit": 207000, "remaining": 483000},
+      "shoot": {
+        "start": "15:00",
+        "end": "16:00",
+        "staffId": "u-tuan",
+        "staffName": "Tuấn",
+        "roomId": "room-a",
+        "roomName": "Phòng A"
+      },
+      "price": {
+        "total": 690000,
+        "deposit": 207000,
+        "remaining": 483000
+      },
       "status": "Chờ cọc 30%",
       "paymentStatus": "Chưa cọc",
       "photoStatus": "Chưa có ảnh",
@@ -442,54 +857,230 @@
       "packageName": "Gói Tốt nghiệp Premium",
       "extras": [],
       "date": "2026-10-14",
-      "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"},
-      "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"},
-      "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000},
+      "makeup": {
+        "start": "13:00",
+        "end": "14:00",
+        "staffId": "u-mai",
+        "staffName": "Mai"
+      },
+      "shoot": {
+        "start": "14:00",
+        "end": "16:00",
+        "staffId": "u-tuan",
+        "staffName": "Tuấn",
+        "roomId": "room-b",
+        "roomName": "Phòng B"
+      },
+      "price": {
+        "total": 1800000,
+        "deposit": 540000,
+        "remaining": 1260000
+      },
       "status": "Đã đặt lịch",
       "paymentStatus": "Đã cọc 30%",
       "photoStatus": "Đã chọn ảnh",
       "maxSelect": 30,
       "previews": [
-        {"id": "pv-1021-01", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 01 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1021-02", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 02 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1021-03", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 03 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1021-04", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 04 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1021-05", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 05 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1021-06", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 06 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1021-07", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 07 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1021-08", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 08 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1021-09", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 09 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1021-10", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 10 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1021-11", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 11 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1021-12", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 12 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1021-13", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 13 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1021-14", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 14 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1021-15", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 15 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1021-16", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 16 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1021-17", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 17 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1021-18", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 18 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1021-19", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 19 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1021-20", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 20 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1021-21", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 21 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1021-22", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 22 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1021-23", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 23 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1021-24", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 24 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1021-25", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 25 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1021-26", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 26 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1021-27", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 27 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1021-28", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 28 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1021-29", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 29 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1021-30", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 30 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1021-31", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 31 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1021-32", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 32 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1021-33", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 33 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1021-34", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 34 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1021-35", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 35 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1021-36", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 36 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1021-37", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 37 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1021-38", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 38 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1021-39", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 39 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1021-40", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 40 (minh hoạ): hành lang giảng đường buổi sáng"}
+        {
+          "id": "pv-1021-01",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 01 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1021-02",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 02 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1021-03",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 03 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1021-04",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 04 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1021-05",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 05 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1021-06",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 06 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1021-07",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 07 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1021-08",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 08 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1021-09",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 09 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1021-10",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 10 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1021-11",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 11 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1021-12",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 12 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1021-13",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 13 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1021-14",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 14 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1021-15",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 15 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1021-16",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 16 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1021-17",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 17 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1021-18",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 18 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1021-19",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 19 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1021-20",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 20 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1021-21",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 21 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1021-22",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 22 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1021-23",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 23 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1021-24",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 24 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1021-25",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 25 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1021-26",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 26 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1021-27",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 27 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1021-28",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 28 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1021-29",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 29 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1021-30",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 30 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1021-31",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 31 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1021-32",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 32 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1021-33",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 33 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1021-34",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 34 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1021-35",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 35 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1021-36",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 36 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1021-37",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 37 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1021-38",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 38 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1021-39",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 39 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1021-40",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 40 (minh hoạ): hành lang giảng đường buổi sáng"
+        }
       ],
       "selectedPhotoIds": [
         "pv-1021-01",
@@ -529,7 +1120,7 @@
     },
     {
       "id": "GS-1023",
-      "conversationId": "c-1001",
+      "conversationId": "c-linh-01",
       "customerId": "u-linh",
       "customerName": "Linh",
       "serviceId": "svc-tot-nghiep",
@@ -538,54 +1129,230 @@
       "packageName": "Gói Tốt nghiệp Premium",
       "extras": [],
       "date": "2026-10-17",
-      "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"},
-      "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"},
-      "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000},
+      "makeup": {
+        "start": "13:00",
+        "end": "14:00",
+        "staffId": "u-mai",
+        "staffName": "Mai"
+      },
+      "shoot": {
+        "start": "14:00",
+        "end": "16:00",
+        "staffId": "u-tuan",
+        "staffName": "Tuấn",
+        "roomId": "room-b",
+        "roomName": "Phòng B"
+      },
+      "price": {
+        "total": 1800000,
+        "deposit": 540000,
+        "remaining": 1260000
+      },
       "status": "Đã đặt lịch",
       "paymentStatus": "Đã cọc 30%",
       "photoStatus": "Chờ chọn ảnh",
       "maxSelect": 30,
       "previews": [
-        {"id": "pv-1023-01", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 01 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1023-02", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 02 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1023-03", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 03 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1023-04", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 04 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1023-05", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 05 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1023-06", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 06 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1023-07", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 07 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1023-08", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 08 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1023-09", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 09 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1023-10", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 10 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1023-11", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 11 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1023-12", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 12 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1023-13", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 13 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1023-14", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 14 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1023-15", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 15 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1023-16", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 16 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1023-17", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 17 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1023-18", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 18 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1023-19", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 19 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1023-20", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 20 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1023-21", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 21 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1023-22", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 22 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1023-23", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 23 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1023-24", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 24 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1023-25", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 25 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1023-26", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 26 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1023-27", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 27 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1023-28", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 28 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1023-29", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 29 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1023-30", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 30 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1023-31", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 31 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1023-32", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 32 (minh hoạ): hành lang giảng đường buổi sáng"},
-        {"id": "pv-1023-33", "url": "/previews/preview-01.svg", "alt": "Ảnh xem trước 33 (minh hoạ): mũ cử nhân trên bậc thềm"},
-        {"id": "pv-1023-34", "url": "/previews/preview-02.svg", "alt": "Ảnh xem trước 34 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"},
-        {"id": "pv-1023-35", "url": "/previews/preview-03.svg", "alt": "Ảnh xem trước 35 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"},
-        {"id": "pv-1023-36", "url": "/previews/preview-04.svg", "alt": "Ảnh xem trước 36 (minh hoạ): Phòng B với phông nền và đèn chụp"},
-        {"id": "pv-1023-37", "url": "/previews/preview-05.svg", "alt": "Ảnh xem trước 37 (minh hoạ): cổng trường lúc chiều"},
-        {"id": "pv-1023-38", "url": "/previews/preview-06.svg", "alt": "Ảnh xem trước 38 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"},
-        {"id": "pv-1023-39", "url": "/previews/preview-07.svg", "alt": "Ảnh xem trước 39 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"},
-        {"id": "pv-1023-40", "url": "/previews/preview-08.svg", "alt": "Ảnh xem trước 40 (minh hoạ): hành lang giảng đường buổi sáng"}
+        {
+          "id": "pv-1023-01",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 01 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1023-02",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 02 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1023-03",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 03 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1023-04",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 04 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1023-05",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 05 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1023-06",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 06 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1023-07",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 07 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1023-08",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 08 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1023-09",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 09 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1023-10",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 10 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1023-11",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 11 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1023-12",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 12 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1023-13",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 13 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1023-14",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 14 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1023-15",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 15 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1023-16",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 16 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1023-17",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 17 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1023-18",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 18 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1023-19",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 19 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1023-20",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 20 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1023-21",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 21 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1023-22",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 22 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1023-23",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 23 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1023-24",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 24 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1023-25",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 25 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1023-26",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 26 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1023-27",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 27 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1023-28",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 28 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1023-29",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 29 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1023-30",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 30 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1023-31",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 31 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1023-32",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 32 (minh hoạ): hành lang giảng đường buổi sáng"
+        },
+        {
+          "id": "pv-1023-33",
+          "url": "/previews/preview-01.svg",
+          "alt": "Ảnh xem trước 33 (minh hoạ): mũ cử nhân trên bậc thềm"
+        },
+        {
+          "id": "pv-1023-34",
+          "url": "/previews/preview-02.svg",
+          "alt": "Ảnh xem trước 34 (minh hoạ): lễ phục cử nhân treo trong phòng chụp"
+        },
+        {
+          "id": "pv-1023-35",
+          "url": "/previews/preview-03.svg",
+          "alt": "Ảnh xem trước 35 (minh hoạ): bằng tốt nghiệp và bó hoa trên bàn gỗ"
+        },
+        {
+          "id": "pv-1023-36",
+          "url": "/previews/preview-04.svg",
+          "alt": "Ảnh xem trước 36 (minh hoạ): Phòng B với phông nền và đèn chụp"
+        },
+        {
+          "id": "pv-1023-37",
+          "url": "/previews/preview-05.svg",
+          "alt": "Ảnh xem trước 37 (minh hoạ): cổng trường lúc chiều"
+        },
+        {
+          "id": "pv-1023-38",
+          "url": "/previews/preview-06.svg",
+          "alt": "Ảnh xem trước 38 (minh hoạ): bảng lớp ghi lời chúc tốt nghiệp"
+        },
+        {
+          "id": "pv-1023-39",
+          "url": "/previews/preview-07.svg",
+          "alt": "Ảnh xem trước 39 (minh hoạ): bó hoa tốt nghiệp trên ghế gỗ"
+        },
+        {
+          "id": "pv-1023-40",
+          "url": "/previews/preview-08.svg",
+          "alt": "Ảnh xem trước 40 (minh hoạ): hành lang giảng đường buổi sáng"
+        }
       ],
       "selectedPhotoIds": [],
       "finalLink": null,
@@ -594,10 +1361,38 @@
     }
   ],
   "payments": [
-    {"id": "pay-1017-dep", "bookingId": "GS-1017", "kind": "deposit", "amount": 1350000, "result": "Thành công", "at": "2026-10-15T03:00:00Z"},
-    {"id": "pay-1018-dep", "bookingId": "GS-1018", "kind": "deposit", "amount": 207000, "result": "Thành công", "at": "2026-10-18T13:15:00Z"},
-    {"id": "pay-1019-dep", "bookingId": "GS-1019", "kind": "deposit", "amount": 540000, "result": "Thành công", "at": "2026-10-03T02:30:00Z"},
-    {"id": "pay-1019-rem", "bookingId": "GS-1019", "kind": "remaining", "amount": 1260000, "result": "Thành công", "at": "2026-10-13T12:00:00Z"},
+    {
+      "id": "pay-1017-dep",
+      "bookingId": "GS-1017",
+      "kind": "deposit",
+      "amount": 1350000,
+      "result": "Thành công",
+      "at": "2026-10-15T03:00:00Z"
+    },
+    {
+      "id": "pay-1018-dep",
+      "bookingId": "GS-1018",
+      "kind": "deposit",
+      "amount": 207000,
+      "result": "Thành công",
+      "at": "2026-10-18T13:15:00Z"
+    },
+    {
+      "id": "pay-1019-dep",
+      "bookingId": "GS-1019",
+      "kind": "deposit",
+      "amount": 540000,
+      "result": "Thành công",
+      "at": "2026-10-03T02:30:00Z"
+    },
+    {
+      "id": "pay-1019-rem",
+      "bookingId": "GS-1019",
+      "kind": "remaining",
+      "amount": 1260000,
+      "result": "Thành công",
+      "at": "2026-10-13T12:00:00Z"
+    },
     {
       "id": "pay-1020-dep-1",
       "bookingId": "GS-1020",
@@ -607,8 +1402,22 @@
       "at": "2026-10-22T14:40:00Z",
       "message": "Thanh toán thử thất bại. Booking vẫn Chờ cọc 30%, bạn có thể thử lại."
     },
-    {"id": "pay-1021-dep", "bookingId": "GS-1021", "kind": "deposit", "amount": 540000, "result": "Thành công", "at": "2026-10-05T02:30:00Z"},
-    {"id": "pay-1023-dep", "bookingId": "GS-1023", "kind": "deposit", "amount": 540000, "result": "Thành công", "at": "2026-10-12T01:45:00Z"}
+    {
+      "id": "pay-1021-dep",
+      "bookingId": "GS-1021",
+      "kind": "deposit",
+      "amount": 540000,
+      "result": "Thành công",
+      "at": "2026-10-05T02:30:00Z"
+    },
+    {
+      "id": "pay-1023-dep",
+      "bookingId": "GS-1023",
+      "kind": "deposit",
+      "amount": 540000,
+      "result": "Thành công",
+      "at": "2026-10-12T01:45:00Z"
+    }
   ],
   "reminders": [
     {
@@ -617,7 +1426,10 @@
       "customerId": "u-linh",
       "title": "Nhắc lịch chụp ngày 17/10",
       "sendAt": "2026-10-16T06:00:00Z",
-      "channels": ["E-mail", "Trong ứng dụng"],
+      "channels": [
+        "E-mail",
+        "Trong ứng dụng"
+      ],
       "emailStatus": "Đã gửi"
     },
     {
@@ -626,7 +1438,9 @@
       "customerId": "u-linh",
       "title": "Ảnh xem trước đã sẵn sàng, mời bạn chọn ảnh",
       "sendAt": "2026-10-20T02:00:00Z",
-      "channels": ["E-mail"],
+      "channels": [
+        "E-mail"
+      ],
       "emailStatus": "Đã gửi"
     },
     {
@@ -635,7 +1449,9 @@
       "customerId": "u-linh",
       "title": "Nhắc thanh toán phần còn lại 1.260.000đ",
       "sendAt": "2026-10-27T02:00:00Z",
-      "channels": ["E-mail"],
+      "channels": [
+        "E-mail"
+      ],
       "emailStatus": "Chờ gửi"
     }
   ],
@@ -739,5 +1555,54 @@
       "previews": []
     }
   ],
-  "settings": {"openingHours": "08:00 - 19:00", "reminderHoursBefore": 24}
+  "settings": {
+    "openingHours": "08:00 - 19:00",
+    "reminderHoursBefore": 24
+  },
+  "accessories": [
+    {
+      "id": "acc-cu-nhan",
+      "name": "Bộ lễ phục cử nhân",
+      "price": 50000,
+      "unit": "bộ",
+      "description": "Áo cử nhân, mũ và nơ tốt nghiệp chuẩn các trường"
+    },
+    {
+      "id": "acc-hoa-cam-tay",
+      "name": "Bó hoa tốt nghiệp tươi",
+      "price": 150000,
+      "unit": "bó",
+      "description": "Hoa hướng dương hoặc hoa hồng kèm băng rôn chúc mừng"
+    },
+    {
+      "id": "acc-bang-ten",
+      "name": "Bằng tốt nghiệp mô hình",
+      "price": 30000,
+      "unit": "cuốn",
+      "description": "Bằng da đỏ cao cấp khắc chữ mạ vàng phục vụ chụp ảnh"
+    }
+  ],
+  "samplePhotos": [
+    {
+      "id": "sp-01",
+      "title": "Kỷ yếu thanh xuân 12A3",
+      "category": "s-ky-yeu",
+      "url": "/assets/samples/ky-yeu-12a3.jpg",
+      "description": "Chụp ngoại cảnh sân trường và lớp học"
+    },
+    {
+      "id": "sp-02",
+      "title": "Tốt nghiệp cử nhân DUKStudio",
+      "category": "s-tot-nghiep",
+      "url": "/assets/samples/tot-nghiep-premium.jpg",
+      "description": "Concept cá nhân tại Phòng B studio"
+    },
+    {
+      "id": "sp-03",
+      "title": "Chân dung Profile CV chuyên nghiệp",
+      "category": "s-chan-dung",
+      "url": "/assets/samples/profile-cv.jpg",
+      "description": "Tone màu xám tối giản cho hồ sơ LinkedIn"
+    }
+  ]
 }
