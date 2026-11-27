@@ -44,40 +44,34 @@ export function register(router) {
       });
     }
 
-    // Validate 30-photo cap before checking ID existence
-    if (body.photoIds.length > 30) {
-      return res.status(400).json({
-        error: {
-          code: 'BAD_REQUEST',
-          message: 'Invalid selection payload',
-          fields: {
-            photoIds: 'Maximum 30 photos can be selected for retouching'
-          }
-        }
-      });
-    }
-
     const store = getStore();
     const bookingId = req.params.id;
     const booking = (store.bookings || []).find((b) => b.id === bookingId);
 
     if (!booking) {
-      return res.status(404).json({
+      return res.status(404).json({ error: { code: 'NOT_FOUND', message: `Booking ${bookingId} not found` } });
+    }
+    if (user.role !== 'customer' || user.id !== booking.customerId) {
+      return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Access denied. Only the booking owner can select photos' } });
+    }
+    if (booking.hasFinalPayment || booking.paymentStatus === 'Đã thanh toán đủ' || booking.status === 'Hoàn thành') {
+      return res.status(409).json({ error: { code: 'CONFLICT', message: 'Photo selection is locked after the remaining balance has been paid' } });
+    }
+    const maxSelect = Math.min(30, Number.isInteger(booking.maxSelect) ? booking.maxSelect : 0);
+
+    // Validate package photo cap before checking ID existence
+    if (body.photoIds.length > maxSelect) {
+      return res.status(400).json({
         error: {
-          code: 'NOT_FOUND',
-          message: `Booking ${bookingId} not found`
+          code: 'BAD_REQUEST',
+          message: 'Invalid selection payload',
+          fields: {
+            photoIds: `Maximum ${maxSelect} photos can be selected for retouching`
+          }
         }
       });
     }
 
-    if (user.role !== 'customer' || user.id !== booking.customerId) {
-      return res.status(403).json({
-        error: {
-          code: 'FORBIDDEN',
-          message: 'Access denied. Only the booking owner can select photos'
-        }
-      });
-    }
 
     // Resolve valid previews for this booking from associated staff jobs
     const validPreviewIds = new Set();
@@ -87,6 +81,7 @@ export function register(router) {
         validPreviewIds.add(p.id);
       }
     }
+    for (const p of booking.previews || []) validPreviewIds.add(p.id);
 
     const invalidIds = body.photoIds.filter((id) => !validPreviewIds.has(id));
     if (invalidIds.length > 0) {
@@ -101,15 +96,15 @@ export function register(router) {
       });
     }
 
-    booking.photos = [...body.photoIds];
-    booking.status = 'Đang chỉnh sửa';
+    booking.selectedPhotoIds = [...body.photoIds];
+    booking.photoStatus = 'Đã chọn ảnh';
 
     return res.status(200).json({
       success: true,
       bookingId: booking.id,
       selectedCount: body.photoIds.length,
       selectedPhotos: body.photoIds,
-      status: 'Đang chỉnh sửa',
+      status: booking.photoStatus,
       submittedAt: '2026-10-25T09:00:00Z'
     });
   });
@@ -150,7 +145,7 @@ export function register(router) {
       });
     }
 
-    if (!booking.photos || booking.photos.length === 0) {
+    if (!booking.selectedPhotoIds || booking.selectedPhotoIds.length === 0) {
       return res.status(409).json({
         error: {
           code: 'CONFLICT',
@@ -159,7 +154,7 @@ export function register(router) {
       });
     }
 
-    if (!booking.hasFinalPayment) {
+    if (!(booking.hasFinalPayment || booking.paymentStatus === 'Đã thanh toán đủ')) {
       return res.status(409).json({
         error: {
           code: 'CONFLICT',
@@ -168,7 +163,7 @@ export function register(router) {
       });
     }
 
-    if (!booking.finalFileLink) {
+    if (!booking.finalLink) {
       return res.status(409).json({
         error: {
           code: 'CONFLICT',
@@ -178,6 +173,9 @@ export function register(router) {
     }
 
     booking.status = 'Hoàn thành';
+    booking.photoStatus = 'Đã nhận ảnh';
+    const conversation = (store.conversations || []).find((c) => c.id === booking.conversationId);
+    if (conversation) conversation.status = 'Hoàn thành';
 
     return res.status(200).json({
       success: true,
@@ -187,7 +185,7 @@ export function register(router) {
         hasDeposit: true,
         hasFinalPayment: true,
         completedAt: '2026-10-26T14:00:00Z',
-        finalFileLink: booking.finalFileLink
+        finalLink: booking.finalLink
       }
     });
   });

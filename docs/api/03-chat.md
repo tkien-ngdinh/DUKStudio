@@ -2,14 +2,16 @@
 
 Specification of customer inquiry channels, real-time consultation messages, administrator schedule proposals, and customer proposal accept/decline workflows for the DUKStudio platform (serving Steps G3, G4, G5, and G6).
 
+Conversation lifecycle rules: a conversation has at most one booking. A new booking request reuses the customer's latest conversation only when it is not `Hoàn thành` and has no booking; otherwise it creates a new conversation. An ordinary customer question joins the latest conversation even when it already has a booking. A customer message to a completed conversation starts a new conversation. Cancelling a linked booking does not change conversation status. A conversation becomes `Hoàn thành` automatically only when its linked booking is completed through `POST /api/gallery/:id/receive`.
+
 ---
 
 ## 1. List Studio Conversations (GET /api/conversations)
 
-Retrieves all studio inquiries and conversations for consultation management. Conversations are organized across 4 operational status states: *Waiting for Studio* (`Chưa trả lời`), *Studio Answered* (`Đang tư vấn`), *Deposit Pending* (`Đã chốt lịch`), and *Done* (`Hoàn thành`).
+Retrieves all studio inquiries and conversations for consultation management. Conversations are organized across 4 operational status states: *Waiting for Studio* (`Chưa trả lời`), *Studio Answered* (`Đang tư vấn`), *Schedule Confirmed* (`Đã chốt lịch`), and *Done* (`Hoàn thành`).
 
 - **Endpoint**: `GET /api/conversations`
-- **Permissions**: Studio Admin role (`admin`).
+- **Permissions**: Customer role (`customer`, returns only the caller's conversations) and Studio Admin role (`admin`, returns all studio conversations).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Query Parameters**:
   - `status` (string, optional): Filter conversations by state (e.g. `Đã chốt lịch`, `Chưa trả lời`).
@@ -28,12 +30,12 @@ Authorization: Bearer {{token:thao}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"conversations": [{"id": "c-linh-01", "customerId": "u-linh", "customerName": "Nguyễn Thị Thúy Linh", "status": "Đã chốt lịch", "lastMessageAt": "2026-10-20T17:21:00Z", "bookingId": "GS-1023", "messages": [{"id": "m-01", "sender": "customer", "senderName": "Linh", "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?", "timestamp": "2026-10-20T17:20:00Z"}, {"id": "m-02", "sender": "admin", "senderName": "DUKStudio", "text": "Để mình kiểm tra lịch cho bạn nhé.", "timestamp": "2026-10-20T17:21:00Z"}, {"id": "m-03", "sender": "admin", "senderName": "DUKStudio", "text": "Bạn ơi, khung 09:00 ngày 24/10 bị trùng vì thợ makeup Mai bận 08:00–12:00. Studio đề xuất dời sang makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) nhé!", "timestamp": "2026-10-20T17:23:00Z", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "agreed"}}, {"id": "m-04", "sender": "customer", "senderName": "Linh", "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ạ!", "timestamp": "2026-10-20T17:24:00Z"}]}]}
+{"conversations": […]}
 ```
 
-### Access Denied Example (403 Forbidden)
+### Customer Access Example (200 OK)
 
-Returned when a non-admin account (e.g. customer Linh) attempts to list studio conversations.
+Customer Linh lists only her own conversations, allowing `/chat` to load after direct navigation or refresh.
 
 ```http
 GET /api/conversations
@@ -42,10 +44,28 @@ Authorization: Bearer {{token:linh}}
 ```
 
 ```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"conversations": [{"id": "c-linh-01", "customerId": "u-linh", …}, {"id": "c-linh-05", "customerId": "u-linh", …}]}
+
+```
+
+### Access Denied Example (403 Forbidden)
+
+Returned when a staff account attempts to list conversations.
+
+```http
+GET /api/conversations
+Authorization: Bearer {{token:mai}}
+
+```
+
+```http
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
 
-{"error": {"code": "FORBIDDEN", "message": "Access denied. Admin role required"}}
+{"error": {"code": "FORBIDDEN", "message": "Access denied. Customer or Admin role required"}}
 ```
 
 ### Unauthenticated Example (401 Unauthorized)
@@ -88,7 +108,7 @@ Authorization: Bearer {{token:linh}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"conversation": {"id": "c-linh-01", "customerId": "u-linh", "customerName": "Nguyễn Thị Thúy Linh", "status": "Đã chốt lịch", "lastMessageAt": "2026-10-20T17:21:00Z", "bookingId": "GS-1023", "messages": [{"id": "m-01", "sender": "customer", "senderName": "Linh", "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?", "timestamp": "2026-10-20T17:20:00Z"}, {"id": "m-02", "sender": "admin", "senderName": "DUKStudio", "text": "Để mình kiểm tra lịch cho bạn nhé.", "timestamp": "2026-10-20T17:21:00Z"}, {"id": "m-03", "sender": "admin", "senderName": "DUKStudio", "text": "Bạn ơi, khung 09:00 ngày 24/10 bị trùng vì thợ makeup Mai bận 08:00–12:00. Studio đề xuất dời sang makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) nhé!", "timestamp": "2026-10-20T17:23:00Z", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "agreed"}}, {"id": "m-04", "sender": "customer", "senderName": "Linh", "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ạ!", "timestamp": "2026-10-20T17:24:00Z"}]}}
+{"conversation":{"id":"c-linh-01","customerId":"u-linh","customerName":"Nguyễn Thị Thúy Linh","status":"Đã chốt lịch","lastMessageAt":"2026-10-20T17:24:00Z","bookingId":"GS-1023","messages":[{"id":"m-01","sender":"customer","senderName":"Linh","text":"Gói tốt nghiệp có makeup còn lịch 17/10 lúc 13:00 không?","timestamp":"2026-10-12T01:00:00Z"},{"id":"m-02","sender":"admin","senderName":"DUKStudio","text":"Dạ, studio kiểm tra lịch ngày 17/10 và sẽ xác nhận với em ngay nhé.","timestamp":"2026-10-12T01:05:00Z"},{"id":"m-03","sender":"admin","senderName":"DUKStudio","text":"Studio đề xuất makeup 13:00–14:00 và chụp 14:00–16:00 ngày 17/10 tại Phòng B nhé!","timestamp":"2026-10-12T01:10:00Z","proposal":{"date":"2026-10-17","makeup":"13:00 - 14:00","shoot":"14:00 - 16:00","room":"Phòng B","status":"agreed"}},{"id":"m-04","sender":"customer","senderName":"Linh","text":"Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ngày 17/10 ạ!","timestamp":"2026-10-12T01:15:00Z"},{"id":"m-05","sender":"customer","senderName":"Linh","text":"Dạ em hỏi studio khi nào sẽ gửi ảnh xem trước để em chọn ạ?","timestamp":"2026-10-20T17:24:00Z"}]}}
 ```
 
 ### Success Example — Admin Access (200 OK)
@@ -105,7 +125,7 @@ Authorization: Bearer {{token:thao}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"conversation": {"id": "c-linh-01", "customerId": "u-linh", "customerName": "Nguyễn Thị Thúy Linh", "status": "Đã chốt lịch", "lastMessageAt": "2026-10-20T17:21:00Z", "bookingId": "GS-1023", "messages": [{"id": "m-01", "sender": "customer", "senderName": "Linh", "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?", "timestamp": "2026-10-20T17:20:00Z"}, {"id": "m-02", "sender": "admin", "senderName": "DUKStudio", "text": "Để mình kiểm tra lịch cho bạn nhé.", "timestamp": "2026-10-20T17:21:00Z"}, {"id": "m-03", "sender": "admin", "senderName": "DUKStudio", "text": "Bạn ơi, khung 09:00 ngày 24/10 bị trùng vì thợ makeup Mai bận 08:00–12:00. Studio đề xuất dời sang makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) nhé!", "timestamp": "2026-10-20T17:23:00Z", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "agreed"}}, {"id": "m-04", "sender": "customer", "senderName": "Linh", "text": "Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ạ!", "timestamp": "2026-10-20T17:24:00Z"}]}}
+{"conversation":{"id":"c-linh-01","customerId":"u-linh","customerName":"Nguyễn Thị Thúy Linh","status":"Đã chốt lịch","lastMessageAt":"2026-10-20T17:24:00Z","bookingId":"GS-1023","messages":[{"id":"m-01","sender":"customer","senderName":"Linh","text":"Gói tốt nghiệp có makeup còn lịch 17/10 lúc 13:00 không?","timestamp":"2026-10-12T01:00:00Z"},{"id":"m-02","sender":"admin","senderName":"DUKStudio","text":"Dạ, studio kiểm tra lịch ngày 17/10 và sẽ xác nhận với em ngay nhé.","timestamp":"2026-10-12T01:05:00Z"},{"id":"m-03","sender":"admin","senderName":"DUKStudio","text":"Studio đề xuất makeup 13:00–14:00 và chụp 14:00–16:00 ngày 17/10 tại Phòng B nhé!","timestamp":"2026-10-12T01:10:00Z","proposal":{"date":"2026-10-17","makeup":"13:00 - 14:00","shoot":"14:00 - 16:00","room":"Phòng B","status":"agreed"}},{"id":"m-04","sender":"customer","senderName":"Linh","text":"Dạ em đồng ý lịch 13:00 makeup và 14:00 chụp ngày 17/10 ạ!","timestamp":"2026-10-12T01:15:00Z"},{"id":"m-05","sender":"customer","senderName":"Linh","text":"Dạ em hỏi studio khi nào sẽ gửi ảnh xem trước để em chọn ạ?","timestamp":"2026-10-20T17:24:00Z"}]}}
 ```
 
 ### Conversation Not Found Example (404 Not Found)
@@ -150,29 +170,31 @@ Initiates a new customer inquiry and consultation thread for a photography shoot
 - **Permissions**: Customer role (`customer`).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Request Body**:
-  - `packageId` (string, required): Desired service package identifier (e.g. `pkg-tot-nghiep-premium`).
+  - `packageId` (string, required): Desired service package identifier (e.g. `pkg-tn-premium`).
   - `preferredDate` (string, required): Preferred shoot date in `YYYY-MM-DD` format (e.g. `2026-10-24`).
   - `message` (string, required): Customer's inquiry or question text.
   - `preferredTime` (string, optional): Desired start timeslot (e.g. `09:00`).
+  - `extras` (array of strings, optional): Extra identifiers to record for studio coordination; extras do not add to the package price.
+  - `participantCount` (integer, required for a package priced per person): Number of participants; the booking total is calculated by the server.
   - `notes` (string, optional): Additional customer requirements.
 
 ### Success Example (201 Created)
 
-Customer Linh creates a new consultation inquiry.
+Customer Linh sends a new booking request. Her latest conversation `c-linh-01` already has booking GS-1023, so this request starts a new conversation. The seed also contains an older thread (`c-linh-05`) with a pending proposal but no booking; it is not reused because it is not the latest conversation.
 
 ```http
 POST /api/conversations
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
-{"packageId": "pkg-tot-nghiep-premium", "preferredDate": "2026-10-24", "preferredTime": "09:00", "message": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?", "notes": "Cần hỗ trợ 1 bộ áo cử nhân"}
+{"packageId": "pkg-tn-premium", "preferredDate": "2026-10-24", "preferredTime": "09:00", "extras": ["ex-makeup"], "message": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?", "notes": "Cần hỗ trợ 1 bộ áo cử nhân"}
 ```
 
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-{"conversation": {"id": "c-linh-02", "customerId": "u-linh", "customerName": "Nguyễn Thị Thúy Linh", "status": "Chưa trả lời", "lastMessageAt": "2026-10-21T09:00:00Z", "bookingId": null, "messages": [{"id": "m-inquiry-01", "sender": "customer", "senderName": "Linh", "text": "Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?", "timestamp": "2026-10-21T09:00:00Z"}]}}
+{"conversation":{"id":"c-linh-06","customerId":"u-linh","customerName":"Linh","status":"Chưa trả lời","lastMessageAt":"2026-10-21T09:00:00Z","bookingId":null,"request":{"packageId":"pkg-tn-premium","preferredDate":"2026-10-24","preferredTime":"09:00","extras":["ex-makeup"],"notes":"Cần hỗ trợ 1 bộ áo cử nhân","participantCount":null},"messages":[{"id":"m-inquiry-01","sender":"customer","senderName":"Linh","text":"Gói tốt nghiệp có makeup còn lịch 24/10 lúc 09:00 không?","timestamp":"2026-10-21T09:00:00Z"}]}}
 ```
 
 ### Combined Validation Error Example (400 Bad Request)
@@ -218,7 +240,7 @@ POST /api/conversations
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
-{"packageId": "pkg-tot-nghiep-premium", "preferredDate": "", "message": "Gói tốt nghiệp có makeup còn lịch không ạ?"}
+{"packageId": "pkg-tn-premium", "preferredDate": "", "message": "Gói tốt nghiệp có makeup còn lịch không ạ?"}
 ```
 
 ```http
@@ -235,7 +257,7 @@ POST /api/conversations
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
-{"packageId": "pkg-tot-nghiep-premium", "preferredDate": "2026-10-24", "message": ""}
+{"packageId": "pkg-tn-premium", "preferredDate": "2026-10-24", "message": ""}
 ```
 
 ```http
@@ -254,7 +276,7 @@ POST /api/conversations
 Authorization: Bearer {{token:tuan}}
 Content-Type: application/json
 
-{"packageId": "pkg-tot-nghiep-premium", "preferredDate": "2026-10-24", "message": "Staff inquiry test"}
+{"packageId": "pkg-tn-premium", "preferredDate": "2026-10-24", "message": "Staff inquiry test"}
 ```
 
 ```http
@@ -285,14 +307,14 @@ POST /api/conversations/c-linh-01/messages
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
-{"text": "Dạ em có cần chuẩn bị trang phục gì trước khi đến studio không ạ?"}
+{"text":"Dạ em chọn ảnh trong thời hạn bao lâu ạ?"}
 ```
 
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-{"message": {"id": "m-05", "sender": "customer", "senderName": "Linh", "text": "Dạ em có cần chuẩn bị trang phục gì trước khi đến studio không ạ?", "timestamp": "2026-10-20T17:25:00Z"}}
+{"message":{"id":"m-06","sender":"customer","senderName":"Linh","text":"Dạ em chọn ảnh trong thời hạn bao lâu ạ?","timestamp":"2026-10-20T17:25:00Z"}}
 ```
 
 ### Success Example — Admin Reply (201 Created)
@@ -304,14 +326,14 @@ POST /api/conversations/c-linh-01/messages
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"text": "Chào Linh, studio có sẵn trang phục cử nhân và phòng thay đồ tiện nghi bạn nhé!"}
+{"text":"Sau khi gửi ảnh xem trước, em có thể chọn tối đa 30 ảnh theo gói Premium nhé!"}
 ```
 
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-{"message": {"id": "m-06", "sender": "admin", "senderName": "DUKStudio", "text": "Chào Linh, studio có sẵn trang phục cử nhân và phòng thay đồ tiện nghi bạn nhé!", "timestamp": "2026-10-20T17:26:00Z"}}
+{"message":{"id":"m-07","sender":"admin","senderName":"DUKStudio","text":"Sau khi gửi ảnh xem trước, em có thể chọn tối đa 30 ảnh theo gói Premium nhé!","timestamp":"2026-10-20T17:26:00Z"}}
 ```
 
 ### Validation Error Example — Empty Message (400 Bad Request)
@@ -372,10 +394,10 @@ When an admin posts a proposal via `POST /api/conversations/:id/propose-time`, t
 
 ### Success Example (200 OK)
 
-Admin Thảo submits a proposed shoot slot with makeup, photographer Tuấn, and room assignment on `c-linh-01`. This supersedes the seeded `agreed` proposal and establishes a new `pending` proposal.
+Admin Thảo submits the first proposal on the new conversation `c-linh-06`, establishing its active proposal as `pending`.
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -386,7 +408,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}, "message": {"id": "m-07", "sender": "admin", "senderName": "DUKStudio", "text": "Studio đề xuất điều chỉnh lịch chụp: makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) ngày 24/10 nhé!", "timestamp": "2026-10-20T17:27:00Z", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}}}
+{"proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}, "message": {"id": "m-02", "sender": "admin", "senderName": "DUKStudio", "text": "Studio đề xuất điều chỉnh lịch chụp: makeup 13:00–14:00 (Mai) và chụp 14:00–16:00 (Tuấn, Phòng B) ngày 24/10 nhé!", "timestamp": "2026-10-21T09:01:00Z", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}}}
 ```
 
 ### Combined Validation Error Example (400 Bad Request)
@@ -394,7 +416,7 @@ Content-Type: application/json
 Returned when mandatory schedule parameters (`date`, `makeup`, `shoot`, `room`) are empty or omitted.
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -411,7 +433,7 @@ Content-Type: application/json
 ### Individual Field Validation — Missing Date (400 Bad Request)
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -428,7 +450,7 @@ Content-Type: application/json
 ### Individual Field Validation — Missing Makeup Timeslot (400 Bad Request)
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -445,7 +467,7 @@ Content-Type: application/json
 ### Individual Field Validation — Missing Shoot Timeslot (400 Bad Request)
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -462,7 +484,7 @@ Content-Type: application/json
 ### Individual Field Validation — Missing Studio Room (400 Bad Request)
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -481,7 +503,7 @@ Content-Type: application/json
 Returned when a non-admin account attempts to propose a shoot schedule.
 
 ```http
-POST /api/conversations/c-linh-01/propose-time
+POST /api/conversations/c-linh-06/propose-time
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
@@ -518,7 +540,7 @@ Content-Type: application/json
 
 Customer accepts or declines the studio's proposed shoot schedule (Step G6).
 - If declined (`decline`), the active proposal status becomes `declined` and conversation status reverts to *Studio Answered* (`Đang tư vấn`) for scheduling adjustments.
-- If accepted (`accept`), the active proposal status becomes `agreed` and conversation status transitions to *Deposit Pending* (`Đã chốt lịch`), unlocking confirmed booking creation (`POST /api/bookings`).
+- If accepted (`accept`), the active proposal status becomes `agreed` and conversation status transitions to *Schedule Confirmed* (`Đã chốt lịch`), unlocking confirmed booking creation (`POST /api/bookings`).
 
 - **Endpoint**: `POST /api/conversations/:id/respond-proposal`
 - **Permissions**: Customer role (`customer` - conversation owner).
@@ -527,57 +549,17 @@ Customer accepts or declines the studio's proposed shoot schedule (Step G6).
   - `decision` (string, required): Customer decision, either `accept` or `decline`.
 
 > [!NOTE]
-> **Sequential Execution & State Ordering**:
-> Responding to a schedule proposal requires an active proposal in `pending` status. Each proposal can only be answered once. In the sequential flow below:
-> 1. Customer Linh declines the initial proposed slot established in Section 5 (`decision: "decline"`). Proposal status becomes `declined` and conversation status returns to `Đang tư vấn`.
-> 2. Admin Thảo posts an alternative timeslot proposal (`POST /api/conversations/c-linh-01/propose-time`), creating a new active `pending` proposal.
-> 3. Customer Linh accepts the revised timeslot (`decision: "accept"`). Proposal status becomes `agreed` and conversation status advances to `Đã chốt lịch`.
-> If running examples independently, ensure the target conversation contains an active pending proposal.
+> **Sequential execution and separate scenarios**:
+> - The main booking flow follows PA2: Linh asks about 24/10 at 09:00; after the clash check, Admin proposes makeup 13:00-14:00 and shooting 14:00-16:00 in Phong B. Linh accepts this proposal, and GS-1024 is created from it.
+> - The decline-and-reproposal example is a separate seeded conversation, c-linh-05. It has a pending proposal and no booking, so declining it leaves the conversation in Đang tư vấn; Admin can then propose another time in that same conversation.
+> Each proposal may be answered only once. A new proposal supersedes the previous proposal and becomes pending. If running examples independently, ensure the target conversation contains an active pending proposal.
 
-### Decline Proposal Example (200 OK)
+### Accept Proposal Example - PA2 Main Flow (200 OK)
 
-Customer Linh declines the initial active proposal established in Section 5.
+Customer Linh accepts the 24/10 at 14:00 shoot proposal.
 
 ```http
-POST /api/conversations/c-linh-01/respond-proposal
-Authorization: Bearer {{token:linh}}
-Content-Type: application/json
-
-{"decision": "decline"}
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"status": "Đang tư vấn", "proposal": {"date": "2026-10-24", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "declined"}, "message": {"id": "m-08", "sender": "customer", "senderName": "Linh", "text": "Dạ khung giờ này em bận mất rồi, studio còn giờ nào khác không ạ?", "timestamp": "2026-10-20T17:28:00Z"}}
-```
-
-### Studio Proposes Alternative Slot (200 OK)
-
-Following the customer's decline, Admin Thảo posts an alternative timeslot proposal into the conversation, superseding the declined proposal and setting active state to `pending`.
-
-```http
-POST /api/conversations/c-linh-01/propose-time
-Authorization: Bearer {{token:thao}}
-Content-Type: application/json
-
-{"date": "2026-10-24", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "text": "Studio đề xuất thêm khung giờ dự phòng ngày 24/10: makeup 14:00–15:00 và chụp 15:00–17:00 (Tuấn, Phòng B) nhé!"}
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"proposal": {"date": "2026-10-24", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "pending"}, "message": {"id": "m-09", "sender": "admin", "senderName": "DUKStudio", "text": "Studio đề xuất thêm khung giờ dự phòng ngày 24/10: makeup 14:00–15:00 và chụp 15:00–17:00 (Tuấn, Phòng B) nhé!", "timestamp": "2026-10-20T17:29:00Z", "proposal": {"date": "2026-10-24", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "pending"}}}
-```
-
-### Accept Proposal Example (200 OK)
-
-Customer Linh agrees to the studio's alternative proposed schedule.
-
-```http
-POST /api/conversations/c-linh-01/respond-proposal
+POST /api/conversations/c-linh-06/respond-proposal
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
@@ -588,7 +570,64 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"status": "Đã chốt lịch", "proposal": {"date": "2026-10-24", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "agreed"}, "message": {"id": "m-10", "sender": "customer", "senderName": "Linh", "text": "Dạ em đồng ý lịch 14:00 makeup và 15:00 chụp ạ!", "timestamp": "2026-10-20T17:30:00Z"}}
+{"status":"Đã chốt lịch","proposal":{"date":"2026-10-24","makeup":"13:00 - 14:00","shoot":"14:00 - 16:00","room":"Phòng B","status":"agreed"},"message":{"id":"m-03","sender":"customer","senderName":"Linh","text":"D\u1ea1 em \u0111\u1ed3ng \u00fd l\u1ecbch 13:00 makeup v\u00e0 14:00 ch\u1ee5p \u1ea1!","timestamp":"2026-10-21T09:02:00Z"}}
+```
+
+### Decline Proposal Example (200 OK)
+
+Customer Linh declines the pending proposal in the separate seeded conversation c-linh-05.
+
+```http
+POST /api/conversations/c-linh-05/respond-proposal
+Authorization: Bearer {{token:linh}}
+Content-Type: application/json
+
+{"decision": "decline"}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"status": "Đang tư vấn", "proposal": {"date": "2026-10-25", "makeup": "14:00 - 15:00", "shoot": "15:00 - 17:00", "room": "Phòng B", "status": "declined"}, "message": {"id": "m-03", "sender": "customer", "senderName": "Linh", "text": "D\u1ea1 khung gi\u1edd n\u00e0y em b\u1eadn m\u1ea5t r\u1ed3i, studio c\u00f2n gi\u1edd n\u00e0o kh\u00e1c kh\u00f4ng \u1ea1?", "timestamp": "2026-10-20T10:30:00Z"}}
+```
+
+### Studio Proposes Alternative Slot (200 OK)
+
+Following the decline, Admin Thao proposes another time in c-linh-05. The conversation remains available for further proposals until Linh agrees to one.
+
+```http
+POST /api/conversations/c-linh-05/propose-time
+Authorization: Bearer {{token:thao}}
+Content-Type: application/json
+
+{"date": "2026-10-26", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "text": "Studio proposes another slot on 26/10: makeup 13:00-14:00 and shoot 14:00-16:00 in Phòng B."}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"proposal": {"date": "2026-10-26", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}, "message": {"id": "m-04", "sender": "admin", "senderName": "DUKStudio", "text": "Studio proposes another slot on 26/10: makeup 13:00-14:00 and shoot 14:00-16:00 in Phòng B.", "timestamp": "2026-10-20T10:31:00Z", "proposal": {"date": "2026-10-26", "makeup": "13:00 - 14:00", "shoot": "14:00 - 16:00", "room": "Phòng B", "status": "pending"}}}
+```
+
+### Accept Revised Proposal Example (200 OK)
+
+Customer Linh accepts the alternative time in c-linh-05.
+
+```http
+POST /api/conversations/c-linh-05/respond-proposal
+Authorization: Bearer {{token:linh}}
+Content-Type: application/json
+
+{"decision": "accept"}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"status":"Đã chốt lịch","proposal":{"date":"2026-10-26","makeup":"13:00 - 14:00","shoot":"14:00 - 16:00","room":"Phòng B","status":"agreed"},"message":{"id":"m-05","sender":"customer","senderName":"Linh","text":"D\u1ea1 em \u0111\u1ed3ng \u00fd l\u1ecbch 13:00 makeup v\u00e0 14:00 ch\u1ee5p \u1ea1!","timestamp":"2026-10-20T10:32:00Z"}}
 ```
 
 ### Validation Error Example — Missing Decision (400 Bad Request)
@@ -596,7 +635,7 @@ Content-Type: application/json
 Returned when the decision field is empty or omitted.
 
 ```http
-POST /api/conversations/c-linh-01/respond-proposal
+POST /api/conversations/c-linh-06/respond-proposal
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
@@ -615,7 +654,7 @@ Content-Type: application/json
 Returned when the decision field contains an unsupported action.
 
 ```http
-POST /api/conversations/c-linh-01/respond-proposal
+POST /api/conversations/c-linh-06/respond-proposal
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
@@ -634,7 +673,7 @@ Content-Type: application/json
 Returned when a non-customer or unauthorized account attempts to respond to the proposal.
 
 ```http
-POST /api/conversations/c-linh-01/respond-proposal
+POST /api/conversations/c-linh-06/respond-proposal
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
@@ -672,9 +711,17 @@ Content-Type: application/json
 - **2026-11-26** (Bích Diệp):
   - Initialized customer chat and conversation management API contract specification in `docs/api/03-chat.md` (Steps G3, G4, G5, G6).
   - Defined 6 core endpoints: `GET /api/conversations`, `POST /api/conversations`, `GET /api/conversations/:id`, `POST /api/conversations/:id/messages`, `POST /api/conversations/:id/propose-time`, and `POST /api/conversations/:id/respond-proposal`.
-  - Aligned permissions strictly with master endpoint table in `README.md` (`Admin` for listing/proposals, `Customer` for inquiries/responses, `Customer/Admin` for details/messages; removed unauthorized superadmin role mentions).
+  - Aligned permissions with the master endpoint table in `README.md` (`Customer/Admin` for listing, `Admin` for proposals, `Customer` for inquiries/responses, `Customer/Admin` for details/messages; removed unauthorized superadmin role mentions).
   - Standardized customer proposal decisions to `accept` and `decline` across request schemas, validation error responses, and state transitions (replacing `reject`).
   - Defined proposal lifecycle rules where a new admin proposal supersedes any previous proposal (including seeded `agreed` proposal) to become the active `pending` proposal.
   - Sequenced proposal examples so that customer declines proposal 1, admin proposes revised slot, and customer accepts revised slot, with every proposal answered exactly once.
   - Added independent HTTP 400 validation examples for `makeup` and `room` on `POST /api/conversations/:id/propose-time` alongside `date`, `shoot`, and combined invalid-fields examples.
-  - Formatted strictly increasing timestamps (`17:25:00Z` through `17:30:00Z`) and sequential message IDs (`m-05` through `m-10`) across all `c-linh-01` message and proposal interactions.
+  - Formatted strictly increasing timestamps (`17:25:00Z` through `17:30:00Z`) and sequential message IDs (`m-05` through `m-10`) across all `c-linh-06` message and proposal interactions.
+
+- **2026-11-27**:
+  - Aligned `GET /api/conversations` with `README.md`: customers receive only their own conversations, admins retain the studio-wide list, and staff receive `403`.
+  - Added a Customer `200 OK` example for Linh so the contract demonstrates the data needed to load `/chat` directly or after refresh.
+  - Aligned the main G3-G6 booking path with the PA2 example (Linh agrees to 24/10 at 14:00); retained decline and re-proposal coverage in the separate seeded c-linh-05 conversation.
+  - Documented the optional `extras` request field as coordination data only; extras have no separate booking price and do not alter the package price.
+  - Removed legacy price and unit fields from seeded extras so their stored data cannot imply that they add charges to bookings.
+  - Renamed the English label for `Đã chốt lịch` to *Schedule Confirmed* to distinguish conversation state from the booking's deposit state.

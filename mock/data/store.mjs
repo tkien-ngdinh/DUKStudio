@@ -64,7 +64,9 @@ export function findUserByToken(token) {
  */
 export function getJobs(staffId) {
   state.jobs = state.jobs || [];
-  const list = staffId ? state.jobs.filter((j) => j.staffId === staffId) : state.jobs;
+  const cancelledIds = new Set((state.bookings || []).filter((b) => b.status === CANCELLED).map((b) => b.id));
+  const activeJobs = state.jobs.filter((j) => !cancelledIds.has(j.bookingId));
+  const list = staffId ? activeJobs.filter((j) => j.staffId === staffId) : activeJobs;
   return list.map((j) => ({
     id: j.id,
     bookingId: j.bookingId,
@@ -156,7 +158,7 @@ export function createAdminAccount({ name, email, password }) {
     email,
     password,
     role: 'admin',
-    createdAt: new Date().toISOString()
+    createdAt: '2026-11-24T18:00:00Z'
   };
   state.users.push(newAccount);
   return {
@@ -198,7 +200,7 @@ export function updateSettings(updates) {
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
-const CANCELLED = 'Đã huỷ';
+const CANCELLED = 'Đã hủy';
 const COMPLETED = 'Hoàn thành';
 const AWAITING_DEPOSIT = 'Chờ cọc 30%';
 
@@ -285,7 +287,7 @@ export function findBooking(id) {
  * Booking without the photo lists, as returned in GET /api/bookings
  */
 function toListItem(booking) {
-  const { previews, selectedPhotoIds, ...rest } = booking;
+  const { previews, selectedPhotoIds, hasDeposit, hasFinalPayment, ...rest } = booking;
   return JSON.parse(JSON.stringify(rest));
 }
 
@@ -341,7 +343,7 @@ function dayBlocks(date, ignoreBookingId) {
   const reasons = state.scheduleReasons || {};
   const blocks = [];
   const bookings = (state.bookings || [])
-    .filter((b) => b.date === date && b.status !== CANCELLED && b.id !== ignoreBookingId)
+    .filter((b) => b.date === date && b.status !== CANCELLED && b.status !== AWAITING_DEPOSIT && b.id !== ignoreBookingId)
     .sort((a, b) => bookingNumber(a.id) - bookingNumber(b.id));
 
   for (const b of bookings) {
@@ -568,7 +570,7 @@ export function createBookingFromConversation(conversationId) {
   if (!conversation) return fail('NOT_FOUND', `Conversation ${conversationId} not found`);
 
   const proposalMessage = (conversation.messages || []).slice().reverse().find((m) => m.proposal);
-  if (!proposalMessage || proposalMessage.proposal.status !== 'accepted') {
+  if (!proposalMessage || proposalMessage.proposal.status !== 'agreed') {
     return fail('CONFLICT', 'The customer has not accepted the proposed time yet');
   }
   if (conversation.bookingId) {
@@ -584,13 +586,24 @@ export function createBookingFromConversation(conversationId) {
   const extras = (request.extras || [])
     .map((extraId) => (state.extras || []).find((e) => e.id === extraId))
     .filter(Boolean)
-    .map((e) => ({ id: e.id, name: e.name, price: (e.includedIn || []).includes(pkg.id) ? 0 : e.price }));
-  const total = pkg.price + extras.reduce((sum, e) => sum + e.price, 0);
+    .map((e) => ({ id: e.id, name: e.name }));
+  const participantCount = pkg.priceUnit === 'người' ? Number(request.participantCount) : 1;
+  if (!Number.isInteger(participantCount) || participantCount < 1) return fail('CONFLICT', `Conversation ${conversationId} needs a valid participant count for package ${pkg.id}`);
+  const total = pkg.price * participantCount;
   const deposit = Math.round(total * 0.3);
 
-  const makeupArtist = proposal.makeupArtistId ? lookupStaff(proposal.makeupArtistId) : null;
-  const photographer = lookupStaff(proposal.photographerId);
-  const room = proposal.roomId ? lookupRoom(proposal.roomId) : null;
+  const makeupTimes = proposal.makeupStart && proposal.makeupEnd
+    ? [proposal.makeupStart, proposal.makeupEnd]
+    : String(proposal.makeup || '').split(' - ');
+  const shootTimes = proposal.shootStart && proposal.shootEnd
+    ? [proposal.shootStart, proposal.shootEnd]
+    : String(proposal.shoot || '').split(' - ');
+  const makeupArtistId = proposal.makeupArtistId || (state.staff || []).find((s) => s.role === 'makeup')?.id;
+  const photographerId = proposal.photographerId || (state.staff || []).find((s) => s.role === 'photographer')?.id;
+  const makeupArtist = makeupTimes.length === 2 ? lookupStaff(makeupArtistId) : null;
+  const photographer = lookupStaff(photographerId);
+  const room = proposal.roomId ? lookupRoom(proposal.roomId) : (state.rooms || []).find((r) => r.name === proposal.room) || null;
+  if (!photographer || shootTimes.length !== 2) return fail('CONFLICT', `Conversation ${conversationId} has an invalid accepted proposal`);
   const createdAt = conversation.lastMessageAt;
   const id = nextBookingId();
 
@@ -603,14 +616,15 @@ export function createBookingFromConversation(conversationId) {
     serviceName: service ? service.name : '',
     packageId: pkg.id,
     packageName: pkg.name,
+    ...(pkg.priceUnit === 'người' ? { participantCount } : {}),
     extras,
     date: proposal.date,
-    makeup: makeupArtist && proposal.makeupStart
-      ? { start: proposal.makeupStart, end: proposal.makeupEnd, staffId: makeupArtist.id, staffName: makeupArtist.name }
+    makeup: makeupArtist && makeupTimes.length === 2
+      ? { start: makeupTimes[0], end: makeupTimes[1], staffId: makeupArtist.id, staffName: makeupArtist.name }
       : null,
     shoot: {
-      start: proposal.shootStart,
-      end: proposal.shootEnd,
+      start: shootTimes[0],
+      end: shootTimes[1],
       staffId: photographer.id,
       staffName: photographer.name,
       roomId: room ? room.id : null,
@@ -618,6 +632,8 @@ export function createBookingFromConversation(conversationId) {
     },
     price: { total, deposit, remaining: total - deposit },
     status: AWAITING_DEPOSIT,
+    hasDeposit: false,
+    hasFinalPayment: false,
     paymentStatus: 'Chưa cọc',
     photoStatus: 'Chưa có ảnh',
     maxSelect: pkg.maxSelect,
@@ -645,20 +661,20 @@ export function createBookingFromConversation(conversationId) {
     state.jobs.push({
       id: nextJobId(), staffId: booking.makeup.staffId, bookingId: id, role: 'makeup', service: booking.packageName,
       customerName: booking.customerName, date: booking.date, time: `${booking.makeup.start} - ${booking.makeup.end}`,
-      location: 'Khu trang điểm, tầng 1', status: 'assigned', previewsCount: 0, previews: []
+      location: 'Khu trang điểm, tầng 1', status: 'Chưa bắt đầu', previewsCount: 0, previews: []
     });
   }
   state.jobs.push({
     id: nextJobId(), staffId: booking.shoot.staffId, bookingId: id, role: 'photographer', service: booking.packageName,
     customerName: booking.customerName, date: booking.date, time: `${booking.shoot.start} - ${booking.shoot.end}`,
-    location: booking.shoot.roomName || 'Tại chỗ', status: 'assigned', previewsCount: 0, previews: []
+    location: booking.shoot.roomName || 'Tại chỗ', status: 'Chưa bắt đầu', previewsCount: 0, previews: []
   });
 
   return { booking };
 }
 
 /**
- * Reschedule {date, time} (with the same clash check as 04) or cancel {status: "Đã huỷ", cancelReason}
+ * Reschedule {date, time} (with the same clash check as 04) or cancel {status: "Đã hủy", cancelReason}
  * (PATCH /api/bookings/:id). On a clash the booking is left unchanged and the error message is the
  * explanation sentence; the full clash result is returned next to the error.
  */
@@ -674,14 +690,10 @@ export function updateBooking(id, body) {
     if (status !== CANCELLED) fields.status = `Status can only be changed to ${CANCELLED}`;
     if (typeof cancelReason !== 'string' || !cancelReason.trim()) fields.cancelReason = 'Cancel reason is required';
     if (Object.keys(fields).length) return fail('BAD_REQUEST', 'Invalid booking update', fields);
-    if (booking.status === CANCELLED) return fail('CONFLICT', `Booking ${id} is already cancelled`);
-    if (booking.status === COMPLETED) return fail('CONFLICT', `Booking ${id} is completed and cannot be cancelled`);
+    if (booking.status !== AWAITING_DEPOSIT && booking.status !== 'Đã đặt lịch') return fail('CONFLICT', `Booking ${id} cannot be cancelled from status ${booking.status}`);
 
     booking.status = CANCELLED;
     booking.cancelReason = cancelReason.trim();
-    (state.jobs || []).forEach((j) => {
-      if (j.bookingId === id && (j.status === 'assigned' || j.status === 'in_progress')) j.status = 'cancelled';
-    });
     return { booking };
   }
 
@@ -719,11 +731,20 @@ export function updateBooking(id, body) {
   booking.shoot.end = toTime(shootStart + shootLength);
 
   (state.jobs || []).forEach((j) => {
-    if (j.bookingId !== id || j.status === 'completed' || j.status === 'cancelled') return;
+    if (j.bookingId !== id) return;
     j.date = date;
     const window = j.role === 'makeup' && booking.makeup ? booking.makeup : booking.shoot;
     j.time = `${window.start} - ${window.end}`;
   });
+  const firstMilestone = booking.makeup?.start || booking.shoot.start;
+  const appointment = new Date(`${date}T${firstMilestone}:00+07:00`);
+  appointment.setHours(appointment.getHours() - (getSettings().reminderHoursBefore || 24));
+  const reminder = (state.reminders || []).find((r) => r.bookingId === id && String(r.title || '').startsWith('Nhắc lịch'));
+  if (reminder) {
+    reminder.sendAt = appointment.toISOString();
+    reminder.title = `Nhắc lịch chụp ngày ${date.slice(8, 10)}/${date.slice(5, 7)}`;
+    reminder.emailStatus = 'Chờ gửi';
+  }
   return { booking };
 }
 

@@ -8,6 +8,11 @@ import {
   setFinalLink
 } from '../data/store.mjs';
 
+function publicBooking(booking) {
+  const { hasDeposit, hasFinalPayment, ...publicFields } = booking;
+  return publicFields;
+}
+
 const STATUS_BY_CODE = {
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
@@ -81,7 +86,7 @@ export function register(router) {
     const result = createBookingFromConversation(conversationId.trim());
     if (result.error) return sendError(res, result.error);
 
-    return res.status(201).json({ booking: result.booking });
+    return res.status(201).json({ booking: publicBooking(result.booking) });
   });
 
   // GET /api/bookings
@@ -124,7 +129,7 @@ export function register(router) {
       });
     }
 
-    return res.status(200).json({ booking });
+    return res.status(200).json({ booking: publicBooking(booking) });
   });
 
   // PATCH /api/bookings/:id  (reschedule or cancel; a clash changes nothing)
@@ -134,7 +139,7 @@ export function register(router) {
     const result = updateBooking(req.params.id, bodyOf(req));
     if (result.error) return sendError(res, result.error);
 
-    return res.status(200).json({ booking: result.booking });
+    return res.status(200).json({ booking: publicBooking(result.booking) });
   });
 
   // POST /api/bookings/:id/final-link

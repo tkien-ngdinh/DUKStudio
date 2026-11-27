@@ -32,17 +32,20 @@ export function register(router) {
       });
     }
 
-    if (user.role !== 'admin') {
+    if (user.role !== 'admin' && user.role !== 'customer') {
       return res.status(403).json({
         error: {
           code: 'FORBIDDEN',
-          message: 'Access denied. Admin role required'
+          message: 'Access denied. Customer or Admin role required'
         }
       });
     }
 
     const store = getStore();
     let conversations = store.conversations || [];
+    if (user.role === 'customer') {
+      conversations = conversations.filter((conversation) => conversation.customerId === user.id);
+    }
 
     const statusFilter = req.query.status;
     if (statusFilter) {
@@ -141,6 +144,11 @@ export function register(router) {
       fields.message = 'Inquiry message is required';
     }
 
+    const requestedPackage = (getStore().packages || []).find((p) => p.id === body.packageId);
+    if (requestedPackage?.priceUnit === 'người' && (!Number.isInteger(body.participantCount) || body.participantCount < 1)) {
+      fields.participantCount = 'Participant count must be a positive integer for a per-person package';
+    }
+
     if (Object.keys(fields).length > 0) {
       return res.status(400).json({
         error: {
@@ -153,7 +161,23 @@ export function register(router) {
 
     const store = getStore();
     store.conversations = store.conversations || [];
-    const newId = `c-${user.id.replace('u-', '')}-${String(store.conversations.length + 1).padStart(2, '0')}`;
+    const latest = store.conversations.filter((c) => c.customerId === user.id)
+      .sort((a, b) => String(b.lastMessageAt || '').localeCompare(String(a.lastMessageAt || '')))[0];
+    if (latest && latest.status !== 'Hoàn thành' && !latest.bookingId) {
+      const timestamp = getNextTimestamp(latest.messages);
+      const message = { id: getNextMessageId(latest.messages), sender: 'customer', senderName: user.name || 'Linh', text: body.message, timestamp };
+      latest.messages.push(message);
+      latest.lastMessageAt = timestamp;
+      latest.request = { packageId: body.packageId, preferredDate: body.preferredDate, preferredTime: body.preferredTime || null, participantCount: body.participantCount || null, extras: body.extras || [], notes: body.notes || '' };
+      return res.status(200).json({ conversation: latest, reused: true });
+    }
+    const existingIds = new Set(store.conversations.map((c) => c.id));
+    let sequence = store.conversations.length + 1;
+    let newId = `c-${user.id.replace('u-', '')}-${String(sequence).padStart(2, '0')}`;
+    while (existingIds.has(newId)) {
+      sequence += 1;
+      newId = `c-${user.id.replace('u-', '')}-${String(sequence).padStart(2, '0')}`;
+    }
     const timestamp = '2026-10-21T09:00:00Z';
 
     const newConversation = {
@@ -163,6 +187,7 @@ export function register(router) {
       status: 'Chưa trả lời',
       lastMessageAt: timestamp,
       bookingId: null,
+      request: { packageId: body.packageId, preferredDate: body.preferredDate, preferredTime: body.preferredTime || null, participantCount: body.participantCount || null, extras: body.extras || [], notes: body.notes || '' },
       messages: [
         {
           id: 'm-inquiry-01',
@@ -217,6 +242,22 @@ export function register(router) {
       });
     }
 
+    if (user.role === 'customer' && conversation.status === 'Hoàn thành') {
+      const body = req.body || {};
+      if (!body.text || !String(body.text).trim()) return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'Invalid message payload', fields: { text: 'Message text is required' } } });
+      const existingIds = new Set(store.conversations.map((c) => c.id));
+      let sequence = store.conversations.length + 1;
+      let id = `c-${user.id.replace('u-', '')}-${String(sequence).padStart(2, '0')}`;
+      while (existingIds.has(id)) {
+        sequence += 1;
+        id = `c-${user.id.replace('u-', '')}-${String(sequence).padStart(2, '0')}`;
+      }
+      const timestamp = getNextTimestamp([]);
+      const next = { id, customerId: user.id, customerName: user.name || conversation.customerName, status: 'Chưa trả lời', lastMessageAt: timestamp, bookingId: null, request: null, messages: [{ id: 'm-01', sender: 'customer', senderName: user.name || 'Linh', text: body.text, timestamp }] };
+      store.conversations.push(next);
+      return res.status(201).json({ conversation: next });
+    }
+
     const body = req.body || {};
     if (!body.text || !String(body.text).trim()) {
       return res.status(400).json({
@@ -247,7 +288,7 @@ export function register(router) {
     conversation.lastMessageAt = timestamp;
 
     // Advance conversation state to 'Đang tư vấn' when admin replies
-    if (user.role === 'admin') {
+    if (user.role === 'admin' && !conversation.bookingId && conversation.status === 'Chưa trả lời') {
       conversation.status = 'Đang tư vấn';
     }
 
@@ -290,6 +331,10 @@ export function register(router) {
           message: `Conversation ${convId} not found`
         }
       });
+    }
+
+    if (conversation.bookingId) {
+      return res.status(409).json({ error: { code: 'CONFLICT', message: 'A conversation with a booking cannot receive another time proposal' } });
     }
 
     const body = req.body || {};

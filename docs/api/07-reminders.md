@@ -14,7 +14,7 @@ Retrieves all upcoming and dispatched appointment reminders for the authenticate
 
 ### Success Example — Active Reminders (200 OK)
 
-Customer Linh retrieves active reminder notifications linked to her seeded booking `GS-1023` scheduled for October 24, 2026. The reminder was triggered 24 hours in advance (per studio settings `reminderHoursBefore: 24`).
+Customer Linh retrieves seeded reminders for booking `GS-1023`, scheduled for October 17, 2026. Appointment reminders are recalculated from the earliest appointment milestone when an Admin reschedules the booking; canceled bookings have no customer-visible reminders.
 
 ```http
 GET /api/reminders
@@ -26,7 +26,7 @@ Authorization: Bearer {{token:linh}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"reminders": [{"id": "rem-1023", "bookingId": "GS-1023", "channel": "email", "scheduledAt": "2026-10-23T13:00:00Z", "deliveryStatus": "sent", "statusLabel": "Sent", "title": "Nhắc lịch chụp ảnh tốt nghiệp GS-1023", "message": "Nhắc nhở: Buổi chụp tốt nghiệp của bạn diễn ra vào 13:00 ngày 24/10/2026 tại Phòng B DUKStudio.", "sentAt": "2026-10-23T13:00:00Z"}]}
+{"reminders":[{"id":"rem-1023-1","bookingId":"GS-1023","customerId":"u-linh","title":"Nhắc lịch chụp ngày 17/10","sendAt":"2026-10-16T06:00:00Z","channels":["E-mail","Trong ứng dụng"],"emailStatus":"Đã gửi"},{"id":"rem-1023-2","bookingId":"GS-1023","customerId":"u-linh","title":"Ảnh xem trước đã sẵn sàng, mời bạn chọn ảnh","sendAt":"2026-10-20T02:00:00Z","channels":["E-mail"],"emailStatus":"Đã gửi"},{"id":"rem-1023-3","bookingId":"GS-1023","customerId":"u-linh","title":"Nhắc thanh toán phần còn lại 1.260.000đ","sendAt":"2026-10-27T02:00:00Z","channels":["E-mail"],"emailStatus":"Chờ gửi"}]}
 ```
 
 ### Empty Mode Behavior (MOCK_MODE=empty)
@@ -82,3 +82,6 @@ Content-Type: application/json
   - Revised `docs/api/07-reminders.md` to prevent sequential state conflict during automated contract checks.
   - Retained the normal-mode success example with all required reminder fields (`scheduledAt`, `channel`, `deliveryStatus`, and standardized English label `Sent`).
   - Documented `MOCK_MODE=empty` response behavior in JSON specification prose rather than an incompatible sequential HTTP request against normal-mode server state.
+
+- **2026-11-27**:
+  - Specified that reminders for cancelled bookings are excluded, matching the mock and PO cancellation rule that cancelled bookings receive no schedule reminders.

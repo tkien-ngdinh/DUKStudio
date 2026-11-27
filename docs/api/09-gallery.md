@@ -16,7 +16,7 @@ Each preview photo object conforms to the following schema:
 - `size` (integer, required): File size in bytes (e.g. `204800`).
 - `uploadedAt` (string, required): ISO 8601 upload timestamp (e.g. `2026-10-24T16:15:00Z`).
 
-Under seeded booking `GS-1023` (package `pkg-tot-nghiep-premium`), the customer is entitled to select up to **30 photos** for professional retouching. Following the upload example in `08-jobs.md`, photographer Tuấn has uploaded preview photo `prev-01` to `job-101` for this booking.
+Under seeded booking `GS-1023` (package `pkg-tn-premium`), the customer is entitled to select up to **30 photos** for professional retouching. Following the upload example in `08-jobs.md`, photographer Tuấn has uploaded preview photo `prev-01` to `job-101` for this booking.
 
 ---
 
@@ -30,12 +30,12 @@ Submits the customer's chosen preview photo identifiers for retouching by the st
 - **Path Parameter**:
   - `:id`: Booking identifier (e.g. `GS-1023`).
 - **Request Body**:
-  - `photoIds` (array of strings, required): Array of selected preview photo IDs. Minimum 1 photo, maximum 30 photos.
+  - `photoIds` (array of strings, required): Array of selected preview photo IDs. Minimum 1 photo, maximum equal to the package edited-photo count (`maxSelect`); no package may allow more than 30 photos.
   - `notes` (string, optional): Customer retouching requests or styling instructions.
 
 ### Success Example (200 OK)
 
-Customer Linh selects available preview photo `prev-01` for professional retouching on booking `GS-1023`. Booking operational progress advances to `Đang chỉnh sửa`.
+Customer Linh selects available preview photo `prev-01` for professional retouching on booking `GS-1023`. Selection is saved and can be replaced until the remaining 70% is paid; booking status does not change.
 
 ```http
 POST /api/gallery/GS-1023/select
@@ -49,7 +49,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"success": true, "bookingId": "GS-1023", "selectedCount": 1, "selectedPhotos": ["prev-01"], "status": "Đang chỉnh sửa", "submittedAt": "2026-10-25T09:00:00Z"}
+{"success": true, "bookingId": "GS-1023", "selectedCount": 1, "selectedPhotos": ["prev-01"], "status": "Đã chọn ảnh", "submittedAt": "2026-10-25T09:00:00Z"}
 ```
 
 ### Combined / Missing Field Validation Example (400 Bad Request)
@@ -92,7 +92,7 @@ Content-Type: application/json
 
 ### Photo Limit Exceeded Validation Example (400 Bad Request)
 
-Returned when the selection exceeds the package limit of 30 photos (e.g. 31 photo IDs submitted).
+Returned when the selection exceeds the package-specific `maxSelect` limit (30 for this seeded package). The request below contains 31 photos to exceed that limit.
 
 ```http
 POST /api/gallery/GS-1023/select
@@ -149,7 +149,7 @@ Content-Type: application/json
 
 ## 2. Confirm Photo Receipt (POST /api/gallery/:id/receive)
 
-Finalizes deliverables delivery (Step G9). The customer clicks "Receive photos" to confirm access to retouched digital assets and mark the booking completed.
+Finalizes deliverables delivery (Step G9). The customer clicks "Receive photos" to confirm access to retouched digital assets and mark the booking and its linked conversation to `Hoàn thành`.
 
 - **Endpoint**: `POST /api/gallery/:id/receive`
 - **Permissions**: Customer role (`customer` - booking owner).
@@ -161,11 +161,11 @@ Finalizes deliverables delivery (Step G9). The customer clicks "Receive photos" 
 ### Prerequisites & Completion Rules
 
 To confirm photo receipt and complete the booking:
-1. Retouching selections must have been submitted (`photos` array contains selected IDs).
+1. Retouching selections must have been submitted (`selectedPhotoIds` contains selected IDs).
 2. The remaining 70% balance payment must have been settled successfully (`hasFinalPayment: true`).
-3. The studio administrator must have attached the final downloadable archive link (`finalFileLink` is not null).
+3. The studio administrator must have attached the final downloadable archive link (`finalLink` is not null).
 
-When all prerequisites are met, the successful operation transitions booking status to *Completed* (`Hoàn thành`). The response schema is shown below, but a runnable success request is blocked until the detailed `05-bookings.md` contract and mock flow can attach `finalFileLink`; the current seed has `finalFileLink: null` and this gallery contract does not invent the admin final-link request schema.
+When all prerequisites are met, the successful operation transitions booking and its linked conversation status to `Hoàn thành`.
 
 ```json
 {
@@ -176,16 +176,14 @@ When all prerequisites are met, the successful operation transitions booking sta
     "hasDeposit": true,
     "hasFinalPayment": true,
     "completedAt": "2026-10-26T14:00:00Z",
-    "finalFileLink": "https://drive.gradstudio.test/deliverables/GS-1023-final.zip"
+    "finalLink": "https://drive.gradstudio.test/deliverables/GS-1023-final.zip"
   }
 }
 ```
 
-### Final Deliverables Not Ready Conflict Example (409 Conflict)
+### Remaining Payment Required Conflict Example (409 Conflict)
 
-In the sequential contract execution against a fresh mock with initial seed data, booking `GS-1023` has `hasDeposit: true`, `hasFinalPayment: true` (settled in `06-payments.md`), and `photos: ["prev-01"]` (selected above). However, the initial seed state has `finalFileLink: null`, and the endpoint to attach final links (`POST /api/bookings/:id/final-link`) belongs to `05-bookings.md` which has not yet been authored in the repository.
-
-Consequently, attempting to confirm photo receipt before the studio administrator attaches the final download archive returns HTTP `409 Conflict`.
+After a selection is saved, the customer cannot confirm photo receipt until the remaining 70% has been paid and the Admin has attached the final archive link. The sequential example uses seeded booking GS-1023 before any 70% payment succeeds, so the first unmet receipt condition is the unpaid remaining balance.
 
 ```http
 POST /api/gallery/GS-1023/receive
@@ -199,7 +197,7 @@ Content-Type: application/json
 HTTP/1.1 409 Conflict
 Content-Type: application/json
 
-{"error": {"code": "CONFLICT", "message": "Final photo deliverables archive link has not been attached yet"}}
+{"error": {"code": "CONFLICT", "message": "Remaining 70% balance must be settled before confirming photo receipt"}}
 ```
 
 ### Booking Not Found Example (404 Not Found)
@@ -247,5 +245,15 @@ Content-Type: application/json
   - Updated photo selection example to use `prev-01` (the single preview established by `08-jobs.md`), removing references to unestablished previews `prev-02` through `prev-05`.
   - Added explicit field-level HTTP 400 validation error examples for `photoIds`: missing field, empty selection (`photoIds: []`), and exceeding the 30-photo maximum limit.
   - Updated `POST /api/gallery/:id/receive` request body to `{}` without undocumented fields (`bypassPayment`).
-  - Aligned the 409 Conflict response with current sequential state: because remaining 70% balance was already paid in `06-payments.md`, the 409 example accurately reflects the missing final deliverables archive link (`finalFileLink: null`), avoiding contradictory unpaid-balance claims while documenting the success response shape and dependency blocker.
+  - Aligned the 409 Conflict response with current sequential state: because the remaining-balance gate correctly blocked payment in `06-payments.md`, the 409 example accurately reflects the unpaid remaining balance, avoiding contradictory unpaid-balance claims while documenting the success response shape and dependency blocker.
   - Marked the receive-success payload as a response schema rather than a runnable example until the detailed admin final-link contract and mock setup are available.
+
+- **2026-11-27**:
+  - Made photo selection limits package-specific, capped at 30 project-wide, and locked selection after successful 70% payment. Receiving photos now requires saved selections, paid remaining balance and an attached final link; success completes the booking and its linked conversation.
+  - Updated the gallery contract to use the shared `selectedPhotoIds` and `finalLink` fields used by bookings and payments.
+  - Clarified that the seeded package limit is 30 photos and the invalid request example submits 31.
+
+
+### Selection Lock and Remaining-Balance Gate
+
+The customer may replace the saved selection any number of times before the 70% payment succeeds, provided the selection count does not exceed the booking package's `maxSelect`. After successful payment, selection changes return `409 Conflict`. The 70% payment endpoint also requires the linked photographer job to be `Hoàn thành` and at least one saved selected photo. Selecting photos does not change booking status.

@@ -1,6 +1,6 @@
 import { findUserByToken, getJobs, findJobById, updateJob, addJobPreview, nextPreviewId } from '../data/store.mjs';
 
-const ALLOWED_STATUSES = ['assigned', 'in_progress', 'completed', 'cancelled'];
+const ALLOWED_STATUSES = ['Chưa bắt đầu', 'Đang làm', 'Hoàn thành'];
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10MB
 
 /**
@@ -85,7 +85,7 @@ export function register(router) {
           code: 'BAD_REQUEST',
           message: 'Invalid job status',
           fields: {
-            status: 'Status must be one of: assigned, in_progress, completed, cancelled'
+            status: 'Status must be one of: Chưa bắt đầu, Đang làm, Hoàn thành'
           }
         }
       });
