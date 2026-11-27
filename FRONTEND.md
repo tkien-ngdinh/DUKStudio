@@ -54,7 +54,7 @@ Demo accounts table parsed by automated verification suites (`contract-check`):
 | linh | customer | linh@gradstudio.test | linh-demo | Customer booking graduation shoot |
 | thao | admin | thao@gradstudio.test | thao-demo | Studio Admin consulting and confirming bookings |
 | mai | staff | mai@gradstudio.test | mai-demo | Makeup artist (busy 08:00–12:00 on Oct 24) |
-| tuan | staff | tuan@gradstudio.test | tuan-demo | Photographer (assigned to GS-1024 / GS-1023) |
+| tuan | staff | tuan@gradstudio.test | tuan-demo | Photographer (assigned to GS-1023; assigned to GS-1024 after G6) |
 | superadmin | superadmin | superadmin@gradstudio.test | superadmin-demo | Superadmin (opening hours & reminder settings) |
 
 ---
@@ -105,4 +105,3 @@ Key architectural and product decisions agreed upon with the team:
 Updated as the work goes on; the final list is written before submission.
 
 - Task 7 (`client/` Vite + React Router scaffold, `vite.config.js` `/api` proxy, `AuthContext` + `useAuth`, `ProtectedRoute`, `apiFetch`, shared `Loading`/`Error+Retry`/`Empty` states, `Layout`, `NotFoundPage`, and `/login`) is complete; feature screens for G1 and G3–G11 are pending in Tasks 8–12 (currently routed to clean scaffold placeholders).
-- Contracts and mock routes for `02-catalog`, `03-chat`, `04-schedule`, `05-bookings`, `06-payments`, `07-reminders` and `09-gallery` are in progress on teammate branches; `contract-check` still lists their 20 endpoints as having no example on `main`.

@@ -200,6 +200,9 @@ Content-Type: application/json
 
 ## Changes
 
+- **2026-11-27**:
+  - Kept the successful administrator-creation example deterministic by fixing the mock-created account timestamp to the value shown in the contract example; duplicate email still returns `409`.
+
 - **2026-11-24** (Trung Kiên):
   - Initialized administration and system settings contract specification in `docs/api/10-admin.md`.
   - Specified endpoints for Admin account listing and provisioning (`GET`, `POST /api/admin/accounts`) and studio settings (`GET`, `PUT /api/admin/settings`) with strict Superadmin role verification (403 for other roles).
