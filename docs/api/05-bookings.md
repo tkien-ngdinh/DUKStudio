@@ -14,19 +14,19 @@ Every endpoint in this file answers with this object (or a list of it).
 | `conversationId` | string or null | The chat the booking was created from; `null` for bookings made outside the chat. |
 | `customerId`, `customerName` | string | `customerName` is the short name (`Linh`). |
 | `serviceId`, `serviceName`, `packageId`, `packageName` | string | From the catalog (`02-catalog.md`). |
-| `extras` | array | `{id, name, price}`. An extra already included in the package has `price` `0`. |
+| `extras` | array | `{id, name}` coordination notes; extras do not add to package price. |
 | `date` | string | Shoot day, `YYYY-MM-DD`. |
 | `makeup` | object or null | `{start, end, staffId, staffName}`; `null` when the package has no make-up. |
 | `shoot` | object | `{start, end, staffId, staffName, roomId, roomName}`. |
 | `price` | object | `{total, deposit, remaining}` in whole đồng (deposit 30%, remaining 70%). |
-| `status` | string | One of `Chờ cọc 30%`, `Đã đặt lịch`, `Hoàn thành`, `Đã huỷ`. |
+| `status` | string | One of `Chờ cọc 30%`, `Đã đặt lịch`, `Hoàn thành`, `Đã hủy`. |
 | `paymentStatus` | string | One of `Chưa cọc`, `Đã cọc 30%`, `Đã thanh toán đủ`. |
 | `photoStatus` | string | One of `Chưa có ảnh`, `Chờ chọn ảnh`, `Đã chọn ảnh`, `Đã có link ảnh cuối`, `Đã nhận ảnh`. |
 | `maxSelect` | number | How many photos the customer may choose for retouching. |
 | `previews` | array | `{id, url, alt}` watermarked previews (added by `08-jobs.md` uploads). |
 | `selectedPhotoIds` | array | Preview ids chosen in G9 (`09-gallery.md`). |
 | `finalLink` | string or null | `null` until the admin adds it in G10. |
-| `cancelReason` | string or null | `null` unless `status` is `Đã huỷ`. |
+| `cancelReason` | string or null | `null` unless `status` is `Đã hủy`. |
 | `createdAt` | string | ISO 8601 UTC. |
 
 **List items** (`GET /api/bookings`) carry every field except `previews` and `selectedPhotoIds`; the full object comes from `GET /api/bookings/:id`.
@@ -36,6 +36,8 @@ Every endpoint in this file answers with this object (or a list of it).
 ## 1. Create Booking (POST /api/bookings)
 
 Creates a booking from a conversation whose latest proposal the customer has accepted. The date, times, staff and room are copied from that accepted proposal; the package, extras and price from the conversation's request. A new booking starts at `Chờ cọc 30%` / `Chưa cọc` / `Chưa có ảnh`. The slot is not held until the deposit succeeds (`06-payments.md`).
+
+For packages priced per person, the inquiry includes `participantCount`; the server calculates `price.total = package.price × participantCount`, then calculates the 30% deposit and 70% remainder. Other packages use the fixed package price. Extras are stored for coordination and do not change the price.
 
 - **Endpoint**: `POST /api/bookings`
 - **Permissions**: Admin role (`admin`).
@@ -54,33 +56,33 @@ POST /api/bookings
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"conversationId": "c-1003"}
+{"conversationId":"c-1003"}
 ```
 
 ```http
 HTTP/1.1 409 Conflict
 Content-Type: application/json
 
-{"error": {"code": "CONFLICT", "message": "The customer has not accepted the proposed time yet"}}
+{"error":{"code":"CONFLICT","message":"The customer has not accepted the proposed time yet"}}
 ```
 
 ### Success Example (201 Created)
 
-`03-chat.md` leaves c-1005 with Linh's accepted 14:00 proposal for 24/10.
+`03-chat.md` leaves c-linh-06 with Linh's accepted proposal for 25/10 (makeup 14:00–15:00, shoot 15:00–17:00).
 
 ```http
 POST /api/bookings
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"conversationId": "c-1005"}
+{"conversationId":"c-linh-06"}
 ```
 
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
 
-{"booking": {"id": "GS-1024", "conversationId": "c-1005", "customerId": "u-linh", "customerName": "Linh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [{"id": "ex-makeup", "name": "Trang điểm", "price": 0}], "date": "2026-10-24", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Chờ cọc 30%", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 30, "previews": [], "selectedPhotoIds": [], "finalLink": null, "cancelReason": null, "createdAt": "2026-10-20T10:30:00Z"}}
+{"booking":{"id":"GS-1024","conversationId":"c-linh-06","customerId":"u-linh","customerName":"Linh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[{"id":"ex-makeup","name":"Trang điểm"}],"date":"2026-10-25","makeup":{"start":"14:00","end":"15:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"15:00","end":"17:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Chờ cọc 30%","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":30,"previews":[],"selectedPhotoIds":[],"finalLink":null,"cancelReason":null,"createdAt":"2026-10-21T09:04:00Z"}}
 ```
 
 ### Missing Conversation Example (400 Bad Request)
@@ -97,7 +99,7 @@ Content-Type: application/json
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
-{"error": {"code": "BAD_REQUEST", "message": "Invalid booking payload", "fields": {"conversationId": "Conversation id is required"}}}
+{"error":{"code":"BAD_REQUEST","message":"Invalid booking payload","fields":{"conversationId":"Conversation id is required"}}}
 ```
 
 ### Access Denied Example (403 Forbidden)
@@ -107,14 +109,14 @@ POST /api/bookings
 Authorization: Bearer {{token:linh}}
 Content-Type: application/json
 
-{"conversationId": "c-1005"}
+{"conversationId":"c-linh-06"}
 ```
 
 ```http
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
 
-{"error": {"code": "FORBIDDEN", "message": "Access denied. Admin role required"}}
+{"error":{"code":"FORBIDDEN","message":"Access denied. Admin role required"}}
 ```
 
 ---
@@ -139,7 +141,7 @@ Authorization: Bearer {{token:linh}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"bookings": [{"id": "GS-1023", "conversationId": "c-1001", "customerId": "u-linh", "customerName": "Linh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [], "date": "2026-10-17", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Đã đặt lịch", "paymentStatus": "Đã cọc 30%", "photoStatus": "Chờ chọn ảnh", "maxSelect": 30, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-12T01:30:00Z"}, {"id": "GS-1024", "conversationId": "c-1005", "customerId": "u-linh", "customerName": "Linh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [{"id": "ex-makeup", "name": "Trang điểm", "price": 0}], "date": "2026-10-24", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Chờ cọc 30%", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 30, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-20T10:30:00Z"}]}
+{"bookings":[{"id":"GS-1023","conversationId":"c-linh-01","customerId":"u-linh","customerName":"Linh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[],"date":"2026-10-17","makeup":{"start":"13:00","end":"14:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"14:00","end":"16:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Đã đặt lịch","paymentStatus":"Đã cọc 30%","photoStatus":"Chờ chọn ảnh","maxSelect":30,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-12T01:30:00Z"},{"id":"GS-1024","conversationId":"c-linh-06","customerId":"u-linh","customerName":"Linh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[{"id":"ex-makeup","name":"Trang điểm"}],"date":"2026-10-25","makeup":{"start":"14:00","end":"15:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"15:00","end":"17:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Chờ cọc 30%","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":30,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-21T09:04:00Z"}]}
 ```
 
 ### Admin Example (200 OK)
@@ -154,7 +156,7 @@ Authorization: Bearer {{token:thao}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"bookings": [{"id": "GS-1017", "conversationId": null, "customerId": "cus-anh", "customerName": "Phan Ngọc Anh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-nhom", "packageName": "Gói Tốt nghiệp Nhóm (tối đa 5 người)", "extras": [], "date": "2026-10-24", "makeup": {"start": "08:00", "end": "12:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "09:30", "end": "12:30", "staffId": "st-khoa", "staffName": "Khoa", "roomId": "room-a", "roomName": "Phòng A"}, "price": {"total": 4500000, "deposit": 1350000, "remaining": 3150000}, "status": "Đã đặt lịch", "paymentStatus": "Đã cọc 30%", "photoStatus": "Chưa có ảnh", "maxSelect": 50, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-15T02:30:00Z"}, {"id": "GS-1018", "conversationId": null, "customerId": "cus-thinh", "customerName": "Lương Đức Thịnh", "serviceId": "svc-chan-dung", "serviceName": "Chân dung / Profile CV", "packageId": "pkg-chan-dung", "packageName": "Gói Chân dung Profile", "extras": [], "date": "2026-10-24", "makeup": null, "shoot": {"start": "16:30", "end": "17:30", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-a", "roomName": "Phòng A"}, "price": {"total": 690000, "deposit": 207000, "remaining": 483000}, "status": "Đã đặt lịch", "paymentStatus": "Đã cọc 30%", "photoStatus": "Chưa có ảnh", "maxSelect": 10, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-18T13:00:00Z"}, {"id": "GS-1019", "conversationId": "c-1004", "customerId": "cus-ha", "customerName": "Huỳnh Thu Hà", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [], "date": "2026-10-10", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Hoàn thành", "paymentStatus": "Đã thanh toán đủ", "photoStatus": "Đã nhận ảnh", "maxSelect": 30, "finalLink": "https://files.gradstudio.test/final/GS-1019.zip", "cancelReason": null, "createdAt": "2026-10-03T02:00:00Z"}, {"id": "GS-1020", "conversationId": null, "customerId": "cus-bao", "customerName": "Võ Gia Bảo", "serviceId": "svc-chan-dung", "serviceName": "Chân dung / Profile CV", "packageId": "pkg-chan-dung", "packageName": "Gói Chân dung Profile", "extras": [], "date": "2026-10-31", "makeup": null, "shoot": {"start": "15:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-a", "roomName": "Phòng A"}, "price": {"total": 690000, "deposit": 207000, "remaining": 483000}, "status": "Chờ cọc 30%", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 10, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-22T14:30:00Z"}, {"id": "GS-1021", "conversationId": null, "customerId": "cus-nhi", "customerName": "Lê Bảo Nhi", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [], "date": "2026-10-14", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Đã đặt lịch", "paymentStatus": "Đã cọc 30%", "photoStatus": "Đã chọn ảnh", "maxSelect": 30, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-05T02:00:00Z"}, {"id": "GS-1023", "conversationId": "c-1001", "customerId": "u-linh", "customerName": "Linh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [], "date": "2026-10-17", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Đã đặt lịch", "paymentStatus": "Đã cọc 30%", "photoStatus": "Chờ chọn ảnh", "maxSelect": 30, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-12T01:30:00Z"}, {"id": "GS-1024", "conversationId": "c-1005", "customerId": "u-linh", "customerName": "Linh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [{"id": "ex-makeup", "name": "Trang điểm", "price": 0}], "date": "2026-10-24", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Chờ cọc 30%", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 30, "finalLink": null, "cancelReason": null, "createdAt": "2026-10-20T10:30:00Z"}]}
+{"bookings":[{"id":"GS-1017","conversationId":null,"customerId":"cus-anh","customerName":"Phan Ngọc Anh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-nhom","packageName":"Gói Tốt nghiệp Nhóm (tối đa 5 người)","extras":[],"date":"2026-10-24","makeup":{"start":"08:00","end":"12:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"09:30","end":"12:30","staffId":"st-khoa","staffName":"Khoa","roomId":"room-a","roomName":"Phòng A"},"price":{"total":4500000,"deposit":1350000,"remaining":3150000},"status":"Đã đặt lịch","paymentStatus":"Đã cọc 30%","photoStatus":"Chưa có ảnh","maxSelect":30,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-15T02:30:00Z"},{"id":"GS-1018","conversationId":null,"customerId":"cus-thinh","customerName":"Lương Đức Thịnh","serviceId":"svc-chan-dung","serviceName":"Chân dung / Profile CV","packageId":"pkg-chan-dung","packageName":"Gói Chân dung Profile","extras":[],"date":"2026-10-24","makeup":null,"shoot":{"start":"16:30","end":"17:30","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-a","roomName":"Phòng A"},"price":{"total":690000,"deposit":207000,"remaining":483000},"status":"Đã đặt lịch","paymentStatus":"Đã cọc 30%","photoStatus":"Chưa có ảnh","maxSelect":10,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-18T13:00:00Z"},{"id":"GS-1019","conversationId":"c-1004","customerId":"cus-ha","customerName":"Huỳnh Thu Hà","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[],"date":"2026-10-10","makeup":{"start":"13:00","end":"14:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"14:00","end":"16:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Hoàn thành","paymentStatus":"Đã thanh toán đủ","photoStatus":"Đã nhận ảnh","maxSelect":30,"finalLink":"https://files.gradstudio.test/final/GS-1019.zip","cancelReason":null,"createdAt":"2026-10-03T02:00:00Z"},{"id":"GS-1020","conversationId":null,"customerId":"cus-bao","customerName":"Võ Gia Bảo","serviceId":"svc-chan-dung","serviceName":"Chân dung / Profile CV","packageId":"pkg-chan-dung","packageName":"Gói Chân dung Profile","extras":[],"date":"2026-10-31","makeup":null,"shoot":{"start":"15:00","end":"16:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-a","roomName":"Phòng A"},"price":{"total":690000,"deposit":207000,"remaining":483000},"status":"Chờ cọc 30%","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":10,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-22T14:30:00Z"},{"id":"GS-1021","conversationId":null,"customerId":"cus-nhi","customerName":"Lê Bảo Nhi","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[],"date":"2026-10-14","makeup":{"start":"13:00","end":"14:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"14:00","end":"16:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Đã đặt lịch","paymentStatus":"Đã cọc 30%","photoStatus":"Đã chọn ảnh","maxSelect":30,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-05T02:00:00Z"},{"id":"GS-1023","conversationId":"c-linh-01","customerId":"u-linh","customerName":"Linh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[],"date":"2026-10-17","makeup":{"start":"13:00","end":"14:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"14:00","end":"16:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Đã đặt lịch","paymentStatus":"Đã cọc 30%","photoStatus":"Chờ chọn ảnh","maxSelect":30,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-12T01:30:00Z"},{"id":"GS-1024","conversationId":"c-linh-06","customerId":"u-linh","customerName":"Linh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[{"id":"ex-makeup","name":"Trang điểm"}],"date":"2026-10-25","makeup":{"start":"14:00","end":"15:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"15:00","end":"17:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Chờ cọc 30%","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":30,"finalLink":null,"cancelReason":null,"createdAt":"2026-10-21T09:04:00Z"}]}
 ```
 
 ---
@@ -179,7 +181,7 @@ Authorization: Bearer {{token:linh}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"booking": {"id": "GS-1024", "conversationId": "c-1005", "customerId": "u-linh", "customerName": "Linh", "serviceId": "svc-tot-nghiep", "serviceName": "Chụp tốt nghiệp", "packageId": "pkg-tn-premium", "packageName": "Gói Tốt nghiệp Premium", "extras": [{"id": "ex-makeup", "name": "Trang điểm", "price": 0}], "date": "2026-10-24", "makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}, "price": {"total": 1800000, "deposit": 540000, "remaining": 1260000}, "status": "Chờ cọc 30%", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 30, "previews": [], "selectedPhotoIds": [], "finalLink": null, "cancelReason": null, "createdAt": "2026-10-20T10:30:00Z"}}
+{"booking":{"id":"GS-1024","conversationId":"c-linh-06","customerId":"u-linh","customerName":"Linh","serviceId":"svc-tot-nghiep","serviceName":"Chụp tốt nghiệp","packageId":"pkg-tn-premium","packageName":"Gói Tốt nghiệp Premium","extras":[{"id":"ex-makeup","name":"Trang điểm"}],"date":"2026-10-25","makeup":{"start":"14:00","end":"15:00","staffId":"u-mai","staffName":"Mai"},"shoot":{"start":"15:00","end":"17:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-b","roomName":"Phòng B"},"price":{"total":1800000,"deposit":540000,"remaining":1260000},"status":"Chờ cọc 30%","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":30,"previews":[],"selectedPhotoIds":[],"finalLink":null,"cancelReason":null,"createdAt":"2026-10-21T09:04:00Z"}}
 ```
 
 ### Another Customer's Booking Example (403 Forbidden)
@@ -194,7 +196,7 @@ Authorization: Bearer {{token:linh}}
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
 
-{"error": {"code": "FORBIDDEN", "message": "Access denied. This booking belongs to another customer"}}
+{"error":{"code":"FORBIDDEN","message":"Access denied. This booking belongs to another customer"}}
 ```
 
 ### Booking Not Found Example (404 Not Found)
@@ -209,7 +211,7 @@ Authorization: Bearer {{token:thao}}
 HTTP/1.1 404 Not Found
 Content-Type: application/json
 
-{"error": {"code": "NOT_FOUND", "message": "Booking GS-9999 not found"}}
+{"error":{"code":"NOT_FOUND","message":"Booking GS-9999 not found"}}
 ```
 
 ---
@@ -218,15 +220,15 @@ Content-Type: application/json
 
 The body is one of two shapes:
 
-- **Reschedule** `{date, time}`: `time` is the new shoot start. The server runs the same clash check as `POST /api/schedule/clash-check` (`04-schedule.md`) with the booking's own package, staff and room, ignoring the booking's own busy blocks. On a clash it answers `409 CONFLICT` with the clash explanation as `error.message`, and nothing changes. Otherwise `date`, `makeup` and `shoot` move, and so do the booking's staff jobs (`08-jobs.md`).
-- **Cancel** `{status: "Đã huỷ", cancelReason}`: `cancelReason` is required. The booking keeps its other fields.
+- **Reschedule** `{date, time}`: `time` is the new shoot start. The server runs the same clash check as `POST /api/schedule/clash-check` (`04-schedule.md`) with the booking's own package, staff and room, ignoring the booking's own busy blocks. On a clash it answers `409 CONFLICT` with the clash explanation as `error.message`, and nothing changes. Otherwise `date`, `makeup` and `shoot` move, and so do the booking's staff jobs (`08-jobs.md`). Booking status is unchanged; reminder scheduling is recalculated from the earliest new appointment milestone. The system does not require new customer approval.
+- **Cancel** `{status: "Đã hủy", cancelReason}`: `cancelReason` is required. The booking keeps its other fields.
 
 - **Endpoint**: `PATCH /api/bookings/:id`
 - **Permissions**: Admin role (`admin`).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Request Body**:
   - `date` (string, `YYYY-MM-DD`) and `time` (string, `HH:MM`): both required to reschedule.
-  - `status` (string, only `Đã huỷ`) and `cancelReason` (string, required with `status`): to cancel.
+  - `status` (string, only `Đã hủy`) and `cancelReason` (string, required with `status`): to cancel.
 
 ### Reschedule Clash Example (409 Conflict)
 
@@ -235,14 +237,14 @@ PATCH /api/bookings/GS-1024
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"date": "2026-10-24", "time": "09:00"}
+{"date":"2026-10-24","time":"09:00"}
 ```
 
 ```http
 HTTP/1.1 409 Conflict
 Content-Type: application/json
 
-{"error": {"code": "CONFLICT", "message": "09:00 bị trùng vì Mai bận 08:00–12:00 (trang điểm GS-1017), mà gói Premium cần trang điểm 08:00–09:00."}}
+{"error":{"code":"CONFLICT","message":"09:00 bị trùng vì Mai bận 08:00–12:00 (trang điểm GS-1017), mà gói Premium cần trang điểm 08:00–09:00."}}
 ```
 
 ### Reschedule Success Example (200 OK)
@@ -254,14 +256,14 @@ PATCH /api/bookings/GS-1020
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"date": "2026-11-01", "time": "10:00"}
+{"date":"2026-11-01","time":"10:00"}
 ```
 
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"booking": {"id": "GS-1020", "conversationId": null, "customerId": "cus-bao", "customerName": "Võ Gia Bảo", "serviceId": "svc-chan-dung", "serviceName": "Chân dung / Profile CV", "packageId": "pkg-chan-dung", "packageName": "Gói Chân dung Profile", "extras": [], "date": "2026-11-01", "makeup": null, "shoot": {"start": "10:00", "end": "11:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-a", "roomName": "Phòng A"}, "price": {"total": 690000, "deposit": 207000, "remaining": 483000}, "status": "Chờ cọc 30%", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 10, "previews": [], "selectedPhotoIds": [], "finalLink": null, "cancelReason": null, "createdAt": "2026-10-22T14:30:00Z"}}
+{"booking":{"id":"GS-1020","conversationId":null,"customerId":"cus-bao","customerName":"Võ Gia Bảo","serviceId":"svc-chan-dung","serviceName":"Chân dung / Profile CV","packageId":"pkg-chan-dung","packageName":"Gói Chân dung Profile","extras":[],"date":"2026-11-01","makeup":null,"shoot":{"start":"10:00","end":"11:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-a","roomName":"Phòng A"},"price":{"total":690000,"deposit":207000,"remaining":483000},"status":"Chờ cọc 30%","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":10,"previews":[],"selectedPhotoIds":[],"finalLink":null,"cancelReason":null,"createdAt":"2026-10-22T14:30:00Z"}}
 ```
 
 ### Cancel Example (200 OK)
@@ -271,14 +273,14 @@ PATCH /api/bookings/GS-1020
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"status": "Đã huỷ", "cancelReason": "Khách báo bận việc gia đình, xin huỷ lịch chụp."}
+{"status":"Đã hủy","cancelReason":"Khách báo bận việc gia đình, xin huỷ lịch chụp."}
 ```
 
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"booking": {"id": "GS-1020", "conversationId": null, "customerId": "cus-bao", "customerName": "Võ Gia Bảo", "serviceId": "svc-chan-dung", "serviceName": "Chân dung / Profile CV", "packageId": "pkg-chan-dung", "packageName": "Gói Chân dung Profile", "extras": [], "date": "2026-11-01", "makeup": null, "shoot": {"start": "10:00", "end": "11:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-a", "roomName": "Phòng A"}, "price": {"total": 690000, "deposit": 207000, "remaining": 483000}, "status": "Đã huỷ", "paymentStatus": "Chưa cọc", "photoStatus": "Chưa có ảnh", "maxSelect": 10, "previews": [], "selectedPhotoIds": [], "finalLink": null, "cancelReason": "Khách báo bận việc gia đình, xin huỷ lịch chụp.", "createdAt": "2026-10-22T14:30:00Z"}}
+{"booking":{"id":"GS-1020","conversationId":null,"customerId":"cus-bao","customerName":"Võ Gia Bảo","serviceId":"svc-chan-dung","serviceName":"Chân dung / Profile CV","packageId":"pkg-chan-dung","packageName":"Gói Chân dung Profile","extras":[],"date":"2026-11-01","makeup":null,"shoot":{"start":"10:00","end":"11:00","staffId":"u-tuan","staffName":"Tuấn","roomId":"room-a","roomName":"Phòng A"},"price":{"total":690000,"deposit":207000,"remaining":483000},"status":"Đã hủy","paymentStatus":"Chưa cọc","photoStatus":"Chưa có ảnh","maxSelect":10,"previews":[],"selectedPhotoIds":[],"finalLink":null,"cancelReason":"Khách báo bận việc gia đình, xin huỷ lịch chụp.","createdAt":"2026-10-22T14:30:00Z"}}
 ```
 
 ### Invalid Date Example (400 Bad Request)
@@ -288,14 +290,14 @@ PATCH /api/bookings/GS-1024
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"date": "24/10/2026", "time": "14:00"}
+{"date":"24/10/2026","time":"14:00"}
 ```
 
 ```http
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
-{"error": {"code": "BAD_REQUEST", "message": "Invalid booking update", "fields": {"date": "Date must be in format YYYY-MM-DD"}}}
+{"error":{"code":"BAD_REQUEST","message":"Invalid booking update","fields":{"date":"Date must be in format YYYY-MM-DD"}}}
 ```
 
 ---
@@ -322,14 +324,14 @@ POST /api/bookings/GS-1024/final-link
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"url": "https://files.gradstudio.test/final/GS-1024.zip"}
+{"url":"https://files.gradstudio.test/final/GS-1024.zip"}
 ```
 
 ```http
 HTTP/1.1 409 Conflict
 Content-Type: application/json
 
-{"error": {"code": "CONFLICT", "message": "Cannot add the final link: the customer has not chosen photos yet"}}
+{"error":{"code":"CONFLICT","message":"Cannot add the final link: the customer has not chosen photos yet"}}
 ```
 
 ### Success Example (200 OK)
@@ -341,14 +343,14 @@ POST /api/bookings/GS-1021/final-link
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"url": "https://files.gradstudio.test/final/GS-1021.zip"}
+{"url":"https://files.gradstudio.test/final/GS-1021.zip"}
 ```
 
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"booking": {"id": "GS-1021", "status": "Đã đặt lịch", "paymentStatus": "Đã cọc 30%", "photoStatus": "Đã có link ảnh cuối", "finalLink": "https://files.gradstudio.test/final/GS-1021.zip"}}
+{"booking":{"id":"GS-1021","status":"Đã đặt lịch","paymentStatus":"Đã cọc 30%","photoStatus":"Đã có link ảnh cuối","finalLink":"https://files.gradstudio.test/final/GS-1021.zip"}}
 ```
 
 ### Invalid URL Example (400 Bad Request)
@@ -358,14 +360,14 @@ POST /api/bookings/GS-1021/final-link
 Authorization: Bearer {{token:thao}}
 Content-Type: application/json
 
-{"url": "anh-cuoi-GS-1021"}
+{"url":"anh-cuoi-GS-1021"}
 ```
 
 ```http
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
-{"error": {"code": "BAD_REQUEST", "message": "Invalid final link", "fields": {"url": "Final link must be a valid http or https URL"}}}
+{"error":{"code":"BAD_REQUEST","message":"Invalid final link","fields":{"url":"Final link must be a valid http or https URL"}}}
 ```
 
 ---
@@ -375,6 +377,10 @@ Content-Type: application/json
 - **2026-11-25** (Hạ Uyên):
   - Initialized the bookings contract in `docs/api/05-bookings.md`: booking object, `POST /api/bookings`, `GET /api/bookings`, `GET /api/bookings/:id`, `PATCH /api/bookings/:id`, `POST /api/bookings/:id/final-link`.
   - Status words follow the team's mock data plan: `status`, `paymentStatus` and `photoStatus` are separate fields.
-  - Examples follow the plan's order and assume `03-chat.md` runs first and leaves c-1005 with an accepted 14:00 proposal; GS-1024 is created here and GS-1020 is rescheduled, then cancelled.
+  - Examples follow the plan's order and assume `03-chat.md` runs first and leaves c-linh-06 with an accepted 25/10 proposal; GS-1024 is created here and GS-1020 is rescheduled, then cancelled.
   - List items leave out `previews` and `selectedPhotoIds` (GS-1023 alone has 40 previews); `POST …/final-link` answers only the changed fields.
   - `POST …/final-link` is accepted only at `photoStatus` `Đã chọn ảnh` (the studio retouches the chosen photos), instead of the plan's "deposit paid and previews exist". The success example uses a new seed booking GS-1021 (Lê Bảo Nhi, already at `Đã chọn ảnh`), so GS-1023 stays free for Linh's live G9–G10 walk. The admin list now has seven bookings.
+
+- **2026-11-27**:
+  - Updated the successful booking example to consume the accepted proposal from `c-linh-06` and use the next server-generated booking ID, GS-1024; `c-linh-05` is an older accepted but unbooked thread in the seed.
+  - Kept cancellation and rescheduling examples in the contract-check execution order and aligned them with the seeded eligible booking state. Rescheduling updates all related staff jobs and recalculates the schedule reminder.

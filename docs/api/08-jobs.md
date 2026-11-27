@@ -24,7 +24,7 @@ Authorization: Bearer {{token:tuan}}
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"jobs": [{"id": "job-101", "bookingId": "GS-1023", "role": "photographer", "service": "Gói Tốt nghiệp Premium", "customerName": "Linh", "date": "2026-10-17", "time": "14:00 - 16:00", "location": "Phòng B", "status": "assigned", "previewsCount": 0}]}
+{"jobs":[{"id":"job-101","bookingId":"GS-1023","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Linh","date":"2026-10-17","time":"14:00 - 16:00","location":"Phòng B","status":"Hoàn thành","previewsCount":40},{"id":"job-104","bookingId":"GS-1018","role":"photographer","service":"Gói Chân dung Profile","customerName":"Lương Đức Thịnh","date":"2026-10-24","time":"16:30 - 17:30","location":"Phòng A","status":"Chưa bắt đầu","previewsCount":0},{"id":"job-107","bookingId":"GS-1021","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Lê Bảo Nhi","date":"2026-10-14","time":"14:00 - 16:00","location":"Phòng B","status":"Hoàn thành","previewsCount":40},{"id":"job-109","bookingId":"GS-1024","role":"photographer","service":"Gói Tốt nghiệp Premium","customerName":"Linh","date":"2026-10-25","time":"15:00 - 17:00","location":"Phòng B","status":"Chưa bắt đầu","previewsCount":0}]}
 ```
 
 ### Access Denied Example (403 Forbidden)
@@ -48,13 +48,13 @@ Content-Type: application/json
 
 ## 2. Update Job Status (PATCH /api/staff/jobs/:id)
 
-Updates the operational progress state of a specific assigned task (`assigned` -> `in_progress` -> `completed` -> `cancelled`).
+Updates the operational progress state of a specific assigned task (`Chưa bắt đầu`, `Đang làm`, `Hoàn thành`).
 
 - **Endpoint**: `PATCH /api/staff/jobs/:id`
 - **Permissions**: Staff role (`staff`), and only the staff member the job is assigned to (`403` otherwise).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Request Body**:
-  - `status` (string, required): New status (`assigned`, `in_progress`, `completed`, `cancelled`).
+  - `status` (string, required): New status (`Chưa bắt đầu`, `Đang làm`, `Hoàn thành`).
 
 ### Success Example (200 OK)
 
@@ -63,14 +63,14 @@ PATCH /api/staff/jobs/job-101
 Authorization: Bearer {{token:tuan}}
 Content-Type: application/json
 
-{"status": "in_progress"}
+{"status": "Đang làm"}
 ```
 
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"job": {"id": "job-101", "bookingId": "GS-1023", "status": "in_progress", "updatedAt": "2026-10-17T14:05:00Z"}}
+{"job": {"id": "job-101", "bookingId": "GS-1023", "status": "Đang làm", "updatedAt": "2026-10-17T14:05:00Z"}}
 ```
 
 ### Invalid Status Example (400 Bad Request)
@@ -87,7 +87,7 @@ Content-Type: application/json
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
 
-{"error": {"code": "BAD_REQUEST", "message": "Invalid job status", "fields": {"status": "Status must be one of: assigned, in_progress, completed, cancelled"}}}
+{"error": {"code": "BAD_REQUEST", "message": "Invalid job status", "fields": {"status": "Status must be one of: Chưa bắt đầu, Đang làm, Hoàn thành"}}}
 ```
 
 ### Job Not Found Example (404 Not Found)
@@ -97,7 +97,7 @@ PATCH /api/staff/jobs/job-999
 Authorization: Bearer {{token:tuan}}
 Content-Type: application/json
 
-{"status": "completed"}
+{"status": "Hoàn thành"}
 ```
 
 ```http
@@ -116,7 +116,7 @@ PATCH /api/staff/jobs/job-102
 Authorization: Bearer {{token:tuan}}
 Content-Type: application/json
 
-{"status": "completed"}
+{"status": "Hoàn thành"}
 ```
 
 ```http
@@ -201,3 +201,6 @@ Content-Type: application/json
   - Example values follow the mock data: GS-1023 is Linh's earlier shoot on 2026-10-17 (moved off 2026-10-24 so the 14:00 slot is free for GS-1024 in G5–G6), and `customerName` is the short name `Linh`.
   - `PATCH` and `POST …/previews` now answer `403` when the job belongs to another staff member; added an example.
   - An uploaded preview is also added to the booking's `previews`, so G9 shows what G8 uploaded. Preview ids are unique (`prev-01`, `prev-02`, …).
+
+- **2026-11-27**:
+  - Changed the shared makeup, photography and retouching task status vocabulary to `Chưa bắt đầu`, `Đang làm`, and `Hoàn thành`; staff may update only their own job. Job status changes do not change booking status.
