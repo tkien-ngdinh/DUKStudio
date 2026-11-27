@@ -60,6 +60,7 @@ export function AuthProvider({ children }) {
     clearStoredSession();
     setToken(null);
     setUser(null);
+    setIsInitializing(false);
     setSessionError('');
     setAuthNotice(noticeMessage);
   }, []);
@@ -129,6 +130,7 @@ export function AuthProvider({ children }) {
     setStoredSession({ token: data.token, user: data.user });
     setToken(data.token);
     setUser(data.user);
+    setIsInitializing(false);
     setSessionError('');
     setAuthNotice('');
     return data;

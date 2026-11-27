@@ -145,7 +145,12 @@ export async function apiFetch(path, options = {}) {
       fields: errShape.fields || {}
     });
 
-    if (response.status === 401 && path !== '/api/auth/login' && unauthorizedHandler) {
+    if (
+      response.status === 401 &&
+      path !== '/api/auth/login' &&
+      unauthorizedHandler &&
+      (!activeToken || getStoredSession()?.token === activeToken)
+    ) {
       unauthorizedHandler(apiErr);
     }
 
