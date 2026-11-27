@@ -116,7 +116,7 @@ This table enumerates all 30 endpoints across the 11 main-flow steps (G1–G11),
 
 ---
 
-## 6. Change History (## Changes)
+## Changes
 
 - **2026-11-23** (Trung Kiên):
   - Initialized master API contract `docs/api/README.md` for milestone PA#3.
@@ -128,3 +128,6 @@ This table enumerates all 30 endpoints across the 11 main-flow steps (G1–G11),
   - Added `GET /api/schedule` (Admin, `04-schedule.md`) so the clash check (G5) and reschedule (G10) forms load staff, rooms and busy slots from the API instead of hard-coding them. The table now lists 30 endpoints.
   - Opened `GET /api/conversations` to Customer (own conversations only) so `/chat` can find the signed-in customer's conversation when opened directly.
   - Stated the general 401/403 rule for authenticated endpoints in section 2.
+
+- **2026-11-27**:
+  - Standardized the master change-history heading to `## Changes`, matching the endpoint contract files.

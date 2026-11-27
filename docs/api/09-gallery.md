@@ -92,7 +92,7 @@ Content-Type: application/json
 
 ### Photo Limit Exceeded Validation Example (400 Bad Request)
 
-Returned when the selection exceeds the package-specific `maxSelect` limit (31 for this seeded package).
+Returned when the selection exceeds the package-specific `maxSelect` limit (30 for this seeded package). The request below contains 31 photos to exceed that limit.
 
 ```http
 POST /api/gallery/GS-1023/select
@@ -251,6 +251,7 @@ Content-Type: application/json
 - **2026-11-27**:
   - Made photo selection limits package-specific, capped at 30 project-wide, and locked selection after successful 70% payment. Receiving photos now requires saved selections, paid remaining balance and an attached final link; success completes the booking and its linked conversation.
   - Updated the gallery contract to use the shared `selectedPhotoIds` and `finalLink` fields used by bookings and payments.
+  - Clarified that the seeded package limit is 30 photos and the invalid request example submits 31.
 
 
 ### Selection Lock and Remaining-Balance Gate

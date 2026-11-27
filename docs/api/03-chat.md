@@ -8,7 +8,7 @@ Conversation lifecycle rules: a conversation has at most one booking. A new book
 
 ## 1. List Studio Conversations (GET /api/conversations)
 
-Retrieves all studio inquiries and conversations for consultation management. Conversations are organized across 4 operational status states: *Waiting for Studio* (`Chưa trả lời`), *Studio Answered* (`Đang tư vấn`), *Deposit Pending* (`Đã chốt lịch`), and *Done* (`Hoàn thành`).
+Retrieves all studio inquiries and conversations for consultation management. Conversations are organized across 4 operational status states: *Waiting for Studio* (`Chưa trả lời`), *Studio Answered* (`Đang tư vấn`), *Schedule Confirmed* (`Đã chốt lịch`), and *Done* (`Hoàn thành`).
 
 - **Endpoint**: `GET /api/conversations`
 - **Permissions**: Studio Admin role (`admin`).
@@ -162,7 +162,7 @@ Initiates a new customer inquiry and consultation thread for a photography shoot
 
 ### Success Example (201 Created)
 
-Customer Linh sends a new booking request. Her latest conversation `c-linh-01` already has booking GS-1023, so this request starts a new conversation. The seed also contains an older accepted but unbooked thread (`c-linh-05`); it is not reused because it is not the latest conversation.
+Customer Linh sends a new booking request. Her latest conversation `c-linh-01` already has booking GS-1023, so this request starts a new conversation. The seed also contains an older thread (`c-linh-05`) whose proposal is in the `agreed` state but has no booking; it is not reused because it is not the latest conversation.
 
 ```http
 POST /api/conversations
@@ -522,7 +522,7 @@ Content-Type: application/json
 
 Customer accepts or declines the studio's proposed shoot schedule (Step G6).
 - If declined (`decline`), the active proposal status becomes `declined` and conversation status reverts to *Studio Answered* (`Đang tư vấn`) for scheduling adjustments.
-- If accepted (`accept`), the active proposal status becomes `agreed` and conversation status transitions to *Deposit Pending* (`Đã chốt lịch`), unlocking confirmed booking creation (`POST /api/bookings`).
+- If accepted (`accept`), the active proposal status becomes `agreed` and conversation status transitions to *Schedule Confirmed* (`Đã chốt lịch`), unlocking confirmed booking creation (`POST /api/bookings`).
 
 - **Endpoint**: `POST /api/conversations/:id/respond-proposal`
 - **Permissions**: Customer role (`customer` - conversation owner).
@@ -684,5 +684,6 @@ Content-Type: application/json
   - Formatted strictly increasing timestamps (`17:25:00Z` through `17:30:00Z`) and sequential message IDs (`m-05` through `m-10`) across all `c-linh-06` message and proposal interactions.
 
 - **2026-11-27**:
-  - Aligned the ordered G3–G6 examples with the one-booking-per-conversation rule: the seeded `c-linh-05` has an accepted proposal but no booking, while `c-linh-01` already links to GS-1023, a new booking request creates `c-linh-06`, and all proposal examples use that new conversation.
+  - Aligned the ordered G3–G6 examples with the one-booking-per-conversation rule: the seeded `c-linh-05` has an `agreed` proposal but no booking, while `c-linh-01` already links to GS-1023, a new booking request creates `c-linh-06`, and all proposal examples use that new conversation.
   - Documented the optional `extras` request field and that extras are coordination data and do not alter the package price.
+  - Renamed the English label for `Đã chốt lịch` to *Schedule Confirmed* to distinguish conversation state from the booking's deposit state.

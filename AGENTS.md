@@ -70,7 +70,7 @@ The application maintains 5 permanent demo accounts covering all 4 roles. In aut
 | `linh` | customer | `linh@gradstudio.test` | `linh-demo` | `token-linh` | Customer booking graduation shoot |
 | `thao` | admin | `thao@gradstudio.test` | `thao-demo` | `token-thao` | Studio Admin managing chat, clash check & bookings |
 | `mai` | staff | `mai@gradstudio.test` | `mai-demo` | `token-mai` | Makeup artist (busy 08:00–12:00 on Oct 24) |
-| `tuan` | staff | `tuan@gradstudio.test` | `tuan-demo` | `token-tuan` | Photographer (assigned to GS-1024 / GS-1023) |
+| `tuan` | staff | `tuan@gradstudio.test` | `tuan-demo` | `token-tuan` | Photographer (assigned to GS-1023; assigned to GS-1024 after G6) |
 | `superadmin` | superadmin | `superadmin@gradstudio.test` | `superadmin-demo` | `token-superadmin` | Superadmin (opening hours & reminder settings) |
 
 ---
