@@ -32,17 +32,20 @@ export function register(router) {
       });
     }
 
-    if (user.role !== 'admin') {
+    if (user.role !== 'admin' && user.role !== 'customer') {
       return res.status(403).json({
         error: {
           code: 'FORBIDDEN',
-          message: 'Access denied. Admin role required'
+          message: 'Access denied. Customer or Admin role required'
         }
       });
     }
 
     const store = getStore();
     let conversations = store.conversations || [];
+    if (user.role === 'customer') {
+      conversations = conversations.filter((conversation) => conversation.customerId === user.id);
+    }
 
     const statusFilter = req.query.status;
     if (statusFilter) {

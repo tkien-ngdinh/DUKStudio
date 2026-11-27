@@ -11,7 +11,7 @@ Conversation lifecycle rules: a conversation has at most one booking. A new book
 Retrieves all studio inquiries and conversations for consultation management. Conversations are organized across 4 operational status states: *Waiting for Studio* (`Chưa trả lời`), *Studio Answered* (`Đang tư vấn`), *Schedule Confirmed* (`Đã chốt lịch`), and *Done* (`Hoàn thành`).
 
 - **Endpoint**: `GET /api/conversations`
-- **Permissions**: Studio Admin role (`admin`).
+- **Permissions**: Customer role (`customer`, returns only the caller's conversations) and Studio Admin role (`admin`, returns all studio conversations).
 - **Required Header**: `Authorization: Bearer <token>`
 - **Query Parameters**:
   - `status` (string, optional): Filter conversations by state (e.g. `Đã chốt lịch`, `Chưa trả lời`).
@@ -33,9 +33,9 @@ Content-Type: application/json
 {"conversations": […]}
 ```
 
-### Access Denied Example (403 Forbidden)
+### Customer Access Example (200 OK)
 
-Returned when a non-admin account (e.g. customer Linh) attempts to list studio conversations.
+Customer Linh lists only her own conversations, allowing `/chat` to load after direct navigation or refresh.
 
 ```http
 GET /api/conversations
@@ -44,10 +44,28 @@ Authorization: Bearer {{token:linh}}
 ```
 
 ```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"conversations": [{"id": "c-linh-01", "customerId": "u-linh", …}, {"id": "c-linh-05", "customerId": "u-linh", …}]}
+
+```
+
+### Access Denied Example (403 Forbidden)
+
+Returned when a staff account attempts to list conversations.
+
+```http
+GET /api/conversations
+Authorization: Bearer {{token:mai}}
+
+```
+
+```http
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
 
-{"error": {"code": "FORBIDDEN", "message": "Access denied. Admin role required"}}
+{"error": {"code": "FORBIDDEN", "message": "Access denied. Customer or Admin role required"}}
 ```
 
 ### Unauthenticated Example (401 Unauthorized)
@@ -693,7 +711,7 @@ Content-Type: application/json
 - **2026-11-26** (Bích Diệp):
   - Initialized customer chat and conversation management API contract specification in `docs/api/03-chat.md` (Steps G3, G4, G5, G6).
   - Defined 6 core endpoints: `GET /api/conversations`, `POST /api/conversations`, `GET /api/conversations/:id`, `POST /api/conversations/:id/messages`, `POST /api/conversations/:id/propose-time`, and `POST /api/conversations/:id/respond-proposal`.
-  - Aligned permissions strictly with master endpoint table in `README.md` (`Admin` for listing/proposals, `Customer` for inquiries/responses, `Customer/Admin` for details/messages; removed unauthorized superadmin role mentions).
+  - Aligned permissions with the master endpoint table in `README.md` (`Customer/Admin` for listing, `Admin` for proposals, `Customer` for inquiries/responses, `Customer/Admin` for details/messages; removed unauthorized superadmin role mentions).
   - Standardized customer proposal decisions to `accept` and `decline` across request schemas, validation error responses, and state transitions (replacing `reject`).
   - Defined proposal lifecycle rules where a new admin proposal supersedes any previous proposal (including seeded `agreed` proposal) to become the active `pending` proposal.
   - Sequenced proposal examples so that customer declines proposal 1, admin proposes revised slot, and customer accepts revised slot, with every proposal answered exactly once.
@@ -701,6 +719,8 @@ Content-Type: application/json
   - Formatted strictly increasing timestamps (`17:25:00Z` through `17:30:00Z`) and sequential message IDs (`m-05` through `m-10`) across all `c-linh-06` message and proposal interactions.
 
 - **2026-11-27**:
+  - Aligned `GET /api/conversations` with `README.md`: customers receive only their own conversations, admins retain the studio-wide list, and staff receive `403`.
+  - Added a Customer `200 OK` example for Linh so the contract demonstrates the data needed to load `/chat` directly or after refresh.
   - Aligned the main G3-G6 booking path with the PA2 example (Linh agrees to 24/10 at 14:00); retained decline and re-proposal coverage in the separate seeded c-linh-05 conversation.
   - Documented the optional `extras` request field as coordination data only; extras have no separate booking price and do not alter the package price.
   - Removed legacy price and unit fields from seeded extras so their stored data cannot imply that they add charges to bookings.
