@@ -1,38 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { apiFetch } from '../../api/client.js';
 import { EmptyState, ErrorState, LoadingState } from '../../components/DataStates.jsx';
 import { formatDateTime } from '../../utils/format.js';
+import { getOnce } from '../../utils/requests.js';
+import {
+  CONVERSATION_STATUSES as STATUS_TABS,
+  conversationBadgeClass as badgeFor,
+  conversationListHref as tabHref
+} from '../../utils/conversationStatus.js';
 
 const PAGE_TITLE = 'Hội thoại khách hàng';
 const LIST_PATH = '/api/conversations';
-
-// The four G4 tabs, named exactly as in the brief and as the API sends `status` (03-chat.md).
-// The badge colour only supports the status text; it never carries the meaning alone.
-const STATUS_TABS = [
-  { status: 'Chưa trả lời', badge: 'status-badge--new' },
-  { status: 'Đang tư vấn', badge: 'status-badge--advising' },
-  { status: 'Đã chốt lịch', badge: 'status-badge--agreed' },
-  { status: 'Hoàn thành', badge: 'status-badge--done' }
-];
-
-function badgeFor(status) {
-  return STATUS_TABS.find((tab) => tab.status === status)?.badge || '';
-}
-
-function tabHref(status) {
-  return `/admin/conversations?${new URLSearchParams({ status }).toString()}`;
-}
-
-// StrictMode mounts the page twice in development; both mounts share one in-flight request,
-// so the mock log shows a single GET /api/conversations per load.
-const inflight = new Map();
-function getOnce(path) {
-  if (inflight.has(path)) return inflight.get(path);
-  const promise = apiFetch(path).finally(() => inflight.delete(path));
-  inflight.set(path, promise);
-  return promise;
-}
 
 function lastMessageOf(conversation) {
   const messages = Array.isArray(conversation.messages) ? conversation.messages : [];

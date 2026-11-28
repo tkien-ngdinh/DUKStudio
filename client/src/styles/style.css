@@ -2250,3 +2250,75 @@
 @media (min-width: 768px) {
   .admin-convo-panel { padding: var(--space-4); }
 }
+
+/* ==========================================================================
+   Admin G4 — conversation detail (/admin/conversations/:id), Hạ Uyên
+   Reuses the customer chat classes (.chat-window, .chat-messages, .message,
+   .proposal-box, .chat-request-banner). Nothing is fixed or sticky: the chat
+   and the reply form scroll with the page.
+   ========================================================================== */
+.admin-back { margin: 0 0 var(--space-2); }
+.admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-family: var(--font-chat);
+  font-weight: 600;
+}
+.admin-chat .chat-header { flex-wrap: wrap; }
+.admin-chat .chat-heading { flex: 1; }
+.admin-chat .chat-heading h2 {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-chat);
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+.admin-chat .chat-heading p { margin: 0; font-size: .875rem; }
+.admin-chat-booking {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 2px solid var(--divider);
+  font-family: var(--font-chat);
+}
+.admin-chat-booking a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-weight: 700;
+}
+.admin-request-list { margin: 0; }
+.admin-request-list > div { min-width: 0; }
+.admin-request-list dt { display: inline; }
+.admin-request-list dt::after { content: ": "; }
+.admin-request-list dd {
+  display: inline;
+  margin: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.admin-request-error {
+  margin-top: var(--space-3);
+  color: var(--danger-ink);
+  font-weight: 600;
+}
+.admin-request-error p { margin: 0 0 var(--space-2); }
+.admin-chat .message { overflow-wrap: anywhere; }
+.admin-reply-form {
+  padding: var(--space-3);
+  border-top: 2px solid var(--divider);
+  font-family: var(--font-chat);
+}
+.admin-reply-input { resize: vertical; }
+.admin-reply-banner { margin: var(--space-2) 0 0; }
+.admin-reply-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+.admin-reply-status { margin: 0; color: var(--online-green); font-weight: 600; }
+

@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import CustomerChatPage from './pages/CustomerChatPage.jsx';
 import AdminConversationsPage from './pages/admin/AdminConversationsPage.jsx';
+import AdminConversationDetailPage from './pages/admin/AdminConversationDetailPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -103,19 +104,7 @@ export default function App() {
           path="/admin/conversations/:id"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G4 · G5 · G6"
-                title="Chi tiết hội thoại & Kiểm tra trùng lịch"
-                description="Kiểm tra lịch nhân sự/phòng, đề xuất giờ mới trong chat và Tạo booking khi khách đồng ý."
-                endpoints={[
-                  'GET /api/conversations/:id',
-                  'POST /api/conversations/:id/messages',
-                  'GET /api/schedule',
-                  'POST /api/schedule/clash-check',
-                  'POST /api/conversations/:id/propose-time',
-                  'POST /api/bookings'
-                ]}
-              />
+              <AdminConversationDetailPage />
             </ProtectedRoute>
           }
         />
