@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage.jsx';
 import CustomerChatPage from './pages/CustomerChatPage.jsx';
 import AdminConversationsPage from './pages/admin/AdminConversationsPage.jsx';
 import AdminConversationDetailPage from './pages/admin/AdminConversationDetailPage.jsx';
+import AdminBookingsPage from './pages/admin/AdminBookingsPage.jsx';
+import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -113,12 +115,7 @@ export default function App() {
           path="/admin/bookings"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G10"
-                title="Quản lý danh sách booking"
-                description="Theo dõi toàn bộ booking và trạng thái thanh toán của studio."
-                endpoints={['GET /api/bookings']}
-              />
+              <AdminBookingsPage />
             </ProtectedRoute>
           }
         />
@@ -127,17 +124,7 @@ export default function App() {
           path="/admin/bookings/:id"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G10"
-                title="Điều chỉnh booking & Link ảnh hoàn thiện"
-                description="Đổi lịch kèm kiểm tra trùng lịch, hủy booking và gắn link tải ảnh cuối."
-                endpoints={[
-                  'GET /api/bookings/:id',
-                  'GET /api/schedule',
-                  'PATCH /api/bookings/:id',
-                  'POST /api/bookings/:id/final-link'
-                ]}
-              />
+              <AdminBookingDetailPage />
             </ProtectedRoute>
           }
         />
