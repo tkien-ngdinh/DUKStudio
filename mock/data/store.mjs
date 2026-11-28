@@ -411,8 +411,9 @@ export function getDaySchedule(date) {
  * The room must be the package's room, the make-up artist must have the role `makeup` and the
  * photographer the role `photographer` (04-schedule.md, Changes 2026-11-26).
  *
- * Returns { clash, explanation, conflicts, suggestions }, or { invalid: { field: message } }
- * when the request itself is incomplete or wrong.
+ * Returns { clash, explanation, conflicts, suggestions } (plus `slot` when clash is false), or
+ * { invalid: { field: message } } when the request itself is incomplete or wrong.
+ * `ignoreBookingId` leaves that booking's own busy blocks out (reschedule preview and PATCH).
  */
 export function checkClash({ date, time, packageId, makeupArtistId, photographerId, roomId, ignoreBookingId }) {
   const invalid = {};
@@ -444,6 +445,12 @@ export function checkClash({ date, time, packageId, makeupArtistId, photographer
     else if (pkg && pkg.roomId && room.id !== pkg.roomId) {
       const packageRoom = lookupRoom(pkg.roomId);
       invalid.roomId = `This package requires ${packageRoom ? packageRoom.name : pkg.roomId} (${pkg.roomId})`;
+    }
+  }
+  // Optional: the booking being rescheduled, whose own busy blocks are left out (04-schedule.md, 2026-11-28)
+  if (ignoreBookingId !== undefined && ignoreBookingId !== null && ignoreBookingId !== '') {
+    if (typeof ignoreBookingId !== 'string' || !findBooking(ignoreBookingId)) {
+      invalid.ignoreBookingId = 'Unknown booking';
     }
   }
   if (Object.keys(invalid).length) return { invalid };
@@ -507,7 +514,17 @@ export function checkClash({ date, time, packageId, makeupArtistId, photographer
       clash: false,
       explanation: `${time} trống: ${makeupPart}${shootWho} rảnh ${toTime(w.shoot.start)}–${toTime(w.shoot.end)}.`,
       conflicts: [],
-      suggestions: []
+      suggestions: [],
+      // The requested slot itself, in the shape of a suggestion, so the admin can propose it
+      slot: {
+        makeup: w.makeup
+          ? { start: toTime(w.makeup.start), end: toTime(w.makeup.end), staffId: makeupArtist.id, staffName: makeupArtist.name }
+          : null,
+        shoot: {
+          start: toTime(w.shoot.start), end: toTime(w.shoot.end), staffId: photographer.id, staffName: photographer.name,
+          roomId: needRoom ? room.id : null, roomName: needRoom ? room.name : null
+        }
+      }
     };
   }
 
