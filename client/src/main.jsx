@@ -7,6 +7,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/states.css';
 import './styles/style.css';
+import './styles/task9.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
