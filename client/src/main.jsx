@@ -7,7 +7,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/states.css';
 import './styles/style.css';
-import './styles/task9.css';
+import './styles/staff-admin.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

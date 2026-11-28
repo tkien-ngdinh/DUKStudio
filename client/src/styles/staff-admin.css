@@ -1,4 +1,4 @@
-/* Task 9 Responsive Mobile-First Styles for G8 (/staff/jobs) & G11 (/superadmin/settings)
+/* Responsive Mobile-First Styles for G8 (/staff/jobs) & G11 (/superadmin/settings)
    - Uses tokens from tokens.css exclusively
    - Mobile-first from 360px -> min-width: 768px -> min-width: 1280px
    - Zero overflow-x: hidden on layout wrappers, zero max-width media queries, zero !important
