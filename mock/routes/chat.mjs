@@ -461,8 +461,16 @@ export function register(router) {
     const msgId = getNextMessageId(conversation.messages);
     const timestamp = getNextTimestamp(conversation.messages);
 
+    // The latest proposal message must show the same status as the active proposal (03-chat.md).
+    // Seeded conversations (c-linh-05) keep them as two separate objects, so the answer is copied.
+    const proposalMessage = (conversation.messages || []).slice().reverse().find((m) => m.proposal);
+    const syncMessage = () => {
+      if (proposalMessage && proposalMessage.proposal !== proposal) proposalMessage.proposal.status = proposal.status;
+    };
+
     if (body.decision === 'decline') {
       proposal.status = 'declined';
+      syncMessage();
       conversation.status = 'Đang tư vấn';
 
       const message = {
@@ -483,6 +491,7 @@ export function register(router) {
       });
     } else {
       proposal.status = 'agreed';
+      syncMessage();
       conversation.status = 'Đã chốt lịch';
 
       const makeupStart = proposal.makeup.split(' - ')[0];
