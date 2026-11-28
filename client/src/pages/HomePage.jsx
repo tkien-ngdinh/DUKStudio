@@ -25,6 +25,22 @@ function resolvePackageTheme(pkgId, index) {
 
 const PACKAGE_MARKS = ['✳', '✦', '✿', '★'];
 
+// Deduplicate concurrent /api/catalog calls across React 18 StrictMode double-mounts
+let inflightCatalogPromise = null;
+
+function fetchCatalogOnce(force = false) {
+  if (force) {
+    inflightCatalogPromise = null;
+  }
+  if (inflightCatalogPromise) {
+    return inflightCatalogPromise;
+  }
+  inflightCatalogPromise = apiFetch('/api/catalog').finally(() => {
+    inflightCatalogPromise = null;
+  });
+  return inflightCatalogPromise;
+}
+
 export default function HomePage() {
   const [catalog, setCatalog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +52,7 @@ export default function HomePage() {
     else setLoading(true);
     setError(null);
 
-    apiFetch('/api/catalog')
+    fetchCatalogOnce(isRetry)
       .then((data) => {
         setCatalog(data);
       })
@@ -54,7 +70,7 @@ export default function HomePage() {
     setLoading(true);
     setError(null);
 
-    apiFetch('/api/catalog')
+    fetchCatalogOnce(false)
       .then((data) => {
         if (!ignore) setCatalog(data);
       })
