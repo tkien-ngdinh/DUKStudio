@@ -104,4 +104,4 @@ Key architectural and product decisions agreed upon with the team:
 
 Updated as the work goes on; the final list is written before submission.
 
-- The React client in `client/` is not built yet (task 7, from 2026-11-26), so no step G1–G11 works in a browser yet.
+- Task 7 (`client/` Vite + React Router scaffold, `vite.config.js` `/api` proxy, `AuthContext` + `useAuth`, `ProtectedRoute`, `apiFetch`, shared `Loading`/`Error+Retry`/`Empty` states, `Layout`, `NotFoundPage`, and `/login`) is complete; feature screens for G1 and G3–G11 are pending in Tasks 8–12 (currently routed to clean scaffold placeholders).
