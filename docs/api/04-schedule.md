@@ -73,15 +73,17 @@ Checks whether the make-up artist, photographer and room are all free for a requ
   - `makeupArtistId` (string, required when the package has make-up): Staff id with role `makeup`.
   - `photographerId` (string, required): Staff id with role `photographer`.
   - `roomId` (string, required when the package uses a room): Must be the package's room; another room answers `400` with `fields.roomId`.
+  - `ignoreBookingId` (string, optional): The booking being rescheduled (G10). Its own busy blocks are left out, so moving it within or next to its current time does not clash with itself. This is the same check `PATCH /api/bookings/:id` runs (`05-bookings.md`). An id that does not exist answers `400` with `fields.ignoreBookingId`.
 - **Rules**:
   - A start that puts the make-up before opening or the end of the shoot after closing is a clash: `conflicts` then holds an entry with `resourceId` `studio` and the opening hours.
   - When no other start of the same day is free, `suggestions` is `[]` and `explanation` says so in words.
-- **400 field messages** (one per wrong field): `date`, `time` as in the example below; `packageId` "Unknown package"; `makeupArtistId` "Staff <id> is not a make-up artist"; `photographerId` "Staff <id> is not a photographer"; `roomId` "This package requires <room name> (<room id>)"; a missing id "… is required"; an unknown id "Unknown …".
+- **400 field messages** (one per wrong field): `date`, `time` as in the example below; `packageId` "Unknown package"; `makeupArtistId` "Staff <id> is not a make-up artist"; `photographerId` "Staff <id> is not a photographer"; `roomId` "This package requires <room name> (<room id>)"; a missing id "… is required"; an unknown id "Unknown …"; `ignoreBookingId` "Unknown booking".
 - **Response Fields**:
   - `clash` (boolean): `true` when at least one resource is busy.
   - `explanation` (string): One plain-text sentence saying why the slot clashes or that it is free.
   - `conflicts` (array): `{resourceId, resourceName, start, end, reason, bookingId}` for each busy block that overlaps the request. Empty when `clash` is `false`.
   - `suggestions` (array): Open slots on the same day. Candidate start times are on the hour, and the whole make-up + shoot block must fit inside opening hours. Each item is `{time, text, makeup: {start, end, staffId, staffName}, shoot: {start, end, staffId, staffName, roomId, roomName}}`. Empty when `clash` is `false`.
+  - `slot` (object, only when `clash` is `false`): The requested slot itself, `{makeup: {start, end, staffId, staffName}, shoot: {start, end, staffId, staffName, roomId, roomName}}`, in the same shape as a suggestion, so the admin can propose it in chat (`POST /api/conversations/:id/propose-time`). `makeup` is `null` when the package has no make-up; `roomId` and `roomName` are `null` when the package uses no room. Not present when `clash` is `true`.
 
 ### Clash Example (200 OK)
 
@@ -116,7 +118,26 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{"clash": false, "explanation": "14:00 trống: Mai rảnh 13:00–14:00, Tuấn và Phòng B rảnh 14:00–16:00.", "conflicts": [], "suggestions": []}
+{"clash": false, "explanation": "14:00 trống: Mai rảnh 13:00–14:00, Tuấn và Phòng B rảnh 14:00–16:00.", "conflicts": [], "suggestions": [], "slot": {"makeup": {"start": "13:00", "end": "14:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "14:00", "end": "16:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}}}
+```
+
+### Reschedule Check Example (200 OK)
+
+GS-1023 (Linh) has make-up 13:00–14:00 and a shoot 14:00–16:00 with Tuấn in Phòng B on 2026-10-17. Moving it one hour later overlaps its own shoot, so without `ignoreBookingId` 15:00 clashes with GS-1023 itself. With `ignoreBookingId` the check skips GS-1023's blocks, and 15:00 is free.
+
+```http
+POST /api/schedule/clash-check
+Authorization: Bearer {{token:thao}}
+Content-Type: application/json
+
+{"date": "2026-10-17", "time": "15:00", "packageId": "pkg-tn-premium", "makeupArtistId": "u-mai", "photographerId": "u-tuan", "roomId": "room-b", "ignoreBookingId": "GS-1023"}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"clash": false, "explanation": "15:00 trống: Mai rảnh 14:00–15:00, Tuấn và Phòng B rảnh 15:00–17:00.", "conflicts": [], "suggestions": [], "slot": {"makeup": {"start": "14:00", "end": "15:00", "staffId": "u-mai", "staffName": "Mai"}, "shoot": {"start": "15:00", "end": "17:00", "staffId": "u-tuan", "staffName": "Tuấn", "roomId": "room-b", "roomName": "Phòng B"}}}
 ```
 
 ### Missing Fields Example (400 Bad Request)
@@ -225,3 +246,7 @@ Content-Type: application/json
   - Written down a rule the mock already applied: a start outside opening hours is a clash (`resourceId` `studio`).
   - New: when no other start of the day is free, `suggestions` is `[]` and the explanation ends with a sentence saying so, so G5 always says in words what to do next.
   - No front-end code calls these endpoints yet.
+
+- **2026-11-28** (Hạ Uyên, before the G4/G5/G10 admin screens):
+  - A clash check with `clash: false` now also returns `slot`, which holds the requested make-up and shoot windows with staff and room. Before, a free answer had only the `explanation` sentence. The catalog has no make-up or shoot lengths, so the admin screen could not build the `makeup` / `shoot` times that `POST /api/conversations/:id/propose-time` needs. "No Clash" example updated.
+  - New optional body field `ignoreBookingId`. It leaves the booking being rescheduled out of the busy blocks, so the G10 reschedule form can check a new time before it sends `PATCH /api/bookings/:id` without the booking clashing with itself. PATCH already ran its check this way. An unknown id answers `400`. Added the "Reschedule Check" example (GS-1023 moved to 15:00 on 2026-10-17).

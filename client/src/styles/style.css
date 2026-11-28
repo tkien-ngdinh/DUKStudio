@@ -2149,3 +2149,104 @@
   padding: var(--space-4);
   font-style: italic;
 }
+
+/* ==========================================================================
+   Admin G4 — conversation list (/admin/conversations), Hạ Uyên
+   Mobile first (360px); status tabs are links that wrap, rows are links.
+   ========================================================================== */
+.admin-status-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+.admin-status-tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--deep-blue);
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--deep-blue);
+  font-family: var(--font-chat);
+  font-weight: 600;
+  text-decoration: none;
+}
+.admin-status-tab:hover { background: var(--light-blue); }
+/* Current tab: filled and underlined, so it does not depend on colour alone */
+.admin-status-tab.is-active {
+  background: var(--deep-blue);
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.admin-status-count { margin-left: .3em; font-weight: 400; }
+
+.admin-convo-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--white);
+  font-family: var(--font-chat);
+}
+.admin-convo-panel > h2 {
+  margin: 0 0 var(--space-3);
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+.admin-convo-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.admin-convo-link {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-height: var(--tap-min);
+  padding: var(--space-3);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+.admin-convo-link:hover { border-color: var(--deep-blue); background: var(--light-blue); }
+.admin-convo-body {
+  display: grid;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+.admin-convo-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.admin-convo-name { overflow-wrap: anywhere; }
+.admin-convo-last {
+  /* At most two lines of the last message, with standard CSS only (W3C) */
+  max-height: 3em;
+  line-height: 1.5;
+  overflow: hidden;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+.admin-convo-meta {
+  color: var(--ink-muted);
+  font-size: .875rem;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .admin-convo-panel { padding: var(--space-4); }
+}

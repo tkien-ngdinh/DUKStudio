@@ -5,6 +5,7 @@ import RoutePlaceholder from './components/RoutePlaceholder.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import CustomerChatPage from './pages/CustomerChatPage.jsx';
+import AdminConversationsPage from './pages/admin/AdminConversationsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -93,12 +94,7 @@ export default function App() {
           path="/admin/conversations"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G4"
-                title="Quản lý hội thoại khách hàng"
-                description="Danh sách hội thoại theo 4 trạng thái: Chưa trả lời, Đang tư vấn, Đã chốt lịch, Hoàn thành."
-                endpoints={['GET /api/conversations', 'GET /api/conversations/:id']}
-              />
+              <AdminConversationsPage />
             </ProtectedRoute>
           }
         />
