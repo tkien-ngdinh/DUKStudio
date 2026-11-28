@@ -2322,3 +2322,112 @@
 }
 .admin-reply-status { margin: 0; color: var(--online-green); font-weight: 600; }
 
+
+/* ==========================================================================
+   Admin G5 — clash check and proposal on /admin/conversations/:id, Hạ Uyên
+   Under the chat on small screens; chat | clash check from 1280px.
+   Schedule labels wrap instead of being cut (no fixed widths, no ellipsis).
+   ========================================================================== */
+.admin-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+.admin-clash-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--white);
+  font-family: var(--font-chat);
+  overflow-wrap: anywhere;
+}
+.admin-clash-panel h2 {
+  margin: 0 0 var(--space-2);
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+.admin-clash-panel h3 {
+  margin: 0 0 var(--space-2);
+  color: var(--deep-blue);
+  font-size: 1.1rem;
+  font-family: var(--font-chat);
+}
+.admin-clash-panel h4 { margin: var(--space-3) 0 var(--space-2); font-size: 1rem; }
+.clash-intro { margin: 0 0 var(--space-3); color: var(--ink-muted); }
+.clash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+.clash-label-text { margin: 0; }
+.clash-optional { font-weight: 400; color: var(--ink-muted); }
+.clash-field-note { margin: 0; color: var(--ink-muted); }
+.clash-field-note p { margin: 0 0 var(--space-2); }
+.clash-banner { margin: var(--space-3) 0 0; }
+.clash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+.clash-day,
+.clash-result,
+.clash-proposal {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--divider);
+}
+.clash-busy-list,
+.clash-conflicts,
+.clash-suggestions {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.clash-busy-list li,
+.clash-conflicts li {
+  padding: var(--space-2) var(--space-3);
+  border-left: 4px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--surface-tint);
+  overflow-wrap: anywhere;
+}
+.clash-conflicts li { border-left-color: var(--clash-ink); background: var(--danger-bg); }
+/* The word "Bị trùng lịch." / "Còn trống." carries the meaning; the colour only supports it */
+.clash-explanation {
+  margin: 0;
+  padding: var(--space-3);
+  border-left: 6px solid var(--clash-ink);
+  border-radius: var(--radius-md);
+  background: var(--danger-bg);
+  color: var(--ink);
+}
+.clash-explanation.is-free { border-left-color: var(--lime-ink); background: var(--lime-soft); }
+.clash-option {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  border: 2px solid var(--lime-border);
+  border-radius: var(--radius-md);
+  background: var(--lime-soft);
+}
+.clash-option p { flex: 1 1 14rem; min-width: 0; margin: 0; }
+.clash-proposal h3:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.clash-proposal input[readonly] { background: var(--readonly-bg); }
+
+@media (min-width: 768px) {
+  .admin-clash-panel { padding: var(--space-4); }
+  .clash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .clash-wide { grid-column: 1 / -1; }
+}
+@media (min-width: 1280px) {
+  .admin-detail-layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+}

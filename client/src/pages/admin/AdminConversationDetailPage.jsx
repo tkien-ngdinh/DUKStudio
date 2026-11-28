@@ -4,14 +4,15 @@ import { apiFetch } from '../../api/client.js';
 import { ErrorState, LoadingState } from '../../components/DataStates.jsx';
 import ChatMessageList from '../../components/chat/ChatMessageList.jsx';
 import BookingRequestCard from '../../components/chat/BookingRequestCard.jsx';
+import ClashCheckPanel from '../../components/admin/ClashCheckPanel.jsx';
 import { formatDateTime } from '../../utils/format.js';
 import { getOnce } from '../../utils/requests.js';
 import { conversationBadgeClass, conversationListHref } from '../../utils/conversationStatus.js';
 
 /**
- * G4: one conversation for the admin (03-chat.md).
- * - GET /api/conversations/:id once; GET /api/catalog (public, 02-catalog.md) once, only when
- *   the conversation has a booking request, to show the names of the package and extras.
+ * G4 + G5: one conversation for the admin (03-chat.md), with the clash check under the chat.
+ * - GET /api/conversations/:id once; GET /api/catalog (public, 02-catalog.md) once, for the
+ *   package and extra names of the request and the package list of the clash check.
  * - Reply: POST /api/conversations/:id/messages. The new message comes from the 201 answer;
  *   the conversation is not loaded again.
  */
@@ -79,10 +80,31 @@ export default function AdminConversationDetailPage() {
     }
   }, []);
 
-  const hasRequest = Boolean(state.conversation?.request);
+  // The catalog gives the package names of the request and the package list of the clash check
+  const conversationReady = state.phase === 'ready';
   useEffect(() => {
-    if (hasRequest && catalog.phase === 'idle') loadCatalog();
-  }, [hasRequest, catalog.phase, loadCatalog]);
+    if (conversationReady && catalog.phase === 'idle') loadCatalog();
+  }, [conversationReady, catalog.phase, loadCatalog]);
+
+  // POST …/propose-time answered {proposal, message}: add the message to the chat (03-chat.md:
+  // the conversation is now "Đang tư vấn", waiting for the customer's answer)
+  const handleProposed = useCallback((data) => {
+    const message = data?.message;
+    if (!message) return;
+    setState((prev) => {
+      if (!prev.conversation) return prev;
+      const conv = prev.conversation;
+      return {
+        ...prev,
+        conversation: {
+          ...conv,
+          messages: [...(Array.isArray(conv.messages) ? conv.messages : []), message],
+          lastMessageAt: message.timestamp || conv.lastMessageAt,
+          status: 'Đang tư vấn'
+        }
+      };
+    });
+  }, []);
 
   async function handleReply(event) {
     event.preventDefault();
@@ -163,85 +185,95 @@ export default function AdminConversationDetailPage() {
       )}
 
       {phase === 'ready' && conversation && (
-        <section className="chat-window inpage-chat admin-chat" aria-labelledby="admin-chat-heading">
-          <div className="chat-header">
-            <div className="chat-icon" aria-hidden="true">
-              {String(conversation.customerName || '?').slice(0, 1).toUpperCase()}
-            </div>
-            <div className="chat-heading">
-              <h2 id="admin-chat-heading">{conversation.customerName || conversation.customerId}</h2>
-              <p>
-                {conversation.id}
-                {conversation.lastMessageAt && (
-                  <>
-                    {' · '}cập nhật{' '}
-                    <time dateTime={conversation.lastMessageAt}>{formatDateTime(conversation.lastMessageAt)}</time>
-                  </>
-                )}
-              </p>
-            </div>
-            <span className={`status-badge ${conversationBadgeClass(conversation.status)}`}>
-              {conversation.status}
-            </span>
-          </div>
-
-          {conversation.bookingId && (
-            <p className="admin-chat-booking">
-              Booking của hội thoại:{' '}
-              <Link to={`/admin/bookings/${encodeURIComponent(conversation.bookingId)}`}>
-                {conversation.bookingId}
-              </Link>
-            </p>
-          )}
-
-          <BookingRequestCard
-            request={conversation.request}
-            catalog={{ ...catalog, onRetry: loadCatalog }}
-          />
-
-          <ChatMessageList messages={conversation.messages} />
-
-          <form className="admin-reply-form" onSubmit={handleReply} noValidate>
-            <div className="form-group">
-              <label className="form-label" htmlFor="admin-reply-text">
-                Trả lời khách
-              </label>
-              <textarea
-                id="admin-reply-text"
-                ref={replyInput}
-                className="form-input admin-reply-input"
-                rows={3}
-                value={replyText}
-                onChange={(e) => {
-                  setReplyText(e.target.value);
-                  if (replyError && e.target.value.trim()) setReplyError('');
-                }}
-                aria-invalid={replyError ? 'true' : undefined}
-                aria-describedby={replyError ? 'admin-reply-error' : undefined}
-              />
-              {replyError && (
-                <p id="admin-reply-error" className="field-error" role="alert">
-                  {replyError}
-                </p>
-              )}
-            </div>
-
-            {formError && (
-              <div className="form-banner-error admin-reply-banner" role="alert">
-                {formError}
+        <div className="admin-detail-layout">
+          <section className="chat-window inpage-chat admin-chat" aria-labelledby="admin-chat-heading">
+            <div className="chat-header">
+              <div className="chat-icon" aria-hidden="true">
+                {String(conversation.customerName || '?').slice(0, 1).toUpperCase()}
               </div>
+              <div className="chat-heading">
+                <h2 id="admin-chat-heading">{conversation.customerName || conversation.customerId}</h2>
+                <p>
+                  {conversation.id}
+                  {conversation.lastMessageAt && (
+                    <>
+                      {' · '}cập nhật{' '}
+                      <time dateTime={conversation.lastMessageAt}>{formatDateTime(conversation.lastMessageAt)}</time>
+                    </>
+                  )}
+                </p>
+              </div>
+              <span className={`status-badge ${conversationBadgeClass(conversation.status)}`}>
+                {conversation.status}
+              </span>
+            </div>
+
+            {conversation.bookingId && (
+              <p className="admin-chat-booking">
+                Booking của hội thoại:{' '}
+                <Link to={`/admin/bookings/${encodeURIComponent(conversation.bookingId)}`}>
+                  {conversation.bookingId}
+                </Link>
+              </p>
             )}
 
-            <div className="admin-reply-actions">
-              <button type="submit" className="blue-cta" disabled={sending}>
-                {sending ? 'Đang gửi...' : 'Gửi trả lời'}
-              </button>
-              <p className="admin-reply-status" role="status">
-                {sentNotice}
-              </p>
-            </div>
-          </form>
-        </section>
+            <BookingRequestCard
+              request={conversation.request}
+              catalog={{ ...catalog, onRetry: loadCatalog }}
+            />
+
+            <ChatMessageList messages={conversation.messages} />
+
+            <form className="admin-reply-form" onSubmit={handleReply} noValidate>
+              <div className="form-group">
+                <label className="form-label" htmlFor="admin-reply-text">
+                  Trả lời khách
+                </label>
+                <textarea
+                  id="admin-reply-text"
+                  ref={replyInput}
+                  className="form-input admin-reply-input"
+                  rows={3}
+                  value={replyText}
+                  onChange={(e) => {
+                    setReplyText(e.target.value);
+                    if (replyError && e.target.value.trim()) setReplyError('');
+                  }}
+                  aria-invalid={replyError ? 'true' : undefined}
+                  aria-describedby={replyError ? 'admin-reply-error' : undefined}
+                />
+                {replyError && (
+                  <p id="admin-reply-error" className="field-error" role="alert">
+                    {replyError}
+                  </p>
+                )}
+              </div>
+
+              {formError && (
+                <div className="form-banner-error admin-reply-banner" role="alert">
+                  {formError}
+                </div>
+              )}
+
+              <div className="admin-reply-actions">
+                <button type="submit" className="blue-cta" disabled={sending}>
+                  {sending ? 'Đang gửi...' : 'Gửi trả lời'}
+                </button>
+                <p className="admin-reply-status" role="status">
+                  {sentNotice}
+                </p>
+              </div>
+            </form>
+          </section>
+
+          <ClashCheckPanel
+            key={conversation.id}
+            conversationId={conversation.id}
+            request={conversation.request}
+            catalog={{ ...catalog, onRetry: loadCatalog }}
+            onProposed={handleProposed}
+          />
+        </div>
       )}
     </div>
   );
