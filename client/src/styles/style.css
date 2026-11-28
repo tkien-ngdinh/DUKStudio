@@ -1374,3 +1374,410 @@
     grid-column: 1 / -1;
   }
 }
+
+
+/* ==========================================================================
+   G1 CATALOG EXTENSIONS: SERVICE GROUPS, ACCESSORIES, SAMPLES, REVIEWS
+   ========================================================================== */
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Service Grouping (Tách biệt Dịch vụ và Gói) */
+.services-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.service-group {
+  padding: var(--space-4);
+  background: var(--white);
+  border: 3px solid var(--border-color);
+  border-radius: var(--round);
+  box-shadow: 0 4px 14px rgba(3, 105, 214, 0.06);
+}
+
+.service-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 2px dashed var(--divider);
+}
+
+.service-header-main {
+  flex: 1 1 20rem;
+  min-width: 0;
+}
+
+.service-title {
+  color: var(--deep-blue);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-bottom: var(--space-1);
+}
+
+.service-desc {
+  color: var(--ink-muted);
+  font-size: 1rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.service-pricing-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: var(--surface-tint);
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  min-width: 10rem;
+}
+
+.service-price-label {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  font-family: var(--font-chakra);
+}
+
+.service-starting-price {
+  font-size: 1.35rem;
+  color: var(--deep-blue);
+  font-weight: 700;
+}
+
+.service-unit {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+/* Package Card Enhancements */
+.package-heading {
+  margin: 0 0 var(--space-2);
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.package-features-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.package-features-list li {
+  font-size: 0.9375rem;
+  color: inherit;
+  line-height: 1.4;
+}
+
+.package-deposit-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 0.875rem;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.45);
+  margin: var(--space-2) 0;
+  color: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.package--blue .package-deposit-info {
+  background: rgba(4, 79, 181, 0.35);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.package-cta {
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+/* Accessories Grid */
+.accessories-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.accessory-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.accessory-badge {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: var(--lime-ink);
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex: none;
+}
+
+.accessory-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.accessory-name {
+  font-size: 1.15rem;
+  color: var(--deep-blue);
+  margin-bottom: var(--space-1);
+}
+
+.accessory-desc {
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+  margin-bottom: var(--space-2);
+  line-height: 1.4;
+}
+
+.accessory-price {
+  font-size: 0.9375rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.accessory-price strong {
+  color: var(--pink);
+  font-size: 1.05rem;
+}
+
+/* Sample Photos Grid */
+.samples-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.sample-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--round);
+  border: 2px solid var(--border-color);
+  background: var(--white);
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(3, 105, 214, 0.08);
+}
+
+.sample-graphic-box {
+  position: relative;
+  width: 100%;
+  background: var(--surface-tint);
+  border-bottom: 2px solid var(--divider);
+  padding: var(--space-4) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sample-svg-art {
+  width: 100%;
+  max-width: 14rem;
+  height: auto;
+}
+
+.sample-category-tag {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: var(--deep-blue);
+  color: var(--white);
+  font-family: var(--font-chakra);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+.sample-card-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sample-title {
+  font-size: 1.25rem;
+  color: var(--deep-blue);
+  margin: 0;
+}
+
+.sample-description {
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Reviews Grid */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-radius: var(--round);
+  background: var(--paper);
+  border: 2px solid var(--lime-border);
+  box-shadow: 0 6px 14px rgba(50, 88, 0, 0.06);
+}
+
+.review-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.review-customer-name {
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.review-service-badge {
+  font-size: 0.8125rem;
+  color: var(--lime-ink);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  margin: var(--space-1) 0 0;
+}
+
+.review-stars {
+  color: #eab308;
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+}
+
+.review-comment {
+  margin: var(--space-2) 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.review-footer {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--divider);
+}
+
+.review-date {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  font-family: var(--font-chakra);
+}
+
+/* Chat CTA Card */
+.chat-cta-section {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-6);
+}
+
+.chat-cta-card {
+  padding: var(--space-5) var(--space-4);
+  background: var(--lime-soft);
+  border: 3px solid var(--lime-border);
+  border-radius: var(--round);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chat-cta-card h2 {
+  color: var(--deep-blue);
+  font-size: 1.85rem;
+  margin: 0;
+}
+
+.chat-cta-desc {
+  max-width: 36rem;
+  color: var(--forest-ink);
+  font-size: 1.05rem;
+  line-height: 1.45;
+  margin: 0 0 var(--space-3);
+}
+
+.empty-subtext {
+  font-size: 1rem;
+  color: var(--ink-muted);
+  font-style: italic;
+  padding: var(--space-3);
+  text-align: center;
+}
+
+/* Responsive Extensions */
+@media (min-width: 768px) {
+  .service-group {
+    padding: var(--space-5);
+  }
+  .service-pricing-badge {
+    align-items: flex-end;
+  }
+  .package-deposit-info {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .package-cta {
+    width: auto;
+  }
+  .accessories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .samples-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .reviews-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .chat-cta-card {
+    padding: var(--space-6) var(--space-5);
+  }
+}
+
+@media (min-width: 1280px) {
+  .accessories-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .samples-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .reviews-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

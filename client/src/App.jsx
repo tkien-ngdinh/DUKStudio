@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RoutePlaceholder from './components/RoutePlaceholder.jsx';
+import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -10,17 +11,7 @@ export default function App() {
     <Layout>
       <Routes>
         {/* Public / Visitor + Customer */}
-        <Route
-          path="/"
-          element={
-            <RoutePlaceholder
-              step="G1"
-              title="Dịch vụ & Bảng giá DUKStudio"
-              description="Trang chủ giới thiệu gói chụp kỷ yếu, tốt nghiệp, chân dung, phụ kiện, ảnh mẫu và đánh giá khách hàng."
-              endpoints={['GET /api/catalog']}
-            />
-          }
-        />
+        <Route path="/" element={<HomePage />} />
 
         {/* Authentication (G2) */}
         <Route path="/login" element={<LoginPage />} />
