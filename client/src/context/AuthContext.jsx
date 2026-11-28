@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   apiFetch,
   clearStoredSession,
@@ -49,10 +49,18 @@ export function AuthProvider({ children }) {
   const [sessionError, setSessionError] = useState('');
   const [authNotice, setAuthNotice] = useState('');
 
+  // Epoch counter: incremented on every clearAuth() and login() call.
+  // verifyCurrentSession() captures the epoch before its async await, then
+  // discards the response if the epoch has since advanced (logout or new login
+  // happened while the /api/auth/me request was in-flight).
+  const authEpoch = useRef(0);
+
   const clearAuth = useCallback((noticeMessage = '') => {
+    authEpoch.current += 1;   // invalidate any in-flight verifyCurrentSession
     clearStoredSession();
     setToken(null);
     setUser(null);
+    setIsInitializing(false);
     setSessionError('');
     setAuthNotice(noticeMessage);
   }, []);
@@ -72,23 +80,39 @@ export function AuthProvider({ children }) {
       return;
     }
 
+    // Capture epoch and token before the async boundary.
+    // If either changes while we await, the response is stale and must be discarded.
+    const epochAtStart = authEpoch.current;
+    const tokenAtStart = stored.token;
+
     setIsInitializing(true);
     setSessionError('');
     try {
       const data = await verifyTokenOnce(stored.token);
+
+      // Guard: abort if a logout or login happened while this request was in-flight
+      if (authEpoch.current !== epochAtStart) return;
+      const nowStored = getStoredSession();
+      if (!nowStored || nowStored.token !== tokenAtStart) return;
+
       if (data?.user) {
         setUser(data.user);
         setToken(stored.token);
         setStoredSession({ token: stored.token, user: data.user });
       }
     } catch (err) {
+      // Same epoch guard: only act on errors that belong to the current session
+      if (authEpoch.current !== epochAtStart) return;
       if (err?.status === 401) {
         clearAuth('Phiên đăng nhập đã hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
       } else {
         setSessionError(err?.message || 'Không thể xác thực phiên đăng nhập.');
       }
     } finally {
-      setIsInitializing(false);
+      // Only clear the spinner if we are still the active verification attempt
+      if (authEpoch.current === epochAtStart) {
+        setIsInitializing(false);
+      }
     }
   }, [clearAuth]);
 
@@ -102,9 +126,11 @@ export function AuthProvider({ children }) {
       skipAuth: true,
       body: { email, password }
     });
+    authEpoch.current += 1;   // invalidate any in-flight verifyCurrentSession
     setStoredSession({ token: data.token, user: data.user });
     setToken(data.token);
     setUser(data.user);
+    setIsInitializing(false);
     setSessionError('');
     setAuthNotice('');
     return data;
