@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { apiFetch } from '../api/client.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/DataStates.jsx';
 
@@ -37,11 +37,31 @@ function formatTime(isoString) {
   try {
     const d = new Date(isoString);
     if (isNaN(d.getTime())) return isoString;
-    return d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' · ' +
-      d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+    return (
+      d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) +
+      ' · ' +
+      d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
+    );
   } catch {
     return isoString;
   }
+}
+
+/**
+ * Pick the conversation with the latest lastMessageAt timestamp
+ */
+function getLatestConversationId(list) {
+  if (!Array.isArray(list) || list.length === 0) return null;
+  let latest = list[0];
+  let latestTime = new Date(latest.lastMessageAt || 0).getTime();
+  for (let i = 1; i < list.length; i++) {
+    const time = new Date(list[i].lastMessageAt || 0).getTime();
+    if (time > latestTime) {
+      latest = list[i];
+      latestTime = time;
+    }
+  }
+  return latest.id;
 }
 
 export default function CustomerChatPage() {
@@ -53,14 +73,28 @@ export default function CustomerChatPage() {
   // 2. Selected conversation ID: string ID or 'new' for creating an inquiry
   const [selectedConvId, setSelectedConvId] = useState(null);
 
-  // 3. Active conversation detail state
-  const [activeConv, setActiveConv] = useState(null);
+  // 3. Conversation details cache: { [id]: conversationObject }
+  const [convDetails, setConvDetails] = useState({});
+  const convDetailsRef = useRef(convDetails);
+  convDetailsRef.current = convDetails;
+
   const [loadingActive, setLoadingActive] = useState(false);
   const [activeError, setActiveError] = useState(null);
+
+  // Active conversation resolved from cache
+  const activeConv =
+    selectedConvId && selectedConvId !== 'new' ? convDetails[selectedConvId] || null : null;
 
   // 4. Catalog state (for packages & extras options in inquiry form)
   const [catalog, setCatalog] = useState(null);
   const [loadingCatalog, setLoadingCatalog] = useState(false);
+  const [catalogError, setCatalogError] = useState(null);
+  const packageNamesById = new Map(
+    (catalog?.services || []).flatMap((service) =>
+      (service.packages || []).map((pkg) => [pkg.id, pkg.name])
+    )
+  );
+  const extraNamesById = new Map((catalog?.extras || []).map((extra) => [extra.id, extra.name]));
 
   // 5. Booking Inquiry Form State
   const [inquiryForm, setInquiryForm] = useState({
@@ -81,7 +115,7 @@ export default function CustomerChatPage() {
   const [sendingMsg, setSendingMsg] = useState(false);
   const [msgError, setMsgError] = useState('');
 
-  // Initial load: Fetch conversations list & catalog
+  // Load conversations list
   const loadConversations = (force = false) => {
     setLoadingConvs(true);
     setConvsError(null);
@@ -91,8 +125,14 @@ export default function CustomerChatPage() {
         const list = Array.isArray(data?.conversations) ? data.conversations : [];
         setConversations(list);
         if (list.length > 0) {
-          // Select latest conversation if none selected yet
-          setSelectedConvId((prev) => (prev && prev !== 'new' ? prev : list[0].id));
+          setSelectedConvId((prev) => {
+            // Keep existing manual selection if valid
+            if (prev && (prev === 'new' || list.some((c) => c.id === prev))) {
+              return prev;
+            }
+            // Pick conversation with latest lastMessageAt
+            return getLatestConversationId(list);
+          });
         } else {
           // No conversation exists: open inquiry form
           setSelectedConvId('new');
@@ -106,29 +146,40 @@ export default function CustomerChatPage() {
       });
   };
 
+  // Load catalog for inquiry form options
   const loadCatalog = (force = false) => {
     setLoadingCatalog(true);
+    setCatalogError(null);
+
     fetchGetOnce('/api/catalog', force)
       .then((data) => {
         setCatalog(data);
       })
-      .catch(() => {
-        // Non-blocking for existing chat; options will reload on retry
+      .catch((err) => {
+        setCatalogError(err?.message || 'Không thể tải danh mục dịch vụ và tiện ích chụp.');
       })
       .finally(() => {
         setLoadingCatalog(false);
       });
   };
 
+  // Initial load
   useEffect(() => {
     loadConversations(false);
     loadCatalog(false);
   }, []);
 
-  // When selected conversation changes, fetch its full detail
+  // When selected conversation changes, fetch its detail only if not already cached
   useEffect(() => {
     if (!selectedConvId || selectedConvId === 'new') {
-      setActiveConv(null);
+      return;
+    }
+
+    // If detail is already cached (messages array present), reuse directly without GET
+    if (convDetailsRef.current[selectedConvId]?.messages) {
+      setLoadingActive(false);
+      setActiveError(null);
+      setMsgError('');
       return;
     }
 
@@ -139,7 +190,10 @@ export default function CustomerChatPage() {
     fetchGetOnce(`/api/conversations/${selectedConvId}`, false)
       .then((data) => {
         if (data?.conversation) {
-          setActiveConv(data.conversation);
+          setConvDetails((prev) => ({
+            ...prev,
+            [data.conversation.id]: data.conversation
+          }));
         }
       })
       .catch((err) => {
@@ -155,9 +209,15 @@ export default function CustomerChatPage() {
     if (!selectedConvId || selectedConvId === 'new') return;
     setLoadingActive(true);
     setActiveError(null);
+
     fetchGetOnce(`/api/conversations/${selectedConvId}`, true)
       .then((data) => {
-        if (data?.conversation) setActiveConv(data.conversation);
+        if (data?.conversation) {
+          setConvDetails((prev) => ({
+            ...prev,
+            [data.conversation.id]: data.conversation
+          }));
+        }
       })
       .catch((err) => {
         setActiveError(err?.message || 'Không thể tải chi tiết cuộc trò chuyện.');
@@ -167,10 +227,11 @@ export default function CustomerChatPage() {
       });
   };
 
-  // Find package metadata for participant count check
-  const allPackages = catalog?.services?.flatMap((s) => s.packages) || [];
-  const selectedPackage = allPackages.find((p) => p.id === inquiryForm.packageId);
-  const isPerPersonPackage = selectedPackage?.durationHours === 3 && selectedPackage?.price === 350000; // pkg-ky-yeu
+  // Find parent service to determine if package is priced per person via contract unit field
+  const selectedService = catalog?.services?.find((s) =>
+    s.packages?.some((p) => p.id === inquiryForm.packageId)
+  );
+  const isPerPersonPackage = selectedService?.unit === 'người';
 
   // Toggle extras checkbox
   const handleExtraToggle = (extraId) => {
@@ -233,17 +294,27 @@ export default function CustomerChatPage() {
     }
 
     try {
+      // Pass object directly to apiFetch so Content-Type: application/json is set
       const data = await apiFetch('/api/conversations', {
         method: 'POST',
-        body: JSON.stringify(payload)
+        body: payload
       });
 
       if (data?.conversation) {
         const created = data.conversation;
-        // Prepend or add new conversation to list
+        // Cache full conversation response immediately to avoid redundant GET
+        convDetailsRef.current[created.id] = created;
+        setConvDetails((prev) => ({
+          ...prev,
+          [created.id]: created
+        }));
+
+        // Add to conversations list
         setConversations((prev) => [created, ...prev.filter((c) => c.id !== created.id)]);
-        setActiveConv(created);
+
+        // Switch to newly created conversation
         setSelectedConvId(created.id);
+
         // Reset form
         setInquiryForm({
           packageId: '',
@@ -275,24 +346,44 @@ export default function CustomerChatPage() {
     setSendingMsg(true);
 
     try {
+      // Pass object directly to apiFetch so Content-Type: application/json is set
       const data = await apiFetch(`/api/conversations/${activeConv.id}/messages`, {
         method: 'POST',
-        body: JSON.stringify({ text: newMsgText.trim() })
+        body: { text: newMsgText.trim() }
       });
 
       if (data?.message) {
+        const newMsg = data.message;
         // Append newly returned message to active conversation immediately
-        setActiveConv((prev) => {
-          if (!prev) return prev;
-          const updatedMessages = [...(prev.messages || []), data.message];
-          return { ...prev, messages: updatedMessages, lastMessageAt: data.message.timestamp };
+        setConvDetails((prev) => {
+          const current = prev[activeConv.id];
+          if (!current) return prev;
+          const updatedMessages = [...(current.messages || []), newMsg];
+          return {
+            ...prev,
+            [activeConv.id]: {
+              ...current,
+              messages: updatedMessages,
+              lastMessageAt: newMsg.timestamp
+            }
+          };
         });
+        setConversations((prev) =>
+          prev.map((c) =>
+            c.id === activeConv.id ? { ...c, lastMessageAt: newMsg.timestamp } : c
+          )
+        );
         setNewMsgText('');
       } else if (data?.conversation) {
         // If messaging a completed conversation created a new one (per contract rule)
-        setConversations((prev) => [data.conversation, ...prev]);
-        setActiveConv(data.conversation);
-        setSelectedConvId(data.conversation.id);
+        const newConv = data.conversation;
+        convDetailsRef.current[newConv.id] = newConv;
+        setConvDetails((prev) => ({
+          ...prev,
+          [newConv.id]: newConv
+        }));
+        setConversations((prev) => [newConv, ...prev.filter((c) => c.id !== newConv.id)]);
+        setSelectedConvId(newConv.id);
         setNewMsgText('');
       }
     } catch (err) {
@@ -362,199 +453,234 @@ export default function CustomerChatPage() {
                 </p>
               </header>
 
-              {inquirySubmitError && (
-                <div className="form-banner-error" role="alert">
-                  {inquirySubmitError}
-                </div>
-              )}
-
-              <form className="form-stack" onSubmit={handleSubmitInquiry} noValidate>
-                {/* 1. Package Select (Mapped to packageId) */}
-                <div className="form-group">
-                  <label htmlFor="inquiry-package" className="form-label">
-                    Loại chụp & Gói dịch vụ <span className="req-star" aria-hidden="true">*</span>
-                  </label>
-                  <select
-                    id="inquiry-package"
-                    className="form-input"
-                    value={inquiryForm.packageId}
-                    onChange={(e) => {
-                      setInquiryForm({ ...inquiryForm, packageId: e.target.value });
-                      if (formErrors.packageId) {
-                        setFormErrors((prev) => ({ ...prev, packageId: undefined }));
-                      }
-                    }}
-                    aria-required="true"
-                    aria-invalid={Boolean(formErrors.packageId)}
-                    aria-describedby={formErrors.packageId ? 'inquiry-package-error' : undefined}
-                  >
-                    <option value="">-- Chọn gói chụp phù hợp --</option>
-                    {catalog?.services?.map((svc) => (
-                      <optgroup key={svc.id} label={`${svc.title} (Khởi điểm: ${formatVND(svc.startingPrice)}/${svc.unit})`}>
-                        {svc.packages?.map((pkg) => (
-                          <option key={pkg.id} value={pkg.id}>
-                            {pkg.name} — {formatVND(pkg.price)} ({pkg.durationHours}h chụp, {pkg.editedPhotos} ảnh chỉnh)
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
-                  {formErrors.packageId && (
-                    <p id="inquiry-package-error" className="field-error" role="alert">
-                      {formErrors.packageId}
-                    </p>
+              {/* Explicit catalog states: loading, error with Retry, empty state */}
+              {loadingCatalog ? (
+                <LoadingState label="Đang tải danh mục dịch vụ và gói chụp..." />
+              ) : catalogError ? (
+                <ErrorState
+                  title="Không thể tải danh mục dịch vụ"
+                  message={catalogError}
+                  onRetry={() => loadCatalog(true)}
+                />
+              ) : !catalog?.services || catalog.services.length === 0 ? (
+                <EmptyState
+                  title="Chưa có gói dịch vụ nào"
+                  description="Hiện tại studio chưa có gói dịch vụ nào trên hệ thống để đặt lịch. Vui lòng quay lại sau."
+                />
+              ) : (
+                <>
+                  {inquirySubmitError && (
+                    <div className="form-banner-error" role="alert">
+                      {inquirySubmitError}
+                    </div>
                   )}
-                </div>
 
-                {/* Optional Participant Count if package is per-person */}
-                {isPerPersonPackage && (
-                  <div className="form-group">
-                    <label htmlFor="inquiry-participants" className="form-label">
-                      Số lượng người tham gia <span className="req-star" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id="inquiry-participants"
-                      type="number"
-                      min="1"
-                      className="form-input"
-                      value={inquiryForm.participantCount}
-                      onChange={(e) => {
-                        setInquiryForm({ ...inquiryForm, participantCount: e.target.value });
-                        if (formErrors.participantCount) {
-                          setFormErrors((prev) => ({ ...prev, participantCount: undefined }));
-                        }
-                      }}
-                      placeholder="Nhập số người (ví dụ: 30)"
-                      aria-required="true"
-                      aria-invalid={Boolean(formErrors.participantCount)}
-                      aria-describedby={formErrors.participantCount ? 'inquiry-participants-error' : undefined}
-                    />
-                    {formErrors.participantCount && (
-                      <p id="inquiry-participants-error" className="field-error" role="alert">
-                        {formErrors.participantCount}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* 2. Date & Time Row */}
-                <div className="form-row-duo">
-                  <div className="form-group">
-                    <label htmlFor="inquiry-date" className="form-label">
-                      Ngày chụp mong muốn <span className="req-star" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id="inquiry-date"
-                      type="date"
-                      className="form-input"
-                      value={inquiryForm.preferredDate}
-                      onChange={(e) => {
-                        setInquiryForm({ ...inquiryForm, preferredDate: e.target.value });
-                        if (formErrors.preferredDate) {
-                          setFormErrors((prev) => ({ ...prev, preferredDate: undefined }));
-                        }
-                      }}
-                      aria-required="true"
-                      aria-invalid={Boolean(formErrors.preferredDate)}
-                      aria-describedby={formErrors.preferredDate ? 'inquiry-date-error' : undefined}
-                    />
-                    {formErrors.preferredDate && (
-                      <p id="inquiry-date-error" className="field-error" role="alert">
-                        {formErrors.preferredDate}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="inquiry-time" className="form-label">
-                      Khung giờ mong muốn
-                    </label>
-                    <select
-                      id="inquiry-time"
-                      className="form-input"
-                      value={inquiryForm.preferredTime}
-                      onChange={(e) => setInquiryForm({ ...inquiryForm, preferredTime: e.target.value })}
-                    >
-                      <option value="09:00">09:00 (Buổi sáng)</option>
-                      <option value="10:30">10:30 (Buổi sáng)</option>
-                      <option value="13:00">13:00 (Buổi chiều)</option>
-                      <option value="14:00">14:00 (Buổi chiều)</option>
-                      <option value="15:30">15:30 (Buổi chiều)</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* 3. Coordination Extras (from catalog.extras) */}
-                <div className="form-group">
-                  <span className="form-label">Dịch vụ phối hợp thêm (Extras):</span>
-                  <div className="checkbox-grid">
-                    {catalog?.extras?.map((extra) => (
-                      <label key={extra.id} className="checkbox-item" htmlFor={`extra-${extra.id}`}>
-                        <input
-                          id={`extra-${extra.id}`}
-                          type="checkbox"
-                          checked={inquiryForm.extras.includes(extra.id)}
-                          onChange={() => handleExtraToggle(extra.id)}
-                        />
-                        <span>{extra.name}</span>
+                  <form className="form-stack" onSubmit={handleSubmitInquiry} noValidate>
+                    {/* 1. Package Select (Mapped to packageId) */}
+                    <div className="form-group">
+                      <label htmlFor="inquiry-package" className="form-label">
+                        Loại chụp & Gói dịch vụ <span className="req-star" aria-hidden="true">*</span>
                       </label>
-                    ))}
-                  </div>
-                </div>
+                      <select
+                        id="inquiry-package"
+                        className="form-input"
+                        value={inquiryForm.packageId}
+                        onChange={(e) => {
+                          const nextPkgId = e.target.value;
+                          setInquiryForm((prev) => ({ ...prev, packageId: nextPkgId }));
+                          setFormErrors((prev) => ({
+                            ...prev,
+                            packageId: undefined,
+                            participantCount: undefined
+                          }));
+                        }}
+                        aria-required="true"
+                        aria-invalid={Boolean(formErrors.packageId)}
+                        aria-describedby={formErrors.packageId ? 'inquiry-package-error' : undefined}
+                      >
+                        <option value="">-- Chọn gói chụp phù hợp --</option>
+                        {catalog.services.map((svc) => (
+                          <optgroup
+                            key={svc.id}
+                            label={`${svc.title} (Khởi điểm: ${formatVND(svc.startingPrice)}/${svc.unit})`}
+                          >
+                            {svc.packages?.map((pkg) => (
+                              <option key={pkg.id} value={pkg.id}>
+                                {pkg.name} — {formatVND(pkg.price)} ({pkg.durationHours}h chụp,{' '}
+                                {pkg.editedPhotos} ảnh chỉnh)
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                      {formErrors.packageId && (
+                        <p id="inquiry-package-error" className="field-error" role="alert">
+                          {formErrors.packageId}
+                        </p>
+                      )}
+                    </div>
 
-                {/* 4. Inquiry Message */}
-                <div className="form-group">
-                  <label htmlFor="inquiry-message" className="form-label">
-                    Câu hỏi / Lời nhắn tư vấn <span className="req-star" aria-hidden="true">*</span>
-                  </label>
-                  <textarea
-                    id="inquiry-message"
-                    rows="3"
-                    className="form-input"
-                    value={inquiryForm.message}
-                    onChange={(e) => {
-                      setInquiryForm({ ...inquiryForm, message: e.target.value });
-                      if (formErrors.message) {
-                        setFormErrors((prev) => ({ ...prev, message: undefined }));
-                      }
-                    }}
-                    placeholder="Ví dụ: Gói tốt nghiệp có makeup còn lịch ngày 24/10 lúc 09:00 không?"
-                    aria-required="true"
-                    aria-invalid={Boolean(formErrors.message)}
-                    aria-describedby={formErrors.message ? 'inquiry-message-error' : undefined}
-                  />
-                  {formErrors.message && (
-                    <p id="inquiry-message-error" className="field-error" role="alert">
-                      {formErrors.message}
-                    </p>
-                  )}
-                </div>
+                    {/* Optional Participant Count if package is per-person */}
+                    {isPerPersonPackage && (
+                      <div className="form-group">
+                        <label htmlFor="inquiry-participants" className="form-label">
+                          Số lượng người tham gia <span className="req-star" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                          id="inquiry-participants"
+                          type="number"
+                          min="1"
+                          className="form-input"
+                          value={inquiryForm.participantCount}
+                          onChange={(e) => {
+                            setInquiryForm({ ...inquiryForm, participantCount: e.target.value });
+                            if (formErrors.participantCount) {
+                              setFormErrors((prev) => ({ ...prev, participantCount: undefined }));
+                            }
+                          }}
+                          placeholder="Nhập số lượng người tham gia"
+                          aria-required="true"
+                          aria-invalid={Boolean(formErrors.participantCount)}
+                          aria-describedby={
+                            formErrors.participantCount ? 'inquiry-participants-error' : undefined
+                          }
+                        />
+                        {formErrors.participantCount && (
+                          <p id="inquiry-participants-error" className="field-error" role="alert">
+                            {formErrors.participantCount}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
-                {/* 5. Notes */}
-                <div className="form-group">
-                  <label htmlFor="inquiry-notes" className="form-label">
-                    Yêu cầu / Ghi chú bổ sung (tùy chọn)
-                  </label>
-                  <textarea
-                    id="inquiry-notes"
-                    rows="2"
-                    className="form-input"
-                    value={inquiryForm.notes}
-                    onChange={(e) => setInquiryForm({ ...inquiryForm, notes: e.target.value })}
-                    placeholder="Ví dụ: Cần hỗ trợ thuê 1 bộ áo cử nhân và hoa tươi..."
-                  />
-                </div>
+                    {/* 2. Date & Time Row */}
+                    <div className="form-row-duo">
+                      <div className="form-group">
+                        <label htmlFor="inquiry-date" className="form-label">
+                          Ngày chụp mong muốn <span className="req-star" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                          id="inquiry-date"
+                          type="date"
+                          className="form-input"
+                          value={inquiryForm.preferredDate}
+                          onChange={(e) => {
+                            setInquiryForm({ ...inquiryForm, preferredDate: e.target.value });
+                            if (formErrors.preferredDate) {
+                              setFormErrors((prev) => ({ ...prev, preferredDate: undefined }));
+                            }
+                          }}
+                          aria-required="true"
+                          aria-invalid={Boolean(formErrors.preferredDate)}
+                          aria-describedby={formErrors.preferredDate ? 'inquiry-date-error' : undefined}
+                        />
+                        {formErrors.preferredDate && (
+                          <p id="inquiry-date-error" className="field-error" role="alert">
+                            {formErrors.preferredDate}
+                          </p>
+                        )}
+                      </div>
 
-                <div className="form-actions">
-                  <button type="submit" className="pink-cta" disabled={submittingInquiry}>
-                    {submittingInquiry ? 'Đang gửi yêu cầu...' : 'Gửi yêu cầu đặt lịch'}
-                  </button>
-                </div>
-              </form>
+                      <div className="form-group">
+                        <label htmlFor="inquiry-time" className="form-label">
+                          Khung giờ mong muốn
+                        </label>
+                        <select
+                          id="inquiry-time"
+                          className="form-input"
+                          value={inquiryForm.preferredTime}
+                          onChange={(e) =>
+                            setInquiryForm({ ...inquiryForm, preferredTime: e.target.value })
+                          }
+                        >
+                          <option value="09:00">09:00 (Buổi sáng)</option>
+                          <option value="10:30">10:30 (Buổi sáng)</option>
+                          <option value="13:00">13:00 (Buổi chiều)</option>
+                          <option value="14:00">14:00 (Buổi chiều)</option>
+                          <option value="15:30">15:30 (Buổi chiều)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* 3. Coordination Extras (from catalog.extras) */}
+                    <div className="form-group">
+                      <span className="form-label">Dịch vụ phối hợp thêm (Extras):</span>
+                      <div className="checkbox-grid">
+                        {catalog.extras?.map((extra) => (
+                          <label
+                            key={extra.id}
+                            className="checkbox-item"
+                            htmlFor={`extra-${extra.id}`}
+                          >
+                            <input
+                              id={`extra-${extra.id}`}
+                              type="checkbox"
+                              checked={inquiryForm.extras.includes(extra.id)}
+                              onChange={() => handleExtraToggle(extra.id)}
+                            />
+                            <span>{extra.name}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 4. Inquiry Message */}
+                    <div className="form-group">
+                      <label htmlFor="inquiry-message" className="form-label">
+                        Câu hỏi / Lời nhắn tư vấn <span className="req-star" aria-hidden="true">*</span>
+                      </label>
+                      <textarea
+                        id="inquiry-message"
+                        rows="3"
+                        className="form-input"
+                        value={inquiryForm.message}
+                        onChange={(e) => {
+                          setInquiryForm({ ...inquiryForm, message: e.target.value });
+                          if (formErrors.message) {
+                            setFormErrors((prev) => ({ ...prev, message: undefined }));
+                          }
+                        }}
+                        placeholder="Ví dụ: Gói tốt nghiệp có makeup còn lịch ngày 24/10 lúc 09:00 không?"
+                        aria-required="true"
+                        aria-invalid={Boolean(formErrors.message)}
+                        aria-describedby={formErrors.message ? 'inquiry-message-error' : undefined}
+                      />
+                      {formErrors.message && (
+                        <p id="inquiry-message-error" className="field-error" role="alert">
+                          {formErrors.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* 5. Notes */}
+                    <div className="form-group">
+                      <label htmlFor="inquiry-notes" className="form-label">
+                        Yêu cầu / Ghi chú bổ sung (tùy chọn)
+                      </label>
+                      <textarea
+                        id="inquiry-notes"
+                        rows="2"
+                        className="form-input"
+                        value={inquiryForm.notes}
+                        onChange={(e) =>
+                          setInquiryForm({ ...inquiryForm, notes: e.target.value })
+                        }
+                        placeholder="Ví dụ: Cần hỗ trợ thuê 1 bộ áo cử nhân và hoa tươi..."
+                      />
+                    </div>
+
+                    <div className="form-actions">
+                      <button type="submit" className="pink-cta" disabled={submittingInquiry}>
+                        {submittingInquiry ? 'Đang gửi yêu cầu...' : 'Gửi yêu cầu đặt lịch'}
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </section>
-          ) : loadingActive ? (
+          ) : loadingActive && !activeConv ? (
             <LoadingState label="Đang nạp chi tiết cuộc trò chuyện..." />
-          ) : activeError ? (
+          ) : activeError && !activeConv ? (
             <ErrorState
               title="Không thể tải nội dung hội thoại"
               message={activeError}
@@ -587,18 +713,39 @@ export default function CustomerChatPage() {
                   <h3 className="request-banner-title">Yêu cầu chụp đã gửi</h3>
                   <div className="request-banner-grid">
                     <div>
-                      <span>Gói chụp:</span> <strong>{activeConv.request.packageId}</strong>
+                      <span>Gói chụp:</span>{' '}
+                      <strong>
+                        {packageNamesById.get(activeConv.request.packageId) ||
+                          (catalog
+                            ? 'Gói không còn trong danh mục hiện tại'
+                            : catalogError
+                            ? 'Chưa tải được tên gói'
+                            : 'Đang tải tên gói')}
+                      </strong>
                     </div>
                     <div>
                       <span>Ngày giờ:</span>{' '}
                       <strong>
-                        {activeConv.request.preferredDate} {activeConv.request.preferredTime ? `(${activeConv.request.preferredTime})` : ''}
+                        {activeConv.request.preferredDate}{' '}
+                        {activeConv.request.preferredTime
+                          ? `(${activeConv.request.preferredTime})`
+                          : ''}
                       </strong>
                     </div>
                     {activeConv.request.extras && activeConv.request.extras.length > 0 && (
                       <div>
                         <span>Dịch vụ thêm:</span>{' '}
-                        <strong>{activeConv.request.extras.join(', ')}</strong>
+                        <strong>
+                          {activeConv.request.extras
+                            .map((id) => extraNamesById.get(id))
+                            .filter(Boolean)
+                            .join(', ') ||
+                            (catalog
+                              ? 'Không có tên dịch vụ thêm trong danh mục hiện tại'
+                              : catalogError
+                              ? 'Chưa tải được tên dịch vụ thêm'
+                              : 'Đang tải tên dịch vụ thêm')}
+                        </strong>
                       </div>
                     )}
                     {activeConv.request.notes && (
@@ -634,13 +781,16 @@ export default function CustomerChatPage() {
                             <div className="proposal-box-details">
                               <p>
                                 Ngày: <strong>{m.proposal.date}</strong> · Phòng:{' '}
-                                <strong>{m.proposal.room || m.proposal.roomId || 'Phòng chụp'}</strong>
+                                <strong>
+                                  {m.proposal.room || m.proposal.roomId || 'Phòng chụp'}
+                                </strong>
                               </p>
                               {(m.proposal.makeup || m.proposal.makeupStart) && (
                                 <p>
                                   Trang điểm:{' '}
                                   <strong>
-                                    {m.proposal.makeup || `${m.proposal.makeupStart} – ${m.proposal.makeupEnd}`}
+                                    {m.proposal.makeup ||
+                                      `${m.proposal.makeupStart} – ${m.proposal.makeupEnd}`}
                                   </strong>
                                 </p>
                               )}
@@ -648,7 +798,8 @@ export default function CustomerChatPage() {
                                 <p>
                                   Chụp ảnh:{' '}
                                   <strong>
-                                    {m.proposal.shoot || `${m.proposal.shootStart} – ${m.proposal.shootEnd}`}
+                                    {m.proposal.shoot ||
+                                      `${m.proposal.shootStart} – ${m.proposal.shootEnd}`}
                                   </strong>
                                 </p>
                               )}
