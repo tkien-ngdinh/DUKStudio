@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RoutePlaceholder from './components/RoutePlaceholder.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import CustomerChatPage from './pages/CustomerChatPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -21,18 +22,7 @@ export default function App() {
           path="/chat"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <RoutePlaceholder
-                step="G3 · G6"
-                title="Tư vấn & Yêu cầu đặt lịch"
-                description="Trò chuyện với studio, gửi yêu cầu chụp và xác nhận lịch đề xuất."
-                endpoints={[
-                  'GET /api/conversations',
-                  'POST /api/conversations',
-                  'GET /api/conversations/:id',
-                  'POST /api/conversations/:id/messages',
-                  'POST /api/conversations/:id/respond-proposal'
-                ]}
-              />
+              <CustomerChatPage />
             </ProtectedRoute>
           }
         />

@@ -1781,3 +1781,291 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* ============================================================
+   G3 · CUSTOMER CHAT & BOOKING INQUIRY STYLES
+   ============================================================ */
+
+.chat-page-main {
+  padding-bottom: var(--space-8);
+}
+
+.chat-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Conversation Navigation & Tabs */
+.chat-nav-bar {
+  background: var(--surface-tint);
+  border: 1px solid var(--border);
+  border-radius: var(--round);
+  padding: var(--space-2);
+}
+
+.chat-nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chat-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+}
+
+.chat-tab-btn:hover {
+  background: var(--light-blue);
+  border-color: var(--blue);
+}
+
+.chat-tab-btn.is-active {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+  box-shadow: 0 4px 10px rgba(3, 105, 214, 0.25);
+}
+
+.chat-tab-btn .conv-id {
+  font-family: var(--font-chakra);
+  font-size: 0.875rem;
+}
+
+.chat-tab-btn .conv-status-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--surface-tint);
+  color: var(--forest-ink);
+  font-weight: 500;
+}
+
+.chat-tab-btn.is-active .conv-status-tag {
+  background: var(--lime);
+  color: var(--deep-blue);
+}
+
+/* Inquiry Form Card */
+.inquiry-form-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--round);
+  padding: var(--space-4);
+  box-shadow: 0 8px 24px rgba(23, 37, 56, 0.08);
+}
+
+.inquiry-form-header {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.inquiry-form-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--deep-blue);
+  margin-bottom: var(--space-1);
+}
+
+.inquiry-form-header p {
+  color: var(--muted-ink);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.form-banner-error {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-ink);
+  color: var(--danger-ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-row-duo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 600px) {
+  .form-row-duo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.req-star {
+  color: var(--danger-ink);
+  font-weight: bold;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+@media (min-width: 500px) {
+  .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-tint);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  user-select: none;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--blue);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-3);
+}
+
+.form-actions .pink-cta {
+  min-height: var(--tap-min);
+  min-width: 180px;
+}
+
+/* Active Conversation In-Page Adjustments */
+.inpage-chat {
+  width: 100%;
+}
+
+.chat-request-banner {
+  background: #f0f7ff;
+  border-bottom: 2px solid #c8e1ff;
+  padding: var(--space-3);
+  font-size: 0.875rem;
+}
+
+.request-banner-title {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--blue);
+}
+
+.request-banner-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1) var(--space-3);
+  color: var(--deep-blue);
+}
+
+@media (min-width: 600px) {
+  .request-banner-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.request-banner-full {
+  grid-column: 1 / -1;
+}
+
+/* Proposal Box inside chat messages */
+.proposal-box {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--white);
+  border: 2px dashed var(--blue);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+}
+
+.proposal-box-title {
+  margin: 0 0 var(--space-2) 0;
+  color: var(--blue);
+  font-size: 0.9375rem;
+}
+
+.proposal-box-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.875rem;
+}
+
+.proposal-box-details p {
+  margin: 0;
+}
+
+.proposal-status-line {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.status-agreed {
+  color: var(--forest-ink);
+  background: var(--lime);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.status-declined {
+  color: var(--danger-ink);
+  background: var(--danger-bg);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.status-proposed {
+  color: var(--deep-blue);
+  background: #e1effe;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.empty-subtext {
+  list-style: none;
+  text-align: center;
+  color: var(--muted-ink);
+  padding: var(--space-4);
+  font-style: italic;
+}
