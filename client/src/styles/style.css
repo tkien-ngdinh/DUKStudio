@@ -2579,3 +2579,74 @@
   .admin-bookings-table td::before { content: none; }
   .admin-booking-detail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ==========================================================================
+   G10 — reschedule, cancel and final link forms on /admin/bookings/:id, Hạ Uyên
+   Full width under the detail cards; the confirm step of "Hủy booking" is a part
+   of the form (no popup), so nothing covers the page.
+   ========================================================================== */
+.admin-booking-actions {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 3px solid var(--deep-blue);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-family: var(--font-chat);
+}
+.admin-booking-actions > h2 { margin: 0; color: var(--blue); font-size: 1.2rem; }
+.booking-action-form {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 2px solid var(--divider);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+}
+.booking-action-form h3 { margin: 0; font-size: 1.05rem; }
+.booking-action-form .form-group { min-width: 0; margin: 0; }
+.booking-action-note { margin: 0; color: var(--ink-muted); overflow-wrap: anywhere; }
+.booking-action-grid { display: grid; gap: var(--space-2); min-width: 0; }
+.booking-action-banner { margin: 0; overflow-wrap: anywhere; }
+.booking-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+.booking-action-status { flex: 1 1 12rem; min-width: 0; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.booking-action-status:empty { display: none; }
+.booking-confirm {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 2px solid var(--pink);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+.booking-confirm p { margin: 0; overflow-wrap: anywhere; }
+.booking-confirm-title { font-weight: 700; }
+.booking-confirm-title:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.booking-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--deep-blue);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--deep-blue);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.booking-secondary-button:disabled { border-color: var(--disabled-border); color: var(--disabled-ink); cursor: not-allowed; }
+
+@media (min-width: 768px) {
+  .admin-booking-actions { grid-column: 1 / -1; padding: var(--space-4); }
+  .booking-action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

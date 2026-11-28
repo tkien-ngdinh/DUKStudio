@@ -3,11 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import { ErrorState, LoadingState } from '../../components/DataStates.jsx';
 import { formatDate, formatDateTime, formatMoney } from '../../utils/format.js';
 import { getOnce } from '../../utils/requests.js';
+import BookingAdminForms from '../../components/admin/BookingAdminForms.jsx';
 
 /**
  * G10: one booking for the admin (05-bookings.md, GET /api/bookings/:id, one request).
- * Read only in this step: package, make-up, shoot, price, the three statuses, the final link
- * and the conversation it came from. Every value is the API's; nothing is computed here.
+ * Shows package, make-up, shoot, price, the three statuses, the final link and the conversation
+ * it came from. Every value is the API's; nothing is computed here.
+ * Under the details: reschedule, cancel and final link (BookingAdminForms). Their answers are
+ * merged into the booking on screen; the booking is not loaded again.
  */
 
 const range = (part) => (part ? `${part.start}–${part.end}` : '');
@@ -55,6 +58,11 @@ export default function AdminBookingDetailPage() {
     };
   }, [load]);
 
+  // PATCH answers the whole booking; POST …/final-link only the changed fields (05-bookings.md)
+  const handleUpdated = useCallback((partial) => {
+    setState((prev) => (prev.booking ? { ...prev, booking: { ...prev.booking, ...partial } } : prev));
+  }, []);
+
   const { phase, booking: b, error } = state;
   const extras = Array.isArray(b?.extras) ? b.extras : [];
 
@@ -69,7 +77,7 @@ export default function AdminBookingDetailPage() {
       <div className="page-heading">
         <p className="eyebrow">&lt; G10 &gt;</p>
         <h1>Booking {id}</h1>
-        <p className="page-subtitle">Lịch chụp, nhân viên, chi phí và trạng thái của booking.</p>
+        <p className="page-subtitle">Lịch chụp, nhân viên, chi phí và trạng thái của booking; đổi lịch, hủy và gắn link ảnh cuối.</p>
       </div>
 
       {phase === 'loading' && <LoadingState label="Đang tải booking..." />}
@@ -153,6 +161,8 @@ export default function AdminBookingDetailPage() {
               )}
             </dl>
           </section>
+
+          <BookingAdminForms key={b.id} booking={b} onUpdated={handleUpdated} />
         </div>
       )}
     </div>
