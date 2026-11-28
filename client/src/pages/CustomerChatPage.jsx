@@ -47,6 +47,14 @@ function formatTime(isoString) {
   }
 }
 
+/** Convert internal room IDs in legacy/API proposal data into customer-facing names. */
+function formatRoomName(room) {
+  if (typeof room !== 'string' || !room.trim()) return 'Phòng chụp';
+  const value = room.trim();
+  const roomLabels = { 'room-a': 'Phòng A', 'room-b': 'Phòng B' };
+  return roomLabels[value.toLowerCase()] || value;
+}
+
 /**
  * Pick the conversation with the latest lastMessageAt timestamp
  */
@@ -62,6 +70,36 @@ function getLatestConversationId(list) {
     }
   }
   return latest.id;
+}
+
+/** Prefer the conversation's active proposal status when older message snapshots are stale. */
+function syncActiveProposalStatus(conversation) {
+  if (!conversation?.activeProposal || !Array.isArray(conversation.messages)) return conversation;
+
+  let latestProposalIndex = -1;
+  for (let index = conversation.messages.length - 1; index >= 0; index -= 1) {
+    if (conversation.messages[index].proposal) {
+      latestProposalIndex = index;
+      break;
+    }
+  }
+  if (latestProposalIndex < 0) return conversation;
+
+  return {
+    ...conversation,
+    messages: conversation.messages.map((message, index) =>
+      index === latestProposalIndex
+        ? {
+            ...message,
+            proposal: {
+              ...message.proposal,
+              ...conversation.activeProposal,
+              status: conversation.activeProposal.status
+            }
+          }
+        : message
+    )
+  };
 }
 
 export default function CustomerChatPage() {
@@ -114,6 +152,11 @@ export default function CustomerChatPage() {
   const [newMsgText, setNewMsgText] = useState('');
   const [sendingMsg, setSendingMsg] = useState(false);
   const [msgError, setMsgError] = useState('');
+
+  // 7. Proposal Response State (G6)
+  const [submittingProposalDecision, setSubmittingProposalDecision] = useState(false);
+  const [proposalActionError, setProposalActionError] = useState('');
+  const proposalDecisionLockRef = useRef(false);
 
   // Load conversations list
   const loadConversations = (force = false) => {
@@ -171,6 +214,8 @@ export default function CustomerChatPage() {
 
   // When selected conversation changes, fetch its detail only if not already cached
   useEffect(() => {
+    setProposalActionError('');
+
     if (!selectedConvId || selectedConvId === 'new') {
       return;
     }
@@ -190,9 +235,10 @@ export default function CustomerChatPage() {
     fetchGetOnce(`/api/conversations/${selectedConvId}`, false)
       .then((data) => {
         if (data?.conversation) {
+          const conversation = syncActiveProposalStatus(data.conversation);
           setConvDetails((prev) => ({
             ...prev,
-            [data.conversation.id]: data.conversation
+            [conversation.id]: conversation
           }));
         }
       })
@@ -213,9 +259,10 @@ export default function CustomerChatPage() {
     fetchGetOnce(`/api/conversations/${selectedConvId}`, true)
       .then((data) => {
         if (data?.conversation) {
+          const conversation = syncActiveProposalStatus(data.conversation);
           setConvDetails((prev) => ({
             ...prev,
-            [data.conversation.id]: data.conversation
+            [conversation.id]: conversation
           }));
         }
       })
@@ -394,6 +441,117 @@ export default function CustomerChatPage() {
       }
     } finally {
       setSendingMsg(false);
+    }
+  };
+
+  // Respond to shoot schedule proposal (POST /api/conversations/:id/respond-proposal)
+  const handleRespondProposal = async (decision) => {
+    if (!activeConv?.id || !decision || proposalDecisionLockRef.current) return;
+
+    proposalDecisionLockRef.current = true;
+    setProposalActionError('');
+    setSubmittingProposalDecision(true);
+
+    try {
+      // Pass object directly to apiFetch so Content-Type: application/json is set
+      const data = await apiFetch(`/api/conversations/${activeConv.id}/respond-proposal`, {
+        method: 'POST',
+        body: { decision }
+      });
+
+      if (data) {
+        // Update proposal status, conversation status, and messages from API response
+        setConvDetails((prev) => {
+          const current = prev[activeConv.id];
+          if (!current) return prev;
+
+          let updatedMessages = (current.messages || []).map((msg) => {
+            if (msg.proposal && msg.proposal.status === 'pending') {
+              return {
+                ...msg,
+                proposal: {
+                  ...msg.proposal,
+                  ...(data.proposal || {}),
+                  status: data.proposal?.status || (decision === 'accept' ? 'agreed' : 'declined')
+                }
+              };
+            }
+            return msg;
+          });
+
+          if (data.message && !updatedMessages.some((message) => message.id === data.message.id)) {
+            updatedMessages = [...updatedMessages, data.message];
+          }
+
+          const nextStatus = data.status || current.status;
+          const nextTimestamp = data.message?.timestamp || current.lastMessageAt;
+
+          const updatedConv = {
+            ...current,
+            status: nextStatus,
+            activeProposal: data.proposal || current.activeProposal,
+            messages: updatedMessages,
+            lastMessageAt: nextTimestamp
+          };
+
+          convDetailsRef.current[activeConv.id] = updatedConv;
+          return {
+            ...prev,
+            [activeConv.id]: updatedConv
+          };
+        });
+
+        // Also update status and timestamp in conversations list
+        setConversations((prev) =>
+          prev.map((c) =>
+            c.id === activeConv.id
+              ? {
+                  ...c,
+                  status: data.status || c.status,
+                  lastMessageAt: data.message?.timestamp || c.lastMessageAt
+                }
+              : c
+          )
+        );
+      }
+    } catch (err) {
+      if (err?.status === 409) {
+        try {
+          const latestData = await fetchGetOnce(`/api/conversations/${activeConv.id}`, true);
+          if (latestData?.conversation) {
+            const latestConversation = syncActiveProposalStatus(latestData.conversation);
+            const nextDetails = {
+              ...convDetailsRef.current,
+              [latestConversation.id]: latestConversation
+            };
+            convDetailsRef.current = nextDetails;
+            setConvDetails(nextDetails);
+            setConversations((prev) =>
+              prev.map((conversation) =>
+                conversation.id === latestConversation.id
+                  ? {
+                      ...conversation,
+                      status: latestConversation.status,
+                      lastMessageAt: latestConversation.lastMessageAt
+                    }
+                  : conversation
+              )
+            );
+            setProposalActionError(
+              latestConversation.activeProposal?.status === 'pending'
+                ? err.message
+                : ''
+            );
+            return;
+          }
+        } catch {
+          // Fall through to the original conflict message if the refresh also fails.
+        }
+      }
+      setProposalActionError(err?.message || 'Không thể gửi phản hồi đề xuất. Vui lòng thử lại.');
+    } finally {
+      proposalDecisionLockRef.current = false;
+      setSubmittingProposalDecision(false);
     }
   };
 
@@ -782,7 +940,9 @@ export default function CustomerChatPage() {
                               <p>
                                 Ngày: <strong>{m.proposal.date}</strong> · Phòng:{' '}
                                 <strong>
-                                  {m.proposal.room || m.proposal.roomId || 'Phòng chụp'}
+                                  {formatRoomName(
+                                    m.proposal.room || m.proposal.roomName || m.proposal.roomId
+                                  )}
                                 </strong>
                               </p>
                               {(m.proposal.makeup || m.proposal.makeupStart) && (
@@ -814,6 +974,35 @@ export default function CustomerChatPage() {
                                 </strong>
                               </p>
                             </div>
+
+                            {/* G6 Proposal Actions: only show buttons when proposal is pending */}
+                            {m.proposal.status === 'pending' && (
+                              <div className="proposal-actions">
+                                <button
+                                  type="button"
+                                  className="btn-proposal-accept"
+                                  disabled={submittingProposalDecision}
+                                  onClick={() => handleRespondProposal('accept')}
+                                >
+                                  {submittingProposalDecision ? 'Đang xử lý...' : 'Đồng ý đề xuất'}
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn-proposal-decline"
+                                  disabled={submittingProposalDecision}
+                                  onClick={() => handleRespondProposal('decline')}
+                                >
+                                  {submittingProposalDecision ? 'Đang xử lý...' : 'Từ chối đề xuất'}
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Inline error if proposal response fails */}
+                            {m.proposal.status === 'pending' && proposalActionError && (
+                              <div className="proposal-error-banner" role="alert">
+                                {proposalActionError}
+                              </div>
+                            )}
                           </div>
                         )}
                       </li>

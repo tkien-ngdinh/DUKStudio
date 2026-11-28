@@ -2055,11 +2055,91 @@
   border-radius: var(--radius-sm);
 }
 
-.status-proposed {
+.status-proposed,
+.status-pending {
   color: var(--deep-blue);
   background: #e1effe;
   padding: 2px 6px;
   border-radius: var(--radius-sm);
+}
+
+.proposal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.btn-proposal-accept {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--forest-ink);
+  border-radius: var(--radius-md);
+  background: var(--lime);
+  color: var(--deep-blue);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-proposal-accept:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(22, 101, 52, 0.25);
+  filter: brightness(1.05);
+}
+
+.btn-proposal-accept:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-proposal-decline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--danger-ink);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--danger-ink);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-proposal-decline:hover:not(:disabled) {
+  background: var(--danger-bg);
+}
+
+.btn-proposal-decline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-proposal-accept:focus-visible,
+.btn-proposal-decline:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.proposal-error-banner {
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-ink);
+  border-radius: var(--radius-sm);
+  color: var(--danger-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .empty-subtext {
