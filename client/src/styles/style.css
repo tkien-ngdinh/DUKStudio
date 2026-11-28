@@ -2234,10 +2234,9 @@
 }
 .admin-convo-name { overflow-wrap: anywhere; }
 .admin-convo-last {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  /* At most two lines of the last message, with standard CSS only (W3C) */
+  max-height: 3em;
+  line-height: 1.5;
   overflow: hidden;
   color: var(--ink-muted);
   overflow-wrap: anywhere;
