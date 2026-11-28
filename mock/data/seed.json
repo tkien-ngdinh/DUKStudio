@@ -394,15 +394,10 @@
           "text": "Studio đề xuất ngày 25/10, makeup 14:00–15:00, chụp 15:00–17:00 tại Phòng B.",
           "timestamp": "2026-10-20T10:28:00Z",
           "proposal": {
-            "id": "p-linh-05-01",
             "date": "2026-10-25",
-            "makeupStart": "14:00",
-            "makeupEnd": "15:00",
-            "shootStart": "15:00",
-            "shootEnd": "17:00",
-            "makeupArtistId": "u-mai",
-            "photographerId": "u-tuan",
-            "roomId": "room-b",
+            "makeup": "14:00 - 15:00",
+            "shoot": "15:00 - 17:00",
+            "room": "Phòng B",
             "status": "pending"
           }
         },

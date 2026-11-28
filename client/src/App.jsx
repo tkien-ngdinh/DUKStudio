@@ -5,6 +5,10 @@ import RoutePlaceholder from './components/RoutePlaceholder.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import CustomerChatPage from './pages/CustomerChatPage.jsx';
+import AdminConversationsPage from './pages/admin/AdminConversationsPage.jsx';
+import AdminConversationDetailPage from './pages/admin/AdminConversationDetailPage.jsx';
+import AdminBookingsPage from './pages/admin/AdminBookingsPage.jsx';
+import AdminBookingDetailPage from './pages/admin/AdminBookingDetailPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -93,12 +97,7 @@ export default function App() {
           path="/admin/conversations"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G4"
-                title="Quản lý hội thoại khách hàng"
-                description="Danh sách hội thoại theo 4 trạng thái: Chưa trả lời, Đang tư vấn, Đã chốt lịch, Hoàn thành."
-                endpoints={['GET /api/conversations', 'GET /api/conversations/:id']}
-              />
+              <AdminConversationsPage />
             </ProtectedRoute>
           }
         />
@@ -107,19 +106,7 @@ export default function App() {
           path="/admin/conversations/:id"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G4 · G5 · G6"
-                title="Chi tiết hội thoại & Kiểm tra trùng lịch"
-                description="Kiểm tra lịch nhân sự/phòng, đề xuất giờ mới trong chat và Tạo booking khi khách đồng ý."
-                endpoints={[
-                  'GET /api/conversations/:id',
-                  'POST /api/conversations/:id/messages',
-                  'GET /api/schedule',
-                  'POST /api/schedule/clash-check',
-                  'POST /api/conversations/:id/propose-time',
-                  'POST /api/bookings'
-                ]}
-              />
+              <AdminConversationDetailPage />
             </ProtectedRoute>
           }
         />
@@ -128,12 +115,7 @@ export default function App() {
           path="/admin/bookings"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G10"
-                title="Quản lý danh sách booking"
-                description="Theo dõi toàn bộ booking và trạng thái thanh toán của studio."
-                endpoints={['GET /api/bookings']}
-              />
+              <AdminBookingsPage />
             </ProtectedRoute>
           }
         />
@@ -142,17 +124,7 @@ export default function App() {
           path="/admin/bookings/:id"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <RoutePlaceholder
-                step="G10"
-                title="Điều chỉnh booking & Link ảnh hoàn thiện"
-                description="Đổi lịch kèm kiểm tra trùng lịch, hủy booking và gắn link tải ảnh cuối."
-                endpoints={[
-                  'GET /api/bookings/:id',
-                  'GET /api/schedule',
-                  'PATCH /api/bookings/:id',
-                  'POST /api/bookings/:id/final-link'
-                ]}
-              />
+              <AdminBookingDetailPage />
             </ProtectedRoute>
           }
         />

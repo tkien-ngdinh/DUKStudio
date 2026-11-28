@@ -2149,3 +2149,504 @@
   padding: var(--space-4);
   font-style: italic;
 }
+
+/* ==========================================================================
+   Admin G4 — conversation list (/admin/conversations), Hạ Uyên
+   Mobile first (360px); status tabs are links that wrap, rows are links.
+   ========================================================================== */
+.admin-status-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+.admin-status-tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--deep-blue);
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--deep-blue);
+  font-family: var(--font-chat);
+  font-weight: 600;
+  text-decoration: none;
+}
+.admin-status-tab:hover { background: var(--light-blue); }
+/* Current tab: filled and underlined, so it does not depend on colour alone */
+.admin-status-tab.is-active {
+  background: var(--deep-blue);
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.admin-status-count { margin-left: .3em; font-weight: 400; }
+
+.admin-convo-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--white);
+  font-family: var(--font-chat);
+}
+.admin-convo-panel > h2 {
+  margin: 0 0 var(--space-3);
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+.admin-convo-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.admin-convo-link {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-height: var(--tap-min);
+  padding: var(--space-3);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+.admin-convo-link:hover { border-color: var(--deep-blue); background: var(--light-blue); }
+.admin-convo-body {
+  display: grid;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+.admin-convo-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.admin-convo-name { overflow-wrap: anywhere; }
+.admin-convo-last {
+  /* At most two lines of the last message, with standard CSS only (W3C) */
+  max-height: 3em;
+  line-height: 1.5;
+  overflow: hidden;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+.admin-convo-meta {
+  color: var(--ink-muted);
+  font-size: .875rem;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .admin-convo-panel { padding: var(--space-4); }
+}
+
+/* ==========================================================================
+   Admin G4 — conversation detail (/admin/conversations/:id), Hạ Uyên
+   Reuses the customer chat classes (.chat-window, .chat-messages, .message,
+   .proposal-box, .chat-request-banner). Nothing is fixed or sticky: the chat
+   and the reply form scroll with the page.
+   ========================================================================== */
+.admin-back { margin: 0 0 var(--space-2); }
+.admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-family: var(--font-chat);
+  font-weight: 600;
+}
+.admin-chat .chat-header { flex-wrap: wrap; }
+.admin-chat .chat-heading { flex: 1; }
+.admin-chat .chat-heading h2 {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-chat);
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+.admin-chat .chat-heading p { margin: 0; font-size: .875rem; }
+.admin-chat-booking {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 2px solid var(--divider);
+  font-family: var(--font-chat);
+}
+.admin-chat-booking a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-weight: 700;
+}
+.admin-request-list { margin: 0; }
+.admin-request-list > div { min-width: 0; }
+.admin-request-list dt { display: inline; }
+.admin-request-list dt::after { content: ": "; }
+.admin-request-list dd {
+  display: inline;
+  margin: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.admin-request-error {
+  margin-top: var(--space-3);
+  color: var(--danger-ink);
+  font-weight: 600;
+}
+.admin-request-error p { margin: 0 0 var(--space-2); }
+.admin-chat .message { overflow-wrap: anywhere; }
+.admin-reply-form {
+  padding: var(--space-3);
+  border-top: 2px solid var(--divider);
+  font-family: var(--font-chat);
+}
+.admin-reply-input { resize: vertical; }
+.admin-reply-banner { margin: var(--space-2) 0 0; }
+.admin-reply-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+.admin-reply-status { margin: 0; color: var(--online-green); font-weight: 600; }
+
+
+/* ==========================================================================
+   Admin G5 — clash check and proposal on /admin/conversations/:id, Hạ Uyên
+   Under the chat on small screens; chat | clash check from 1280px.
+   Schedule labels wrap instead of being cut (no fixed widths, no ellipsis).
+   ========================================================================== */
+.admin-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+.admin-clash-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--white);
+  font-family: var(--font-chat);
+  overflow-wrap: anywhere;
+}
+.admin-clash-panel h2 {
+  margin: 0 0 var(--space-2);
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+.admin-clash-panel h3 {
+  margin: 0 0 var(--space-2);
+  color: var(--deep-blue);
+  font-size: 1.1rem;
+  font-family: var(--font-chat);
+}
+.admin-clash-panel h4 { margin: var(--space-3) 0 var(--space-2); font-size: 1rem; }
+.clash-intro { margin: 0 0 var(--space-3); color: var(--ink-muted); }
+.clash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+.clash-label-text { margin: 0; }
+.clash-optional { font-weight: 400; color: var(--ink-muted); }
+.clash-field-note { margin: 0; color: var(--ink-muted); }
+.clash-field-note p { margin: 0 0 var(--space-2); }
+.clash-banner { margin: var(--space-3) 0 0; }
+.clash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+.clash-day,
+.clash-result,
+.clash-proposal {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--divider);
+}
+.clash-busy-list,
+.clash-conflicts,
+.clash-suggestions {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.clash-busy-list li,
+.clash-conflicts li {
+  padding: var(--space-2) var(--space-3);
+  border-left: 4px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--surface-tint);
+  overflow-wrap: anywhere;
+}
+.clash-conflicts li { border-left-color: var(--clash-ink); background: var(--danger-bg); }
+/* The word "Bị trùng lịch." / "Còn trống." carries the meaning; the colour only supports it */
+.clash-explanation {
+  margin: 0;
+  padding: var(--space-3);
+  border-left: 6px solid var(--clash-ink);
+  border-radius: var(--radius-md);
+  background: var(--danger-bg);
+  color: var(--ink);
+}
+.clash-explanation.is-free { border-left-color: var(--lime-ink); background: var(--lime-soft); }
+.clash-option {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  border: 2px solid var(--lime-border);
+  border-radius: var(--radius-md);
+  background: var(--lime-soft);
+}
+.clash-option p { flex: 1 1 14rem; min-width: 0; margin: 0; }
+.clash-proposal h3:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.clash-proposal input[readonly] { background: var(--readonly-bg); }
+
+@media (min-width: 768px) {
+  .admin-clash-panel { padding: var(--space-4); }
+  .clash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .clash-wide { grid-column: 1 / -1; }
+}
+@media (min-width: 1280px) {
+  .admin-detail-layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   G6 — "Tạo booking" on /admin/conversations/:id (CreateBookingPanel)
+   ========================================================================== */
+.admin-create-booking {
+  padding: var(--space-3);
+  border-top: 2px solid var(--divider);
+  font-family: var(--font-chat);
+}
+.admin-create-booking h3 { margin: 0 0 var(--space-2); font-size: 1rem; }
+.admin-create-booking p { margin: 0; overflow-wrap: anywhere; }
+.create-booking-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+.create-booking-actions > p { flex: 1 1 14rem; min-width: 0; }
+.create-booking-reason { font-weight: 700; }
+.create-booking-error { margin-top: var(--space-2); }
+.create-booking-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-weight: 700;
+}
+.create-booking-done {
+  padding: var(--space-3);
+  border: 2px solid var(--lime-border);
+  border-radius: var(--radius-md);
+  background: var(--lime-soft);
+}
+.create-booking-facts { margin: var(--space-2) 0 0; }
+.create-booking-facts > div { min-width: 0; }
+.create-booking-facts dt { display: inline; }
+.create-booking-facts dt::after { content: ": "; }
+.create-booking-facts dd { display: inline; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.create-booking-note { margin-top: var(--space-2); }
+.create-booking-note .blue-cta { margin-top: var(--space-2); }
+
+/* ==========================================================================
+   G10 — admin bookings list (/admin/bookings) and detail (/admin/bookings/:id), Hạ Uyên
+   Below 768px each table row is a card with its own labels (data-label), so the
+   table never needs horizontal scroll; from 768px it is a normal table that wraps.
+   ========================================================================== */
+.admin-bookings-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--white);
+  font-family: var(--font-chat);
+}
+.admin-bookings-panel > h2 {
+  margin: 0 0 var(--space-3);
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+.admin-bookings-table,
+.admin-bookings-table tbody,
+.admin-bookings-table tr,
+.admin-bookings-table th,
+.admin-bookings-table td { display: block; min-width: 0; }
+.admin-bookings-table { width: 100%; border-collapse: collapse; }
+.admin-bookings-table thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.admin-bookings-table tbody { display: grid; gap: var(--space-2); }
+.admin-bookings-table tr {
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--divider);
+  border-left: 6px solid var(--blue);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+  overflow-wrap: anywhere;
+}
+.admin-bookings-table th,
+.admin-bookings-table td { padding: 2px 0; text-align: left; }
+.admin-bookings-table td::before {
+  content: attr(data-label) ": ";
+  color: var(--ink-muted);
+  font-weight: 700;
+}
+.admin-bookings-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.admin-booking-detail { display: grid; gap: var(--space-3); min-width: 0; }
+.admin-booking-card {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 3px solid var(--deep-blue);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-family: var(--font-chat);
+}
+.admin-booking-card h2 { margin: 0 0 var(--space-2); color: var(--blue); font-size: 1.2rem; }
+.admin-booking-facts { display: grid; gap: var(--space-1); margin: 0; }
+.admin-booking-facts > div { min-width: 0; }
+.admin-booking-facts dt { display: inline; color: var(--ink-muted); }
+.admin-booking-facts dt::after { content: ": "; }
+.admin-booking-facts dd { display: inline; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.admin-booking-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .admin-bookings-panel { padding: var(--space-4); }
+  .admin-bookings-table { display: table; }
+  .admin-bookings-table thead {
+    position: static;
+    display: table-header-group;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+  .admin-bookings-table tbody { display: table-row-group; }
+  .admin-bookings-table tr { display: table-row; padding: 0; border: 0; background: none; }
+  .admin-bookings-table th,
+  .admin-bookings-table td {
+    display: table-cell;
+    padding: var(--space-2);
+    border-bottom: 2px solid var(--divider);
+    vertical-align: middle;
+  }
+  .admin-bookings-table thead th { color: var(--ink-muted); font-size: .875rem; }
+  .admin-bookings-table td::before { content: none; }
+  .admin-booking-detail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ==========================================================================
+   G10 — reschedule, cancel and final link forms on /admin/bookings/:id, Hạ Uyên
+   Full width under the detail cards; the confirm step of "Hủy booking" is a part
+   of the form (no popup), so nothing covers the page.
+   ========================================================================== */
+.admin-booking-actions {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 3px solid var(--deep-blue);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-family: var(--font-chat);
+}
+.admin-booking-actions > h2 { margin: 0; color: var(--blue); font-size: 1.2rem; }
+.booking-action-form {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 2px solid var(--divider);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+}
+.booking-action-form h3 { margin: 0; font-size: 1.05rem; }
+.booking-action-form .form-group { min-width: 0; margin: 0; }
+.booking-action-note { margin: 0; color: var(--ink-muted); overflow-wrap: anywhere; }
+.booking-action-grid { display: grid; gap: var(--space-2); min-width: 0; }
+.booking-action-banner { margin: 0; overflow-wrap: anywhere; }
+.booking-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+.booking-action-status { flex: 1 1 12rem; min-width: 0; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.booking-action-status:empty { display: none; }
+.booking-confirm {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 2px solid var(--pink);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+.booking-confirm p { margin: 0; overflow-wrap: anywhere; }
+.booking-confirm-title { font-weight: 700; }
+.booking-confirm-title:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.booking-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--deep-blue);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--deep-blue);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.booking-secondary-button:disabled { border-color: var(--disabled-border); color: var(--disabled-ink); cursor: not-allowed; }
+
+@media (min-width: 768px) {
+  .admin-booking-actions { grid-column: 1 / -1; padding: var(--space-4); }
+  .booking-action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -65,7 +65,8 @@ export function register(router) {
       packageId: body.packageId,
       makeupArtistId: body.makeupArtistId,
       photographerId: body.photographerId,
-      roomId: body.roomId
+      roomId: body.roomId,
+      ignoreBookingId: body.ignoreBookingId
     });
 
     if (result.invalid) {
