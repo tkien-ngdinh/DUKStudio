@@ -1,0 +1,345 @@
+/* Responsive Mobile-First Styles for G8 (/staff/jobs) & G11 (/superadmin/settings)
+   - Uses tokens from tokens.css exclusively
+   - Mobile-first from 360px -> min-width: 768px -> min-width: 1280px
+   - Zero overflow-x: hidden on layout wrappers, zero max-width media queries, zero !important
+*/
+
+.field-hint {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.form-banner-success {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--lime-soft);
+  border: 2px solid var(--lime-border);
+  color: var(--forest-ink);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-2);
+}
+
+.form-input--file {
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-2);
+  background: var(--surface-tint);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   G8: Staff Jobs Dashboard (/staff/jobs)
+   ========================================================================== */
+.staff-jobs-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.section-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.section-bar h2 {
+  color: var(--deep-blue);
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+
+.section-note {
+  color: var(--ink-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.job-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: var(--round);
+  box-shadow: 0 8px 20px rgba(3, 105, 214, 0.08);
+}
+
+.job-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--divider);
+}
+
+.job-booking-code {
+  margin: 0 0 var(--space-1);
+  color: var(--ink-muted);
+  font-size: 0.9375rem;
+}
+
+.job-card-header h3 {
+  margin: 0;
+  color: var(--blue);
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.job-status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.job-status-pill--pending {
+  background: var(--surface-tint);
+  border-color: var(--border-color);
+  color: var(--ink);
+}
+
+.job-status-pill--active {
+  background: var(--light-blue);
+  border-color: var(--blue);
+  color: var(--deep-blue);
+}
+
+.job-status-pill--done {
+  background: var(--lime-soft);
+  border-color: var(--lime-border);
+  color: var(--forest-ink);
+}
+
+.job-meta-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--surface-tint);
+  border-radius: var(--radius-md);
+}
+
+.job-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.job-meta-row dt {
+  color: var(--ink-muted);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.job-meta-row dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.job-forms-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.job-subform {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+}
+
+.job-subform button {
+  align-self: stretch;
+}
+
+.uploaded-previews-box {
+  padding: var(--space-3);
+  background: var(--lime-soft);
+  border: 1px solid var(--lime-border);
+  border-radius: var(--radius-md);
+}
+
+.uploaded-previews-title {
+  margin: 0 0 var(--space-2);
+  color: var(--forest-ink);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.uploaded-previews-list {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   G11: Superadmin Administration & Settings (/superadmin/settings)
+   ========================================================================== */
+.superadmin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.admin-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: var(--round);
+  box-shadow: 0 8px 20px rgba(3, 105, 214, 0.08);
+}
+
+.panel-header {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--divider);
+}
+
+.panel-header h2 {
+  margin: 0 0 var(--space-1);
+  color: var(--deep-blue);
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+
+.panel-subtitle {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 1rem;
+}
+
+.panel-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.panel-subsection h3 {
+  margin: 0;
+  color: var(--blue);
+  font-size: 1.18rem;
+  line-height: 1.25;
+}
+
+.admin-accounts-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.admin-account-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+  border: 1px solid var(--border-color);
+}
+
+.admin-account-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.admin-account-top strong {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.admin-account-email {
+  margin: 0;
+  color: var(--deep-blue);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.admin-account-meta {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+}
+
+.settings-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--light-blue);
+  border: 1px solid var(--blue);
+  border-radius: var(--radius-md);
+}
+
+.settings-summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.settings-summary-row dt {
+  color: var(--ink-muted);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.settings-summary-row dd {
+  margin: 0;
+  color: var(--deep-blue);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .job-subform button,
+  .admin-panel .form-stack button {
+    align-self: flex-start;
+  }
+  .jobs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .superadmin-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

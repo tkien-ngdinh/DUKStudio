@@ -5,6 +5,8 @@ import RoutePlaceholder from './components/RoutePlaceholder.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import CustomerChatPage from './pages/CustomerChatPage.jsx';
+import StaffJobsPage from './pages/StaffJobsPage.jsx';
+import SuperadminSettingsPage from './pages/SuperadminSettingsPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -162,16 +164,7 @@ export default function App() {
           path="/staff/jobs"
           element={
             <ProtectedRoute allowedRoles={['staff']}>
-              <RoutePlaceholder
-                step="G8"
-                title="Công việc được giao (Staff)"
-                description="Xem lịch chụp/trang điểm được phân công, cập nhật trạng thái và tải ảnh xem trước."
-                endpoints={[
-                  'GET /api/staff/jobs',
-                  'PATCH /api/staff/jobs/:id',
-                  'POST /api/staff/jobs/:id/previews'
-                ]}
-              />
+              <StaffJobsPage />
             </ProtectedRoute>
           }
         />
@@ -181,17 +174,7 @@ export default function App() {
           path="/superadmin/settings"
           element={
             <ProtectedRoute allowedRoles={['superadmin']}>
-              <RoutePlaceholder
-                step="G11"
-                title="Quản trị hệ thống (Superadmin)"
-                description="Quản lý tài khoản Admin và cấu hình giờ mở cửa, thời gian gửi nhắc lịch."
-                endpoints={[
-                  'GET /api/admin/accounts',
-                  'POST /api/admin/accounts',
-                  'GET /api/admin/settings',
-                  'PUT /api/admin/settings'
-                ]}
-              />
+              <SuperadminSettingsPage />
             </ProtectedRoute>
           }
         />

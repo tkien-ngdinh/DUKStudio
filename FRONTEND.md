@@ -104,4 +104,7 @@ Key architectural and product decisions agreed upon with the team:
 
 Updated as the work goes on; the final list is written before submission.
 
-- Task 7 (`client/` Vite + React Router scaffold, `vite.config.js` `/api` proxy, `AuthContext` + `useAuth`, `ProtectedRoute`, `apiFetch`, shared `Loading`/`Error+Retry`/`Empty` states, `Layout`, `NotFoundPage`, and `/login`) is complete; feature screens for G1 and G3–G11 are pending in Tasks 8–12 (currently routed to clean scaffold placeholders).
+- Task 7 (`client/` Vite + React Router scaffold, `vite.config.js` `/api` proxy, `AuthContext` + `useAuth`, `ProtectedRoute`, `apiFetch`, shared `Loading`/`Error+Retry`/`Empty` states, `Layout`, `NotFoundPage`, and `/login`) is complete.
+- Task 8 (G1 `HomePage` at `/` and G3/G6 customer `CustomerChatPage` at `/chat`) is complete.
+- Task 9 (G8 `StaffJobsPage` at `/staff/jobs` and G11 `SuperadminSettingsPage` at `/superadmin/settings`) is complete.
+- Remaining feature screens pending in subsequent tasks (currently routed to clean scaffold placeholders): `/my-bookings`, `/bookings/:id`, `/payment/test`, `/gallery/:id` (G7, G9) and `/admin/conversations`, `/admin/conversations/:id`, `/admin/bookings`, `/admin/bookings/:id` (G4, G5, G6 admin, G10).
