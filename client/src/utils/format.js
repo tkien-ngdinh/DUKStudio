@@ -26,3 +26,11 @@ export function formatDateTime(iso) {
   if (Number.isNaN(date.getTime())) return '';
   return DATE_TIME.format(date);
 }
+
+const MONEY = new Intl.NumberFormat('vi-VN');
+
+/** Whole đồng -> "1.800.000đ"; '' when the value is not a number */
+export function formatMoney(amount) {
+  if (typeof amount !== 'number' || !Number.isFinite(amount)) return '';
+  return `${MONEY.format(amount)}đ`;
+}

@@ -5,6 +5,7 @@ import { ErrorState, LoadingState } from '../../components/DataStates.jsx';
 import ChatMessageList from '../../components/chat/ChatMessageList.jsx';
 import BookingRequestCard from '../../components/chat/BookingRequestCard.jsx';
 import ClashCheckPanel from '../../components/admin/ClashCheckPanel.jsx';
+import CreateBookingPanel from '../../components/admin/CreateBookingPanel.jsx';
 import { formatDateTime } from '../../utils/format.js';
 import { getOnce } from '../../utils/requests.js';
 import { conversationBadgeClass, conversationListHref } from '../../utils/conversationStatus.js';
@@ -15,6 +16,8 @@ import { conversationBadgeClass, conversationListHref } from '../../utils/conver
  *   package and extra names of the request and the package list of the clash check.
  * - Reply: POST /api/conversations/:id/messages. The new message comes from the 201 answer;
  *   the conversation is not loaded again.
+ * - G6 "Tạo booking": POST /api/bookings (05-bookings.md). Its 201 answer has only the booking,
+ *   so the conversation is loaded once more, in the background, for its system message.
  */
 export default function AdminConversationDetailPage() {
   const { id } = useParams();
@@ -25,6 +28,7 @@ export default function AdminConversationDetailPage() {
   const [formError, setFormError] = useState('');
   const [sending, setSending] = useState(false);
   const [sentNotice, setSentNotice] = useState('');
+  const [refresh, setRefresh] = useState({ phase: 'idle', message: '' });
   const requestId = useRef(0);
   const mounted = useRef(true);
   const replyInput = useRef(null);
@@ -64,6 +68,7 @@ export default function AdminConversationDetailPage() {
     setReplyError('');
     setFormError('');
     setSentNotice('');
+    setRefresh({ phase: 'idle', message: '' });
     load();
     return () => {
       requestId.current += 1;
@@ -105,6 +110,33 @@ export default function AdminConversationDetailPage() {
       };
     });
   }, []);
+
+  // After "Tạo booking": load the conversation again without the loading screen, so the chat
+  // shows the system message from the API. Until then the booking id from the 201 answer is used.
+  const refreshConversation = useCallback(async () => {
+    const current = ++requestId.current;
+    setRefresh({ phase: 'loading', message: '' });
+    try {
+      const data = await getOnce(`/api/conversations/${encodeURIComponent(id)}`);
+      if (current !== requestId.current) return;
+      if (!data?.conversation) throw new Error('Máy chủ không trả về hội thoại.');
+      setState({ phase: 'ready', conversation: data.conversation, error: null });
+      setRefresh({ phase: 'idle', message: '' });
+    } catch (err) {
+      if (current !== requestId.current) return;
+      setRefresh({ phase: 'error', message: err?.message || 'Không thể tải hội thoại.' });
+    }
+  }, [id]);
+
+  const handleBookingCreated = useCallback(
+    (booking) => {
+      setState((prev) =>
+        prev.conversation ? { ...prev, conversation: { ...prev.conversation, bookingId: booking.id } } : prev
+      );
+      refreshConversation();
+    },
+    [refreshConversation]
+  );
 
   async function handleReply(event) {
     event.preventDefault();
@@ -171,7 +203,7 @@ export default function AdminConversationDetailPage() {
       <div className="page-heading">
         <p className="eyebrow">&lt; G4 &gt;</p>
         <h1>Hội thoại {id}</h1>
-        <p className="page-subtitle">Đọc tin nhắn, xem yêu cầu đặt lịch và trả lời khách.</p>
+        <p className="page-subtitle">Đọc tin nhắn, xem yêu cầu đặt lịch, trả lời khách và tạo booking.</p>
       </div>
 
       {phase === 'loading' && <LoadingState label="Đang tải hội thoại..." />}
@@ -208,21 +240,19 @@ export default function AdminConversationDetailPage() {
               </span>
             </div>
 
-            {conversation.bookingId && (
-              <p className="admin-chat-booking">
-                Booking của hội thoại:{' '}
-                <Link to={`/admin/bookings/${encodeURIComponent(conversation.bookingId)}`}>
-                  {conversation.bookingId}
-                </Link>
-              </p>
-            )}
-
             <BookingRequestCard
               request={conversation.request}
               catalog={{ ...catalog, onRetry: loadCatalog }}
             />
 
             <ChatMessageList messages={conversation.messages} />
+
+            <CreateBookingPanel
+              key={conversation.id}
+              conversation={conversation}
+              onCreated={handleBookingCreated}
+              refresh={{ ...refresh, onRetry: refreshConversation }}
+            />
 
             <form className="admin-reply-form" onSubmit={handleReply} noValidate>
               <div className="form-group">

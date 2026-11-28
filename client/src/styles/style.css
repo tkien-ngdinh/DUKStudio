@@ -2431,3 +2431,43 @@
 @media (min-width: 1280px) {
   .admin-detail-layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
 }
+
+/* ==========================================================================
+   G6 — "Tạo booking" on /admin/conversations/:id (CreateBookingPanel)
+   ========================================================================== */
+.admin-create-booking {
+  padding: var(--space-3);
+  border-top: 2px solid var(--divider);
+  font-family: var(--font-chat);
+}
+.admin-create-booking h3 { margin: 0 0 var(--space-2); font-size: 1rem; }
+.admin-create-booking p { margin: 0; overflow-wrap: anywhere; }
+.create-booking-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+.create-booking-actions > p { flex: 1 1 14rem; min-width: 0; }
+.create-booking-reason { font-weight: 700; }
+.create-booking-error { margin-top: var(--space-2); }
+.create-booking-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--deep-blue);
+  font-weight: 700;
+}
+.create-booking-done {
+  padding: var(--space-3);
+  border: 2px solid var(--lime-border);
+  border-radius: var(--radius-md);
+  background: var(--lime-soft);
+}
+.create-booking-facts { margin: var(--space-2) 0 0; }
+.create-booking-facts > div { min-width: 0; }
+.create-booking-facts dt { display: inline; }
+.create-booking-facts dt::after { content: ": "; }
+.create-booking-facts dd { display: inline; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.create-booking-note { margin-top: var(--space-2); }
+.create-booking-note .blue-cta { margin-top: var(--space-2); }
