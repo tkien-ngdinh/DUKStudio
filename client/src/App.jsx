@@ -2,7 +2,9 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RoutePlaceholder from './components/RoutePlaceholder.jsx';
+import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import CustomerChatPage from './pages/CustomerChatPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -10,17 +12,7 @@ export default function App() {
     <Layout>
       <Routes>
         {/* Public / Visitor + Customer */}
-        <Route
-          path="/"
-          element={
-            <RoutePlaceholder
-              step="G1"
-              title="Dịch vụ & Bảng giá DUKStudio"
-              description="Trang chủ giới thiệu gói chụp kỷ yếu, tốt nghiệp, chân dung, phụ kiện, ảnh mẫu và đánh giá khách hàng."
-              endpoints={['GET /api/catalog']}
-            />
-          }
-        />
+        <Route path="/" element={<HomePage />} />
 
         {/* Authentication (G2) */}
         <Route path="/login" element={<LoginPage />} />
@@ -30,18 +22,7 @@ export default function App() {
           path="/chat"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <RoutePlaceholder
-                step="G3 · G6"
-                title="Tư vấn & Yêu cầu đặt lịch"
-                description="Trò chuyện với studio, gửi yêu cầu chụp và xác nhận lịch đề xuất."
-                endpoints={[
-                  'GET /api/conversations',
-                  'POST /api/conversations',
-                  'GET /api/conversations/:id',
-                  'POST /api/conversations/:id/messages',
-                  'POST /api/conversations/:id/respond-proposal'
-                ]}
-              />
+              <CustomerChatPage />
             </ProtectedRoute>
           }
         />

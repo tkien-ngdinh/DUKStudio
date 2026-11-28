@@ -1,0 +1,2151 @@
+/* DUKStudio Component & Screen Styles — Ported from PA#2 style.css for Vite bundling
+   - Design tokens: provided by tokens.css (including local Malika @font-face and WCAG AA tokens)
+   - Global reset, layout container, navigation & CTA buttons: provided by base.css
+   - UX data states & auth forms: provided by states.css
+*/
+
+/* ==========================================================================
+   HERO SECTION (INDEX.HTML / G1)
+   ========================================================================== */
+.hero { padding: var(--space-2) var(--space-5) var(--space-6); }
+.hero-illustration { width: 100%; max-width: 20rem; margin: 0 auto; }
+.hero-feather { position: relative; isolation: isolate; }
+.hero-feather::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: -3%; /* hiệu ứng bóng trang trí dưới hero, không phải khoảng cách layout */
+  left: 9%;
+  width: 82%;
+  height: 19%;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: .62;
+  filter: blur(18px);
+  transform: scaleY(.6);
+}
+.hero-feather img {
+  position: relative;
+  width: 100%;
+  filter: drop-shadow(0 7px 6px rgba(20, 99, 188, .16));
+}
+.hero-copy { max-width: 20rem; margin: var(--space-2) auto 0; }
+.hero h1 {
+  margin-bottom: 0;
+  color: var(--blue);
+  font-size: 1.85rem;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+}
+.hero-copy p { margin: 0 0 var(--space-1); font-size: 1rem; }
+
+
+/* ==========================================================================
+   SERVICES, PACKAGES, IN-PAGE CHAT & PROCESS (G1, G3, G6)
+   ========================================================================== */
+.section { padding: var(--space-6) var(--space-5); }
+.section-intro { margin-bottom: var(--space-4); }
+.eyebrow {
+  margin-bottom: 0;
+  color: var(--lime-ink);
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+.section h2 {
+  margin: 0;
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+.section-microcopy { margin: var(--space-2) 0 0; }
+.packages { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+.package {
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--round);
+  border: 2px solid rgba(23, 37, 56, 0.14);
+  padding: var(--space-4);
+  overflow-wrap: anywhere;
+  /* Hiệu ứng feather đổ bóng mờ mềm, clean và đồng bộ tone màu như hero */
+  box-shadow: 0 16px 28px -4px rgba(3, 105, 214, 0.22), 0 6px 14px -2px rgba(23, 37, 56, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.package:hover {
+  transform: translateY(-2px);
+}
+.package--lime {
+  background: var(--lime);
+  border-color: rgba(89, 142, 0, 0.28);
+  box-shadow: 0 16px 32px -4px rgba(159, 229, 28, 0.5), 0 8px 18px -2px rgba(7, 86, 199, 0.12);
+}
+.package--lime:hover {
+  box-shadow: 0 20px 40px -4px rgba(159, 229, 28, 0.65), 0 10px 20px -2px rgba(7, 86, 199, 0.16);
+}
+.package--blue {
+  background: var(--blue);
+  color: var(--white);
+  border-color: rgba(7, 86, 199, 0.4);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
+}
+.package--blue:hover {
+  box-shadow: 0 20px 40px -4px rgba(3, 105, 214, 0.7), 0 10px 20px -2px rgba(7, 86, 199, 0.25);
+}
+.package--pink {
+  background: var(--pink-light);
+  border-color: rgba(206, 36, 103, 0.25);
+  box-shadow: 0 16px 32px -4px rgba(255, 79, 131, 0.45), 0 8px 18px -2px rgba(7, 86, 199, 0.12);
+}
+.package--pink:hover {
+  box-shadow: 0 20px 40px -4px rgba(255, 79, 131, 0.6), 0 10px 20px -2px rgba(7, 86, 199, 0.16);
+}
+.package-top, .package-bottom { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); }
+.package-top {
+  font-family: var(--font-chakra);
+  font-size: .875rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.package-mark { font-size: 2.5rem; line-height: .9; font-family: system-ui, sans-serif; }
+.package--blue .package-mark { color: var(--lime); }
+.package--pink .package-mark { color: #ce2467; }
+.package-inner { padding: var(--space-4) 0; }
+.package-kicker {
+  display: inline-flex;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 100px;
+  margin-bottom: var(--space-3);
+  background: var(--paper);
+  color: var(--deep-blue);
+  font-size: .875rem;
+  font-weight: 700;
+  transform: rotate(-3deg);
+  word-spacing: 0.1em;
+}
+.package h3 {
+  margin: 0 0 var(--space-1);
+  font-size: 1.7rem;
+  line-height: 1.14;
+  word-spacing: 0.14em;
+}
+.package-description {
+  margin: 0;
+  word-spacing: 0.12em;
+}
+.package-bottom { margin-top: auto; flex-wrap: wrap; }
+.package-price {
+  margin: 0;
+  font-size: 1rem;
+  word-spacing: 0.08em;
+}
+.package-price strong { font-size: 1.15rem; }
+.package-price small { font-size: .875rem; }
+.package-chat-hint {
+  font-family: var(--font-chakra);
+  font-weight: 600;
+  font-size: .875rem;
+  color: inherit;
+}
+.chat-section { background: var(--surface-tint); }
+.chat-layout { display: grid; grid-template-columns: minmax(0,1fr); gap: var(--space-5); }
+.chat-window {
+  min-width: 0;
+  border: 3px solid var(--blue);
+  border-radius: var(--round);
+  background: var(--white);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
+  font-family: var(--font-chat);
+}
+.chat-header {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--blue);
+  color: var(--white);
+  font-family: var(--font-chat);
+}
+.chat-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--lime);
+  color: var(--deep-blue);
+  font-size: .875rem;
+  font-weight: 700;
+  font-family: var(--font-chakra);
+}
+.chat-heading { min-width: 0; }
+.chat-heading h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-family: var(--font-chat);
+  font-weight: 700;
+}
+.chat-heading p {
+  margin: 0;
+  font-size: .875rem;
+  font-family: var(--font-chat);
+  opacity: .95;
+}
+.chat-state {
+  display: inline-block;
+  margin-left: auto;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 100px;
+  color: var(--forest-ink);
+  background: var(--lime);
+  font-size: .875rem;
+  font-weight: 600;
+  font-family: var(--font-chat);
+  text-align: center;
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--light-blue);
+  font-family: var(--font-chat);
+}
+.chat-messages:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+.message {
+  max-width: 92%;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-chat);
+  line-height: 1.45;
+  font-size: 1rem;
+}
+.message p { margin-bottom: 0; }
+.message-person {
+  color: #28405f;
+  margin-bottom: var(--space-1);
+  font-size: .875rem;
+  font-weight: 700;
+  font-family: var(--font-chat);
+}
+.message--guest { align-self: flex-end; background: var(--white); border-bottom-right-radius: var(--space-1); }
+.message--duk { align-self: flex-start; background: var(--lime); border-bottom-left-radius: var(--space-1); }
+.chat-form { padding: var(--space-3); font-family: var(--font-chat); }
+.chat-form label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-chat);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.chat-controls { display: flex; align-items: stretch; gap: var(--space-2); }
+.chat-controls textarea {
+  min-width: 0;
+  min-height: var(--tap-min);
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--disabled-border);
+  border-radius: var(--radius-md);
+  background: #f3f5f6;
+  color: #24374c;
+  resize: vertical;
+  font-family: var(--font-chat);
+  font-size: 1rem;
+}
+.chat-controls button {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  background: var(--disabled-bg);
+  color: var(--disabled-ink);
+  font-family: var(--font-chat);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.chat-hint {
+  font-size: .875rem;
+  color: #435268;
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-chat);
+}
+.note-card {
+  min-width: 0;
+  border: 2px solid var(--lime-border);
+  border-radius: var(--round);
+  padding: var(--space-4);
+  background: var(--lime-soft);
+  font-family: var(--font-chat);
+}
+.note-card h3 { margin: 0 0 var(--space-4); color: var(--blue); font-size: 1.45rem; word-spacing: 0.12em; }
+.steps { display: grid; gap: var(--space-2); list-style: none; padding: 0; margin: 0 0 var(--space-4); }
+.steps li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-family: var(--font-chat);
+  font-size: 1rem;
+}
+.steps span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  margin-top: var(--space-1);
+}
+.steps li strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--deep-blue);
+  margin-bottom: var(--space-1);
+}
+.steps li p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.note-small {
+  margin: 0;
+  font-size: 1rem;
+  color: #244633;
+  font-family: var(--font-chat);
+  line-height: 1.45;
+}
+
+/* Link chuyển tiếp vai trò thực tế theo kịch bản GradStudio (Fix these #2) */
+.role-handoff {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 2px dashed var(--lime-dashed);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.role-handoff-hint {
+  font-family: var(--font-chat);
+  font-size: .875rem;
+  font-weight: 600;
+  color: #17421c;
+}
+.role-handoff-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  background: var(--deep-blue);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  font-family: var(--font-chat);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(4, 79, 181, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.role-handoff-link:hover {
+  background: #033a85;
+  transform: translateY(-1px);
+}
+.role-handoff-link:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE LAYOUT FOR HERO & PACKAGES
+   ========================================================================== */
+@media (min-width: 768px) {
+  .hero { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: center; gap: var(--space-5); padding: var(--space-4) var(--space-6) var(--space-6); }
+  .hero-illustration { max-width: 26rem; }
+  .hero-copy { max-width: 26rem; margin: 0; }
+  .hero h1 { font-size: 2.25rem; }
+  .hero-copy p { font-size: 1.25rem; margin: var(--space-2) 0; }
+  .section { padding: var(--space-6); }
+  .section h2 { font-size: 2rem; }
+  .packages { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .hero { padding: var(--space-5) var(--space-6) var(--space-6); max-width: 74rem; margin: auto; }
+  .hero-illustration { max-width: 30rem; }
+  .hero h1 { font-size: 3.1rem; }
+  .section { padding: var(--space-6) max(var(--space-6),calc((100% - 74rem)/2)); }
+  .packages { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .package { min-height: 20rem; }
+}
+
+/* ==========================================================================
+   STUDIO.HTML — Màn 2 (Admin Thảo): chỉ thêm class mới, không sửa quy tắc cũ
+   ========================================================================== */
+.main-nav--studio { flex-wrap: wrap; }
+.nav-current {
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--deep-blue);
+  color: var(--white);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  font-size: .875rem;
+}
+.nav-pending {
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-chakra);
+  font-size: .875rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.studio-main {
+  max-width: 80rem;
+  margin: 0 auto;
+  min-width: 0;
+  padding: var(--space-4) var(--space-3) var(--space-6);
+}
+.studio-intro { margin-bottom: var(--space-4); }
+.studio-title {
+  margin: 0 0 var(--space-2);
+  color: var(--blue);
+  font-size: 1.85rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.role-line { margin: 0 0 var(--space-2); color: var(--ink-muted); font-family: var(--font-chat); }
+.studio-status {
+  margin: 0;
+  padding: var(--space-3);
+  border-left: 6px solid var(--pink);
+  border-radius: var(--radius-md);
+  background: var(--pink-light);
+  color: var(--ink);
+  font-family: var(--font-chat);
+  font-weight: 700;
+}
+
+.studio-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+.studio-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--white);
+  font-family: var(--font-chat);
+  overflow-wrap: anywhere;
+}
+.studio-panel > h2 {
+  margin: 0 0 var(--space-3);
+  color: var(--blue);
+  font-size: 1.38rem;
+  line-height: 1.16;
+}
+
+/* Vùng A */
+.convo-list { display: grid; gap: var(--space-2); }
+.convo {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+}
+.convo.is-selected { border-color: var(--deep-blue); background: var(--light-blue); }
+.convo-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-width: var(--tap-min);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--deep-blue);
+  color: var(--white);
+  font-weight: 700;
+}
+.convo-body { min-width: 0; flex: 1; }
+.convo-name { margin: 0 0 var(--space-1); font-weight: 700; }
+.convo-last { margin: 0 0 var(--space-2); color: var(--ink-muted); }
+.convo-tags { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.status-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 100px;
+  font-size: .875rem;
+  font-weight: 700;
+  border: 2px solid currentColor;
+}
+.status-badge--new { background: #ffe3e3; color: #7a1010; }
+.status-badge--advising { background: var(--light-blue); color: var(--deep-blue); }
+.status-badge--agreed { background: var(--lime); color: var(--forest-ink); }
+.status-badge--done { background: #e5e9ef; color: var(--ink); }
+.selected-mark {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--deep-blue);
+  color: var(--white);
+  font-size: .875rem;
+  font-weight: 700;
+}
+
+/* Vùng B: chat */
+.studio-chat { margin-bottom: var(--space-4); }
+.chat-heading .studio-chat-name { margin: 0; font-size: 1.1rem; font-weight: 700; opacity: 1; overflow-wrap: anywhere; }
+.studio-chat .message { max-width: 92%; overflow-wrap: anywhere; }
+
+/* Phía Admin Thảo: Thảo gửi ở bên phải (nền trắng), Linh là khách ở bên trái (nền xanh lime) */
+.studio-chat .message--admin {
+  align-self: flex-end;
+  background: var(--white);
+  border-bottom-right-radius: var(--space-1);
+  border-bottom-left-radius: var(--radius-lg);
+}
+.studio-chat .message--customer {
+  align-self: flex-start;
+  background: var(--lime);
+  border-bottom-left-radius: var(--space-1);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+/* Thông báo hệ thống căn giữa, không hộp nền xanh */
+.studio-chat .message--system {
+  align-self: center;
+  max-width: 100%;
+  background: transparent;
+  border: none;
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+  color: #1b3d63;
+}
+.studio-chat .message--system .message-person {
+  color: #1b3d63;
+  text-align: center;
+  margin-bottom: var(--space-1);
+}
+.studio-chat .message--system p {
+  text-align: center;
+}
+.studio-chat .chat-hint { color: var(--ink-muted); }
+
+/* Form Booking mới — điểm nhấn của trang, cùng tông xanh thương hiệu */
+.booking-form {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  min-width: 0;
+  padding: var(--space-4) var(--space-3);
+  border: 4px solid var(--deep-blue);
+  border-radius: var(--round);
+  background: var(--surface-tint);
+  color: var(--ink);
+  font-family: var(--font-chat);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.28);
+}
+.booking-form h3 {
+  margin: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 4px solid var(--lime);
+  color: var(--deep-blue);
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+.field { display: grid; gap: var(--space-1); min-width: 0; }
+.field label,
+.slot-group legend { font-weight: 700; }
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--deep-blue);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.field input[readonly],
+.field textarea[readonly] { background: var(--readonly-bg); }
+.field textarea { resize: vertical; }
+.field-note { margin: 0; font-size: .875rem; color: var(--ink-muted); }
+.field-trio { display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
+.slot-group {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 2px solid var(--deep-blue);
+  border-radius: var(--radius-md);
+}
+.slot-group legend { padding: 0 var(--space-2); }
+.slot-option {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.slot-option input {
+  flex: none;
+  min-width: var(--space-4);
+  min-height: var(--space-4);
+  cursor: pointer;
+  accent-color: var(--deep-blue);
+}
+.slot-option label { flex: 1; min-width: 0; min-height: var(--tap-min); display: flex; align-items: center; }
+.slot-option.is-chosen { background: var(--lime); color: var(--forest-ink); font-weight: 700; }
+.slot-option.is-unavailable { background: #eef2f7; color: var(--ink-muted); text-decoration: line-through; }
+.submit-booking {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--pink);
+  color: var(--white);
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.18);
+}
+.submit-booking:hover { background: #b81c55; }
+.submit-booking:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.flow-note { margin: 0; font-weight: 700; color: var(--deep-blue); }
+.form-fine { margin: 0; font-size: .875rem; color: var(--ink-muted); }
+
+/* Vùng C: lịch tài nguyên — mỗi dòng là một thẻ đọc đủ chữ, không cuộn ngang */
+.calendar-list { min-width: 0; }
+.resource-table, .resource-table tbody, .resource-table tr,
+.resource-table th, .resource-table td { display: block; min-width: 0; }
+.resource-table { width: 100%; }
+.resource-table thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.resource-table tbody { display: grid; gap: var(--space-3); }
+.resource-table tr {
+  padding: var(--space-3);
+  border: 2px solid #b7cdea;
+  border-top: 6px solid var(--blue);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+  overflow-wrap: anywhere;
+}
+.resource-table tbody th {
+  margin-bottom: var(--space-2);
+  color: var(--deep-blue);
+  font-size: 1.1rem;
+  text-align: left;
+}
+.resource-table td { padding: var(--space-1) 0; color: var(--ink); }
+.resource-table td::before {
+  content: attr(data-label);
+  display: block;
+  color: var(--ink-muted);
+  font-size: .875rem;
+  font-weight: 700;
+}
+.resource-table td[data-label="Ghi chú"] { font-weight: 700; }
+.resource-table .row-clash {
+  border-color: var(--pink);
+  border-top-color: var(--pink);
+  background: #ffe9f2;
+}
+.resource-table .row-clash th { color: var(--clash-ink); }
+.resource-table .row-clash td::before { color: var(--clash-ink); }
+.resource-table .row-clash td[data-label="Ghi chú"] {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: 2px solid var(--pink);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--clash-ink);
+}
+
+@media (min-width: 768px) {
+  .studio-main { padding: var(--space-4) var(--space-6) var(--space-6); }
+  .studio-title { font-size: 2.25rem; }
+  .studio-panel { padding: var(--space-4); }
+  .booking-form { padding: var(--space-4); }
+  /* Tablet: ba vùng xếp dọc, mỗi vùng dùng hết chiều ngang nên không lệch chiều cao */
+  .convo-list,
+  .resource-table tbody { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .field-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .studio-title { font-size: 3.1rem; }
+  /* Laptop: hàng 1 = danh sách | chat, hàng 2 = lịch tài nguyên | form Booking mới.
+     Dùng align-items: start để mỗi vùng giữ chiều cao tự nhiên, tránh khoảng trắng thừa dưới hai ô tham khảo. */
+  .studio-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .area-list { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; }
+  .area-chat { grid-column: 2; grid-row: 1; }
+  .area-calendar { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; }
+  .area-booking { grid-column: 2; grid-row: 2; }
+  .area-chat .studio-chat { margin-bottom: 0; }
+  .convo-list { flex: 1; grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .calendar-list { flex: 1; display: flex; }
+  .resource-table { flex: 1; display: flex; }
+  .resource-table tbody { flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
+  .field-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Phân cấp viền: chat và form (quan trọng) đậm, danh sách và lịch (tham khảo) nhạt hơn */
+.area-list,
+.area-calendar { border: 3px solid #9dc3f0; }
+
+/* ==========================================================================
+   BOOKING — SCREEN 3 STYLES (GRADSTUDIO / DUKSTUDIO)
+   Kế thừa hoàn toàn ngôn ngữ thiết kế từ index.html:
+   - Màu sắc: Electric blue, Lime neon, Deep blue, Pink CTA, Paper, Ink.
+   - Typography: Font Malika cục bộ (h1, h2, h3), System font stack (nhãn và nội dung).
+   - Component: .package--blue, .chat-window, .note-card, .role-handoff.
+   ========================================================================== */
+
+/* 1. Header & Page Layout */
+.booking-site .user-badge {
+  box-shadow: none;
+}
+
+.booking-main {
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  min-width: 0;
+}
+
+.booking-page-heading {
+  max-width: 60rem;
+  margin: 0 0 var(--space-4);
+}
+
+.booking-site .booking-page-heading::before {
+  display: none;
+}
+
+.booking-page-heading h1 {
+  margin: 0;
+  color: var(--blue);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  overflow-wrap: anywhere;
+}
+
+.booking-page-heading p {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-muted);
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.booking-schedule-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* 2. Featured Booking Card (Kế thừa từ .package.package--blue của index.html) */
+.booking-summary.package--blue {
+  border: 2px solid rgba(7, 86, 199, 0.4);
+  border-radius: var(--round);
+  background: var(--blue);
+  color: var(--white);
+  padding: var(--space-4);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.55), 0 8px 18px -2px rgba(7, 86, 199, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.booking-card-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.booking-summary h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1.2;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-summary .package-mark {
+  color: var(--lime);
+  font-size: 2.5rem;
+  line-height: 0.9;
+  font-family: system-ui, sans-serif;
+}
+
+.booking-status.package-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 100px;
+  background: var(--paper);
+  color: var(--deep-blue);
+  font-family: var(--font-chakra);
+  font-size: .875rem;
+  font-weight: 700;
+  transform: rotate(-2deg);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-package {
+  margin: var(--space-3) 0 var(--space-3);
+  color: var(--white);
+  font-family: var(--font-chat);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* Box chi tiết khách hàng */
+.booking-details {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 2px 4px rgba(7, 86, 199, 0.08);
+  font-family: var(--font-chat);
+}
+
+.booking-details > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--divider);
+}
+
+.booking-details > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.booking-details dt {
+  color: var(--ink-muted);
+  font-family: var(--font-chakra);
+  font-weight: 600;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.booking-details dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-chat);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* Card chi phí & phân bổ cọc 30% (Đã xử lý bỏ đường kẻ trùng lặp) */
+.booking-summary .cost-heading {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--white);
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.booking-costs {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 2px 4px rgba(7, 86, 199, 0.08);
+  font-family: var(--font-chat);
+  font-variant-numeric: tabular-nums;
+}
+
+.booking-costs > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--divider);
+}
+
+.booking-costs > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.booking-costs dt {
+  color: var(--ink-muted);
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.booking-costs dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.booking-costs .deposit-row {
+  background: var(--lime);
+  color: var(--lime-ink);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border-bottom: 0;
+  margin: 0;
+}
+
+.booking-costs .deposit-row dt {
+  color: var(--lime-ink);
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.booking-costs .deposit-row dd {
+  color: var(--lime-ink);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+/* Cảnh báo giữ lịch & Nút thanh toán */
+.booking-hold-warning {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3);
+  border: 2px solid #b45309;
+  border-radius: var(--radius-md);
+  background: #fffbeb;
+  color: var(--warning-ink);
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.booking-hold-warning strong {
+  color: var(--warning-ink);
+}
+
+.deposit-action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.deposit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--disabled-border);
+  border-radius: var(--radius-md);
+  background: var(--disabled-bg);
+  color: var(--disabled-ink);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  cursor: not-allowed;
+}
+
+.not-wired-note {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.booking-reminder {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.95);
+  overflow-wrap: anywhere;
+}
+
+/* 3. Week Card & Timeline Card (Kế thừa cấu trúc .chat-window) */
+.week-card.chat-window,
+.timeline-card.chat-window {
+  border: 3px solid var(--blue);
+  border-radius: var(--round);
+  background: var(--white);
+  box-shadow: 0 16px 32px -4px rgba(3, 105, 214, 0.18), 0 6px 12px -2px rgba(23, 37, 56, 0.06);
+  font-family: var(--font-chat);
+}
+
+.booking-site .chat-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--blue);
+  color: var(--white);
+}
+
+.booking-site .chat-header h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  margin: 0;
+  color: var(--white);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.booking-date-prefix {
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.booking-date-emphasis {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 4. Week Schedule (Danh sách 7 ngày đồng bộ, rõ ràng, không bị méo chữ hay lệch hàng) */
+.week-grid.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: var(--light-blue);
+  list-style: none;
+}
+
+.booking-site .week-grid .week-day {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-height: var(--tap-min);
+  padding: var(--space-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  transition: border-color 0.15s ease;
+  overflow-wrap: anywhere;
+}
+
+.booking-site .week-grid .week-day:hover {
+  border-color: var(--blue);
+}
+
+.booking-site .week-grid .week-day span:first-child {
+  flex: 0 0 auto;
+  min-width: 4.8rem;
+  font-family: var(--font-chakra);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.booking-site .week-grid .week-day strong {
+  flex: 0 0 auto;
+  min-width: 3.2rem;
+  font-family: var(--font-chat);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--deep-blue);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.booking-site .week-grid .week-day span:last-child {
+  flex: 1 1 auto;
+  margin-left: auto;
+  text-align: right;
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  color: var(--ink-muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.week-day.is-booked {
+  background: var(--lime);
+  border: 2px solid var(--lime-ink);
+  box-shadow: 0 4px 14px rgba(159, 229, 28, 0.4);
+}
+
+.booking-site .week-grid .week-day.is-booked span:first-child,
+.booking-site .week-grid .week-day.is-booked strong,
+.booking-site .week-grid .week-day.is-booked span:last-child {
+  color: var(--lime-ink);
+  font-weight: 700;
+}
+
+.booking-site .week-grid .week-day.is-booked span:last-child {
+  font-weight: 800;
+}
+
+/* 5. Timeline Card (Kế thừa bong bóng tin nhắn .message) */
+.appointment-timeline.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: var(--light-blue);
+  list-style: none;
+}
+
+.appointment-item {
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-chat);
+  line-height: 1.45;
+  font-size: 1rem;
+}
+
+.appointment-item p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.appointment-item strong,
+.appointment-item s {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mốc giờ trùng (Clash) - hiển thị bằng chữ và gạch ngang rõ ràng */
+.appointment-item.is-unavailable {
+  background: #fff1f2;
+  border: 2px solid #e11d48;
+  color: var(--danger-ink);
+}
+
+.appointment-item.is-unavailable s {
+  font-weight: 700;
+  color: var(--danger-ink);
+}
+
+.appointment-item.is-unavailable strong {
+  color: var(--danger-ink);
+}
+
+/* Mốc 1: Makeup với Mai (Phong cách .message--duk màu lime) */
+.appointment-item--makeup {
+  background: var(--lime);
+  color: var(--lime-ink);
+  border-bottom-left-radius: var(--space-1);
+}
+
+.appointment-item--makeup strong,
+.appointment-item--makeup span {
+  color: var(--lime-ink);
+}
+
+/* Mốc 2: Chụp với Tuấn (Phong cách .message--guest màu trắng có viền xanh) */
+.appointment-item--shoot {
+  background: var(--white);
+  border: 2px solid var(--deep-blue);
+  color: var(--ink);
+  border-bottom-right-radius: var(--space-1);
+}
+
+.appointment-item--shoot strong {
+  color: var(--deep-blue);
+}
+
+/* 6. Location Card (Kế thừa cấu trúc .note-card) */
+.location-card.note-card {
+  border: 2px solid var(--lime-border);
+  border-radius: var(--round);
+  background: var(--lime-soft);
+  padding: var(--space-4);
+  font-family: var(--font-chat);
+}
+
+.location-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  color: var(--deep-blue);
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em;
+  margin: 0 0 var(--space-2);
+}
+
+.studio-name {
+  margin: 0 0 var(--space-2);
+  color: var(--deep-blue);
+  font-family: var(--font-chakra);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.location-card address {
+  font-style: normal;
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--lime-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin: 0 0 var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.not-wired-label,
+.selected-photos-label {
+  display: inline-block;
+  font-family: var(--font-chakra);
+  font-size: .875rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  background: rgba(255, 255, 255, 0.75);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  margin: 0 var(--space-2) var(--space-2) 0;
+  overflow-wrap: anywhere;
+}
+
+/* 7. Return link & role handoff */
+.booking-site .booking-return.role-handoff {
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  border-top: 2px dashed var(--lime-dashed);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.booking-site .booking-return p {
+  color: var(--ink-muted);
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-site .booking-return-link.pink-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--pink);
+  color: var(--white);
+  font-family: var(--font-chat);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.booking-site .booking-return-link.pink-cta:hover {
+  background: var(--pink-hover);
+  transform: translateY(-1px);
+}
+
+/* 8. Responsive Media Queries cho booking */
+@media (min-width: 768px) {
+  .booking-main {
+    padding: var(--space-6);
+  }
+
+  .booking-page-heading h1 {
+    font-size: 2.5rem;
+  }
+
+  .booking-site .chat-header h2 {
+    font-size: 1.625rem;
+  }
+
+  .booking-date-emphasis {
+    font-size: 2rem;
+  }
+
+  .week-grid.chat-messages {
+    padding: var(--space-3);
+  }
+
+  .booking-site .week-grid .week-day {
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+@media (min-width: 1280px) {
+  .booking-main {
+    padding: var(--space-6) max(var(--space-6), calc((100% - 74rem) / 2));
+  }
+
+  .booking-layout {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--space-5);
+  }
+
+  .booking-site .location-card {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* ==========================================================================
+   G1 CATALOG EXTENSIONS: SERVICE GROUPS, ACCESSORIES, SAMPLES, REVIEWS
+   ========================================================================== */
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Service Grouping (Tách biệt Dịch vụ và Gói) */
+.services-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.service-group {
+  padding: var(--space-4);
+  background: var(--white);
+  border: 3px solid var(--border-color);
+  border-radius: var(--round);
+  box-shadow: 0 4px 14px rgba(3, 105, 214, 0.06);
+}
+
+.service-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 2px dashed var(--divider);
+}
+
+.service-header-main {
+  flex: 1 1 20rem;
+  min-width: 0;
+}
+
+.service-title {
+  color: var(--deep-blue);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-bottom: var(--space-1);
+}
+
+.service-desc {
+  color: var(--ink-muted);
+  font-size: 1rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.service-pricing-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: var(--surface-tint);
+  border: 2px solid var(--blue);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  min-width: 10rem;
+}
+
+.service-price-label {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  font-family: var(--font-chakra);
+}
+
+.service-starting-price {
+  font-size: 1.35rem;
+  color: var(--deep-blue);
+  font-weight: 700;
+}
+
+.service-unit {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+/* Package Card Enhancements */
+.package-heading {
+  margin: 0 0 var(--space-2);
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.package-features-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.package-features-list li {
+  font-size: 0.9375rem;
+  color: inherit;
+  line-height: 1.4;
+}
+
+.package-deposit-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 0.875rem;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.45);
+  margin: var(--space-2) 0;
+  color: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.package--blue .package-deposit-info {
+  background: rgba(4, 79, 181, 0.35);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.package-cta {
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+/* Accessories Grid */
+.accessories-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.accessory-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.accessory-badge {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: var(--lime-ink);
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex: none;
+}
+
+.accessory-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.accessory-name {
+  font-size: 1.15rem;
+  color: var(--deep-blue);
+  margin-bottom: var(--space-1);
+}
+
+.accessory-desc {
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+  margin-bottom: var(--space-2);
+  line-height: 1.4;
+}
+
+.accessory-price {
+  font-size: 0.9375rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.accessory-price strong {
+  color: var(--pink);
+  font-size: 1.05rem;
+}
+
+/* Sample Photos Grid */
+.samples-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.sample-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--round);
+  border: 2px solid var(--border-color);
+  background: var(--white);
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(3, 105, 214, 0.08);
+}
+
+.sample-graphic-box {
+  position: relative;
+  width: 100%;
+  background: var(--surface-tint);
+  border-bottom: 2px solid var(--divider);
+  padding: var(--space-4) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sample-svg-art {
+  width: 100%;
+  max-width: 14rem;
+  height: auto;
+}
+
+.sample-category-tag {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: var(--deep-blue);
+  color: var(--white);
+  font-family: var(--font-chakra);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+.sample-card-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sample-title {
+  font-size: 1.25rem;
+  color: var(--deep-blue);
+  margin: 0;
+}
+
+.sample-description {
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Reviews Grid */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-radius: var(--round);
+  background: var(--paper);
+  border: 2px solid var(--lime-border);
+  box-shadow: 0 6px 14px rgba(50, 88, 0, 0.06);
+}
+
+.review-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.review-customer-name {
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.review-service-badge {
+  font-size: 0.8125rem;
+  color: var(--lime-ink);
+  font-family: var(--font-chakra);
+  font-weight: 700;
+  margin: var(--space-1) 0 0;
+}
+
+.review-stars {
+  color: #eab308;
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+}
+
+.review-comment {
+  margin: var(--space-2) 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.review-footer {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--divider);
+}
+
+.review-date {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  font-family: var(--font-chakra);
+}
+
+/* Chat CTA Card */
+.chat-cta-section {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-6);
+}
+
+.chat-cta-card {
+  padding: var(--space-5) var(--space-4);
+  background: var(--lime-soft);
+  border: 3px solid var(--lime-border);
+  border-radius: var(--round);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chat-cta-card h2 {
+  color: var(--deep-blue);
+  font-size: 1.85rem;
+  margin: 0;
+}
+
+.chat-cta-desc {
+  max-width: 36rem;
+  color: var(--forest-ink);
+  font-size: 1.05rem;
+  line-height: 1.45;
+  margin: 0 0 var(--space-3);
+}
+
+.empty-subtext {
+  font-size: 1rem;
+  color: var(--ink-muted);
+  font-style: italic;
+  padding: var(--space-3);
+  text-align: center;
+}
+
+/* Responsive Extensions */
+@media (min-width: 768px) {
+  .service-group {
+    padding: var(--space-5);
+  }
+  .service-pricing-badge {
+    align-items: flex-end;
+  }
+  .package-deposit-info {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .package-cta {
+    width: auto;
+  }
+  .accessories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .samples-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .reviews-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .chat-cta-card {
+    padding: var(--space-6) var(--space-5);
+  }
+}
+
+@media (min-width: 1280px) {
+  .accessories-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .samples-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .reviews-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   G3 · CUSTOMER CHAT & BOOKING INQUIRY STYLES
+   ============================================================ */
+
+.chat-page-main {
+  padding-bottom: var(--space-8);
+}
+
+.chat-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Conversation Navigation & Tabs */
+.chat-nav-bar {
+  background: var(--surface-tint);
+  border: 1px solid var(--border);
+  border-radius: var(--round);
+  padding: var(--space-2);
+}
+
+.chat-nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chat-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+}
+
+.chat-tab-btn:hover {
+  background: var(--light-blue);
+  border-color: var(--blue);
+}
+
+.chat-tab-btn.is-active {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+  box-shadow: 0 4px 10px rgba(3, 105, 214, 0.25);
+}
+
+.chat-tab-btn .conv-id {
+  font-family: var(--font-chakra);
+  font-size: 0.875rem;
+}
+
+.chat-tab-btn .conv-status-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--surface-tint);
+  color: var(--forest-ink);
+  font-weight: 500;
+}
+
+.chat-tab-btn.is-active .conv-status-tag {
+  background: var(--lime);
+  color: var(--deep-blue);
+}
+
+/* Inquiry Form Card */
+.inquiry-form-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--round);
+  padding: var(--space-4);
+  box-shadow: 0 8px 24px rgba(23, 37, 56, 0.08);
+}
+
+.inquiry-form-header {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.inquiry-form-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--deep-blue);
+  margin-bottom: var(--space-1);
+}
+
+.inquiry-form-header p {
+  color: var(--muted-ink);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.form-banner-error {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-ink);
+  color: var(--danger-ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-row-duo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 600px) {
+  .form-row-duo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.req-star {
+  color: var(--danger-ink);
+  font-weight: bold;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+@media (min-width: 500px) {
+  .checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-tint);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  user-select: none;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--blue);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-3);
+}
+
+.form-actions .pink-cta {
+  min-height: var(--tap-min);
+  min-width: 180px;
+}
+
+/* Active Conversation In-Page Adjustments */
+.inpage-chat {
+  width: 100%;
+}
+
+.chat-request-banner {
+  background: #f0f7ff;
+  border-bottom: 2px solid #c8e1ff;
+  padding: var(--space-3);
+  font-size: 0.875rem;
+}
+
+.request-banner-title {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--blue);
+}
+
+.request-banner-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1) var(--space-3);
+  color: var(--deep-blue);
+}
+
+@media (min-width: 600px) {
+  .request-banner-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.request-banner-full {
+  grid-column: 1 / -1;
+}
+
+/* Proposal Box inside chat messages */
+.proposal-box {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--white);
+  border: 2px dashed var(--blue);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+}
+
+.proposal-box-title {
+  margin: 0 0 var(--space-2) 0;
+  color: var(--blue);
+  font-size: 0.9375rem;
+}
+
+.proposal-box-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.875rem;
+}
+
+.proposal-box-details p {
+  margin: 0;
+}
+
+.proposal-status-line {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.status-agreed {
+  color: var(--forest-ink);
+  background: var(--lime);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.status-declined {
+  color: var(--danger-ink);
+  background: var(--danger-bg);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.status-proposed,
+.status-pending {
+  color: var(--deep-blue);
+  background: #e1effe;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.proposal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.btn-proposal-accept {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--forest-ink);
+  border-radius: var(--radius-md);
+  background: var(--lime);
+  color: var(--deep-blue);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-proposal-accept:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(22, 101, 52, 0.25);
+  filter: brightness(1.05);
+}
+
+.btn-proposal-accept:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-proposal-decline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--danger-ink);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--danger-ink);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-proposal-decline:hover:not(:disabled) {
+  background: var(--danger-bg);
+}
+
+.btn-proposal-decline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-proposal-accept:focus-visible,
+.btn-proposal-decline:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.proposal-error-banner {
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-ink);
+  border-radius: var(--radius-sm);
+  color: var(--danger-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.empty-subtext {
+  list-style: none;
+  text-align: center;
+  color: var(--muted-ink);
+  padding: var(--space-4);
+  font-style: italic;
+}

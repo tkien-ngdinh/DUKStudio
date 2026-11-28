@@ -54,7 +54,7 @@ Demo accounts table parsed by automated verification suites (`contract-check`):
 | linh | customer | linh@gradstudio.test | linh-demo | Customer booking graduation shoot |
 | thao | admin | thao@gradstudio.test | thao-demo | Studio Admin consulting and confirming bookings |
 | mai | staff | mai@gradstudio.test | mai-demo | Makeup artist (busy 08:00–12:00 on Oct 24) |
-| tuan | staff | tuan@gradstudio.test | tuan-demo | Photographer (assigned to GS-1023; assigned to GS-1024 after G6) |
+| tuan | staff | tuan@gradstudio.test | tuan-demo | Photographer (assigned to GS-1024 / GS-1023) |
 | superadmin | superadmin | superadmin@gradstudio.test | superadmin-demo | Superadmin (opening hours & reminder settings) |
 
 ---
